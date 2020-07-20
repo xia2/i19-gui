@@ -1,0 +1,14 @@
+language: python
+
+jobs:
+  include:
+    - stage: check
+    - name: "Syntax validation - Python 3.8"
+      python: 3.8
+      script:
+         - python3 -m compileall -q *
+
+    - name: "Flake8 - Python 3.8"
+      python: 3.8
+      script: .travis/run-flake8
+      if: type = pull_request

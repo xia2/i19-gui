@@ -54,3 +54,4 @@ coverage.xml
 # Editor files
 *.swp
 *~
+.idea/

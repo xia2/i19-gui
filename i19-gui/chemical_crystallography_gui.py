@@ -1125,8 +1125,10 @@ class UIMainWindow(object):
                 subprocess.Popen(
                     [
                         "sh",
-                        "/dls_sw/i19/scripts/MarkWarren/PyQT/1_basic/"
-                        "dialsReciprocalLatticeViewer.sh",
+                        (
+                            "/dls_sw/i19/scripts/MarkWarren/PyQT/1_basic/"
+                            "dialsReciprocalLatticeViewer.sh"
+                        ),
                         latest_expt,
                         latest_refl,
                     ]
@@ -1188,8 +1190,10 @@ class UIMainWindow(object):
                 subprocess.Popen(
                     [
                         "sh",
-                        "/dls_sw/i19/scripts/MarkWarren/PyQT/1_basic/"
-                        "dialsImageViewer.sh",
+                        (
+                            "/dls_sw/i19/scripts/MarkWarren/PyQT/1_basic/"
+                            "dialsImageViewer.sh"
+                        ),
                         latest_expt,
                         latest_refl,
                     ]
@@ -3468,7 +3472,9 @@ class UIXia2Options:
         self.mainTab_txt.appendPlainText(options_update_text)
         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
 
-        UIMainWindow.update_options(datasetINPUT, self.command_command)
+        UIMainWindow.update_options(
+            self.xia2command, datasetINPUT, self.command_command
+        )
 
     def option_file_text_function(self):
         option_file_text = ""

@@ -16,26 +16,15 @@ from datetime import datetime
 from time import sleep
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import (
-    QCoreApplication,
-    QObject,
-    QRunnable,
-    Qt,
-    QThread,
-    QThreadPool,
-    pyqtSignal,
-)
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QApplication, QFileDialog, QInputDialog, QLineEdit, QWidget
 
-###############################################################################################################################################
-###############################################################################################################################################
-###############################################################################################################################################
-###############################################################################################################################################
+########################################################################################
+########################################################################################
+########################################################################################
+########################################################################################
 
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+class UIMainWindow(object):
+    def setup_ui(self, main_window):
         self.dialVersion = ""
         self.datasetPath = ""
         global datasetINPUT
@@ -122,50 +111,50 @@ class Ui_MainWindow(object):
         self.fontSize10 = QtGui.QFont()
         self.fontSize10.setPointSize(10)
 
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(764, 720)
+        main_window.setObjectName("main_window")
+        main_window.resize(764, 720)
 
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget = QtWidgets.QWidget(main_window)
         self.centralwidget.setObjectName("centralwidget")
-        MainWindow.setCentralWidget(self.centralwidget)
+        main_window.setCentralWidget(self.centralwidget)
         # menubar
-        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.menubar = QtWidgets.QMenuBar(main_window)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 26))
         self.menubar.setObjectName("menubar")
-        MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        main_window.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(main_window)
         self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
-        ##########################################################################################
+        main_window.setStatusBar(self.statusbar)
+        ################################################################################
         # menu File
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
         self.menubar.addAction(self.menuFile.menuAction())
         #
-        self.menuFile_Open = QtWidgets.QAction(MainWindow)
+        self.menuFile_Open = QtWidgets.QAction(main_window)
         self.menuFile_Open.setObjectName("menuFile_Open")
         self.menuFile.addAction(self.menuFile_Open)
-        self.menuFile_Open.triggered.connect(self.selectDataset)
-        self.menuFile_Open_Multiple = QtWidgets.QAction(MainWindow)
+        self.menuFile_Open.triggered.connect(self.select_dataset)
+        self.menuFile_Open_Multiple = QtWidgets.QAction(main_window)
         self.menuFile_Open_Multiple.setObjectName("menuFile_Open_Multiple")
         self.menuFile.addAction(self.menuFile_Open_Multiple)
-        self.menuFile_Open_Multiple.triggered.connect(self.openMultiple)
-        self.menuFile_Close_GUI = QtWidgets.QAction(MainWindow)
+        self.menuFile_Open_Multiple.triggered.connect(self.open_multiple)
+        self.menuFile_Close_GUI = QtWidgets.QAction(main_window)
         self.menuFile_Close_GUI.setObjectName("menuFile_Close_GUI")
         self.menuFile.addAction(self.menuFile_Close_GUI)
-        self.menuFile_Close_GUI.triggered.connect(self.closeGUI)
+        self.menuFile_Close_GUI.triggered.connect(self.close_gui)
         # menu Edit
         self.menuEdit = QtWidgets.QMenu(self.menubar)
         self.menuEdit.setObjectName("menuEdit")
         self.menubar.addAction(self.menuEdit.menuAction())
         #
-        self.menuEdit_CopyCommand = QtWidgets.QAction(MainWindow)
+        self.menuEdit_CopyCommand = QtWidgets.QAction(main_window)
         self.menuEdit_CopyCommand.setObjectName("menuEdit_CopyCommand")
         self.menuEdit.addAction(self.menuEdit_CopyCommand)
-        self.menuEdit_SaveSettings = QtWidgets.QAction(MainWindow)
+        self.menuEdit_SaveSettings = QtWidgets.QAction(main_window)
         self.menuEdit_SaveSettings.setObjectName("menuEdit_SaveSettings")
         self.menuEdit.addAction(self.menuEdit_SaveSettings)
-        self.menuEdit_LoadSettings = QtWidgets.QAction(MainWindow)
+        self.menuEdit_LoadSettings = QtWidgets.QAction(main_window)
         self.menuEdit_LoadSettings.setObjectName("menuEdit_LoadSettings")
         self.menuEdit.addAction(self.menuEdit_LoadSettings)
         # menu View
@@ -181,28 +170,28 @@ class Ui_MainWindow(object):
         self.menuVersion.setObjectName("menuVersion")
         self.menubar.addAction(self.menuVersion.menuAction())
         #
-        self.menuVersion_current = QtWidgets.QAction(MainWindow)
+        self.menuVersion_current = QtWidgets.QAction(main_window)
         self.menuVersion_current.setObjectName("menuVersion_current")
         self.menuVersion.addAction(self.menuVersion_current)
-        self.menuVersion_current.triggered.connect(self.versionCurrent)
-        self.menuVersion_latest = QtWidgets.QAction(MainWindow)
+        self.menuVersion_current.triggered.connect(self.version_current)
+        self.menuVersion_latest = QtWidgets.QAction(main_window)
         self.menuVersion_latest.setObjectName("menuVersion_latest")
         self.menuVersion.addAction(self.menuVersion_latest)
-        self.menuVersion_latest.triggered.connect(self.versionLatest)
-        self.menuVersion_now = QtWidgets.QAction(MainWindow)
+        self.menuVersion_latest.triggered.connect(self.version_latest)
+        self.menuVersion_now = QtWidgets.QAction(main_window)
         self.menuVersion_now.setObjectName("menuVersion_now")
         self.menuVersion.addAction(self.menuVersion_now)
-        self.menuVersion_now.triggered.connect(self.VersionNow)
-        self.menuVersion_1_4 = QtWidgets.QAction(MainWindow)
+        self.menuVersion_now.triggered.connect(self.version_now)
+        self.menuVersion_1_4 = QtWidgets.QAction(main_window)
         self.menuVersion_1_4.setObjectName("menuVersion_1_4")
         self.menuVersion.addAction(self.menuVersion_1_4)
-        self.menuVersion_1_4.triggered.connect(self.Version1_4)
-        self.menuVersion_2_1 = QtWidgets.QAction(MainWindow)
+        self.menuVersion_1_4.triggered.connect(self.version_1_4)
+        self.menuVersion_2_1 = QtWidgets.QAction(main_window)
         self.menuVersion_2_1.setObjectName("menuVersion_2_1")
         self.menuVersion.addAction(self.menuVersion_2_1)
-        self.menuVersion_2_1.triggered.connect(self.Version2_1)
+        self.menuVersion_2_1.triggered.connect(self.version_2_1)
 
-        ##########################################################################################
+        ################################################################################
         self.labelsDataset = QtWidgets.QLabel(self.centralwidget)
         self.labelsDataset.setGeometry(QtCore.QRect(0, 0, 55, 16))
         self.labelsDataset.setObjectName("labelsDataset")
@@ -235,7 +224,7 @@ class Ui_MainWindow(object):
         self.datasetInfo_line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.datasetInfo_line.setObjectName("datasetInfo_line")
 
-        ##########################################################################################
+        ################################################################################
 
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
@@ -388,26 +377,26 @@ class Ui_MainWindow(object):
         self.viewButtons_xia2.setPalette(palette)
         self.viewButtons_xia2.setFont(self.fontSize10B)
         self.viewButtons_xia2.setObjectName("viewButtons_xia2")
-        self.viewButtons_xia2.clicked.connect(self.runXia2)
+        self.viewButtons_xia2.clicked.connect(self.run_xia2)
 
         self.viewButtons_screen19 = QtWidgets.QPushButton(self.centralwidget)
         self.viewButtons_screen19.setGeometry(QtCore.QRect(165, 60, 151, 31))
         self.viewButtons_screen19.setPalette(palette)
         self.viewButtons_screen19.setFont(self.fontSize10B)
         self.viewButtons_screen19.setObjectName("viewButtons_screen19")
-        self.viewButtons_screen19.clicked.connect(self.runScreen19)
+        self.viewButtons_screen19.clicked.connect(self.run_screen19)
 
         self.viewButtons_options = QtWidgets.QPushButton(self.centralwidget)
         self.viewButtons_options.setGeometry(QtCore.QRect(325, 60, 151, 31))
         self.viewButtons_options.setFont(self.fontSize10)
         self.viewButtons_options.setObjectName("viewButtons_options")
-        self.viewButtons_options.clicked.connect(self.openOptions)
+        self.viewButtons_options.clicked.connect(self.open_options)
 
         self.viewButtons_albula = QtWidgets.QPushButton(self.centralwidget)
         self.viewButtons_albula.setGeometry(QtCore.QRect(485, 60, 151, 31))
         self.viewButtons_albula.setFont(self.fontSize10)
         self.viewButtons_albula.setObjectName("viewButtons_albula")
-        self.viewButtons_albula.clicked.connect(self.runAlbula)
+        self.viewButtons_albula.clicked.connect(self.run_albula)
 
         self.viewButtons_line = QtWidgets.QFrame(self.centralwidget)
         self.viewButtons_line.setGeometry(QtCore.QRect(0, 93, 761, 16))
@@ -415,7 +404,7 @@ class Ui_MainWindow(object):
         self.viewButtons_line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.viewButtons_line.setObjectName("viewButtons_line")
 
-        ##########################################################################################
+        ################################################################################
 
         self.processingPath_label = QtWidgets.QLabel(self.centralwidget)
         self.processingPath_label.setGeometry(QtCore.QRect(2, 101, 191, 16))
@@ -432,7 +421,7 @@ class Ui_MainWindow(object):
         self.processingPath__line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.processingPath__line.setObjectName("processingPath__line")
 
-        ##########################################################################################
+        ################################################################################
 
         self.command_label = QtWidgets.QLabel(self.centralwidget)
         self.command_label.setGeometry(QtCore.QRect(2, 142, 91, 16))
@@ -449,7 +438,7 @@ class Ui_MainWindow(object):
         self.command_line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.command_line.setObjectName("command_line")
 
-        ##########################################################################################
+        ################################################################################
         # xia2 output tabs
 
         self.xia2output = QtWidgets.QTabWidget(self.centralwidget)
@@ -463,44 +452,49 @@ class Ui_MainWindow(object):
         self.mainTab.setObjectName("mainTab")
         self.mainTab_txt = QtWidgets.QPlainTextEdit(self.mainTab)
         self.mainTab_txt.setGeometry(QtCore.QRect(0, 0, 756, 372))
-        self.mainTab_txt.setObjectName("mainTab_txt")
+        self.mainTab_txt.setObjectName("main_tab_txt")
         self.xia2output.addTab(self.mainTab, "")
         self.xia2output.setTabText(self.xia2output.indexOf(self.mainTab), "Main")
 
-        ##########################################################################################
+        ################################################################################
 
-        self.retranslateUi(MainWindow)
+        self.retranslate_ui(main_window)
         self.xia2output.setCurrentIndex(1)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(main_window)
 
         ####################################################
 
     ####################################################
-    ### functions ######
+    # functions
 
-    def appendOutput(self, tabName, newLinesPrint):
+    @staticmethod
+    def append_output(tab_name, new_lines_print):
         try:
-            tabName.appendPlainText(newLinesPrint)
-            tabName.moveCursor(QtGui.QTextCursor.End)
+            tab_name.appendPlainText(new_lines_print)
+            tab_name.moveCursor(QtGui.QTextCursor.End)
         except:
             print("\n\n *** Error with updating tab text *** \n\n")
         finally:
             pass
 
-    def getDialsVersion(self):
+    @staticmethod
+    def get_dials_version():
         return os.popen("dials.version").read().split("-")[0]
 
-    def selectDataset(self):
+    def select_dataset(self):
         try:
             path = self.openingVisit
-            self.datasetPath = QFileDialog.getExistingDirectory(
-                None, "Select a dataset folder", path, QFileDialog.ShowDirsOnly
+            self.datasetPath = QtWidgets.QFileDialog.getExistingDirectory(
+                None,
+                "Select a dataset folder",
+                path,
+                QtWidgets.QFileDialog.ShowDirsOnly,
             )
             global datasetINPUT
             datasetINPUT = self.datasetPath
             if self.datasetPath:
                 self.multipleDataset = {}
-                self.appendOutput(
+                self.append_output(
                     self.mainTab_txt, "\n	Dataset Path:		" + self.datasetPath
                 )
                 self.dataset = self.datasetPath.split("/")[-1]  # dataset name
@@ -511,18 +505,17 @@ class Ui_MainWindow(object):
                     # /dls/i19-2/data/2020/cm26492-2/
                     self.visit = "/".join(self.datasetPath.split("/")[:6]) + "/"
                 self.openingVisit = str(self.visit)
-            self.appendOutput(self.mainTab_txt, "	Dataset:		" + self.dataset)
+            self.append_output(self.mainTab_txt, "	Dataset:		" + self.dataset)
             for cbfFile in os.listdir(self.datasetPath):  # prefix
                 if cbfFile.endswith("_00001.cbf"):
                     self.prefix = cbfFile[:-12]
                     break
                 else:
                     continue
-                break
 
-            self.appendOutput(self.mainTab_txt, "	Prefix:			" + self.prefix)
+            self.append_output(self.mainTab_txt, "	Prefix:			" + self.prefix)
             self.runList = []
-            runImagesDict = {}
+            run_images_dict = {}
             for cbfFiles in os.listdir(self.datasetPath):  # runs in dataset
                 if cbfFiles.endswith("_00001.cbf"):
                     if cbfFiles[:-12] == self.prefix:
@@ -530,51 +523,52 @@ class Ui_MainWindow(object):
                         self.runList.append(run)
 
             self.runList.sort()
-            self.appendOutput(
+            self.append_output(
                 self.mainTab_txt,
-                "	Number of runs:		" + str(len(self.runList)) + " " + str(self.runList),
+                "	Number of runs:		"
+                + " ".join(map(str, (len(self.runList), self.runList))),
             )
             for run in self.runList:  # number of images per run
-                basenameMatch = self.prefix + "%02d" % (run) + "_*.cbf"
-                numCbfRun = len(
-                    fnmatch.filter(os.listdir(self.datasetPath), basenameMatch)
+                basename_match = self.prefix + "%02d" % run + "_*.cbf"
+                num_cbf_run = len(
+                    fnmatch.filter(os.listdir(self.datasetPath), basename_match)
                 )
-                runImagesDict[run] = numCbfRun
-            self.appendOutput(
-                self.mainTab_txt, "	Images per run: 	" + str(runImagesDict)
+                run_images_dict[run] = num_cbf_run
+            self.append_output(
+                self.mainTab_txt, "	Images per run: 	" + str(run_images_dict)
             )
-            totalNumImages = sum(runImagesDict.values())  # total number of imagess
-            self.appendOutput(
+            total_num_images = sum(run_images_dict.values())  # total number of images
+            self.append_output(
                 self.mainTab_txt,
-                "	Total number of images:	" + str(totalNumImages) + "\n",
+                "	Total number of images:	" + str(total_num_images) + "\n",
             )
-            # update lables
+            # update labels
             self.datasetInfo_dataset.setText(self.dataset)
             self.datasetInfo_prefix.setText(self.prefix)
-            self.datasetInfo_images.setText(str(runImagesDict).strip("{}"))
+            self.datasetInfo_images.setText(str(run_images_dict).strip("{}"))
             self.command_command.setPlainText(
                 self.xia2command + datasetINPUT + xia2OptionsList
             )
         except:
-            self.appendOutput(self.mainTab_txt, "\n	*** unable to load dataset ***	\n")
+            self.append_output(self.mainTab_txt, "\n	*** unable to load dataset ***	\n")
 
-    #### file menu, open-> select dataset ####
-    def openMultiple(self):
+    # file menu, open-> select dataset ####
+    def open_multiple(self):
         # try:
         path = self.openingVisit
-        newDatasetPath = QFileDialog.getExistingDirectory(
-            None, "Select a dataset folder", path, QFileDialog.ShowDirsOnly
+        new_dataset_path = QtWidgets.QFileDialog.getExistingDirectory(
+            None, "Select a dataset folder", path, QtWidgets.QFileDialog.ShowDirsOnly
         )
 
         global datasetINPUT
         datasetINPUT = "MULTIPLE"
 
-        if newDatasetPath:
-            self.appendOutput(
-                self.mainTab_txt, "\n	New Dataset Path:		" + newDatasetPath
+        if new_dataset_path:
+            self.append_output(
+                self.mainTab_txt, "\n	New Dataset Path:		" + new_dataset_path
             )
 
-            dataset = newDatasetPath.split("/")[-1]  # dataset name
+            dataset = new_dataset_path.split("/")[-1]  # dataset name
             if "staging" in self.datasetPath.split("/"):
                 # /dls/staging/dls/i19-2/data/2019/cy23463-1/
                 self.visit = "/".join(self.datasetPath.split("/")[:8]) + "/"
@@ -582,87 +576,82 @@ class Ui_MainWindow(object):
                 # /dls/i19-2/data/2020/cm26492-2/
                 self.visit = "/".join(self.datasetPath.split("/")[:6]) + "/"
             self.openingVisit = str(self.visit)
-        self.appendOutput(self.mainTab_txt, "	New Dataset:		" + dataset)
-        for cbfFile in os.listdir(newDatasetPath):  # prefix
+        self.append_output(self.mainTab_txt, "	New Dataset:		" + dataset)
+        for cbfFile in os.listdir(new_dataset_path):  # prefix
             if cbfFile.endswith("_00001.cbf"):
                 prefix = cbfFile[:-12]
                 break
             else:
                 continue
-            break
 
-        self.appendOutput(self.mainTab_txt, "	New Prefix:			" + prefix)
-        runList = []
-        runImagesDict = {}
-        for cbfFiles in os.listdir(newDatasetPath):  # runs in dataset
-            if cbfFiles.endswith("_00001.cbf"):
-                if cbfFiles[:-12] == prefix:
-                    run = int(cbfFiles[-12:-10])
-                    runList.append(run)
+        self.append_output(self.mainTab_txt, "	New Prefix:			" + prefix)
+        run_list = []
+        run_images_dict = {}
+        for cbf_file in os.listdir(new_dataset_path):  # runs in dataset
+            if cbf_file.endswith("_00001.cbf"):
+                if cbf_file[:-12] == prefix:
+                    run = int(cbf_file[-12:-10])
+                    run_list.append(run)
 
-        runList.sort()
-        self.appendOutput(
+        run_list.sort()
+        self.append_output(
             self.mainTab_txt,
-            "	New Number of runs:		" + str(len(runList)) + " " + str(runList),
+            "	New Number of runs:		" + str(len(run_list)) + " " + str(run_list),
         )
-        for run in runList:  # number of images per run
-            basenameMatch = prefix + "%02d" % (run) + "_*.cbf"
-            numCbfRun = len(fnmatch.filter(os.listdir(newDatasetPath), basenameMatch))
-            runImagesDict[run] = numCbfRun
-        self.appendOutput(
-            self.mainTab_txt, "	New Images per run: 	" + str(runImagesDict)
+        for run in run_list:  # number of images per run
+            basename_match = f"{prefix}{run:02d}_*.cbf"
+            num_cbf_run = len(
+                fnmatch.filter(os.listdir(new_dataset_path), basename_match)
+            )
+            run_images_dict[run] = num_cbf_run
+        self.append_output(
+            self.mainTab_txt, "	New Images per run: 	" + str(run_images_dict)
         )
-        totalNumImages = sum(runImagesDict.values())  # total number of imagess
-        self.appendOutput(
+        total_num_images = sum(run_images_dict.values())  # total number of images
+        self.append_output(
             self.mainTab_txt,
-            "	New Total number of images:	" + str(totalNumImages) + "\n",
+            "	New Total number of images:	" + str(total_num_images) + "\n",
         )
-        # update lables
+        # update labels
         self.datasetInfo_dataset.setText(dataset)
         self.datasetInfo_prefix.setText(prefix)
-        self.datasetInfo_images.setText(str(runImagesDict).strip("{}"))
+        self.datasetInfo_images.setText(str(run_images_dict).strip("{}"))
         self.command_command.setPlainText(
             self.xia2command + datasetINPUT + xia2OptionsList
         )
 
-        self.multipleDataset[dataset] = [newDatasetPath, prefix, runList]
-        self.appendOutput(
+        self.multipleDataset[dataset] = [new_dataset_path, prefix, run_list]
+        self.append_output(
             self.mainTab_txt, "	Multiple runs:\n	" + str(self.multipleDataset)
         )
 
     # except:
-    # self.appendOutput(self.mainTab_txt,"\n	*** unable to load datasets ***	\n")
+    # self.append_output(self.main_tab_txt,"\n	*** unable to load datasets ***	\n")
 
-    #### file menu, close -> close GUI ####
-    def closeGUI(self):
-        self.appendOutput(self.mainTab_txt, "\n\nClosing GUI\n\n")
+    # file menu, close -> close GUI ####
+    def close_gui(self):
+        self.append_output(self.mainTab_txt, "\n\nClosing GUI\n\n")
         QtCore.QCoreApplication.instance().quit()
 
-    #### open albula ####
-    def runAlbula(self):
-        self.appendOutput(self.mainTab_txt, self.datasetPath)
+    # open albula ####
+    def run_albula(self):
+        self.append_output(self.mainTab_txt, self.datasetPath)
         if self.datasetPath == "":
             subprocess.Popen(
                 ["sh", "/dls_sw/i19/scripts/MarkWarren/PyQT/1_basic/albula.sh"]
             )
         else:
-            self.appendOutput(self.mainTab_txt, "opening albula with first image")
-            image = (
-                self.datasetPath
-                + "/"
-                + self.prefix
-                + "%02d" % (self.runList[0])
-                + "_00001.cbf"
-            )
+            self.append_output(self.mainTab_txt, "opening albula with first image")
+            image = f"{self.datasetPath}/{self.prefix}{self.runList[0]:02d}_00001.cbf"
             subprocess.Popen(
                 ["sh", "/dls_sw/i19/scripts/MarkWarren/PyQT/1_basic/albula.sh", image]
             )
 
-    #### open options window #####################################################################################################################
-    def openOptions(self):
-        self.appendOutput(self.mainTab_txt, "Opeining Optioins window")
+    # open options window ###########################################################
+    def open_options(self):
+        self.append_output(self.mainTab_txt, "Opening options window")
         self.secondWindow = QtWidgets.QMainWindow()
-        self.ui = Ui_Xia2Options(
+        self.ui = UIXia2Options(
             self.xia2command,
             self.datasetPath,
             self.command_command,
@@ -672,99 +661,110 @@ class Ui_MainWindow(object):
             self.prefix,
             self.openingVisit,
         )
-        self.ui.setupUi(self.secondWindow)
+        self.ui.setup_ui(self.secondWindow)
         self.secondWindow.show()
 
-    def updateOptionsFunction(xia2command, datasetPath, command_command):
-        command_command.setPlainText(xia2command + datasetPath + xia2OptionsList)
+    @staticmethod
+    def update_options(xia2_command, dataset_path, command_command):
+        command_command.setPlainText(xia2_command + dataset_path + xia2OptionsList)
 
-    def runXia2(self):
-        self.appendOutput(self.mainTab_txt, "\nRunning xia2\n")
-        ###### single datasets ###########
+    def run_xia2(self):
+        self.append_output(self.mainTab_txt, "\nRunning xia2\n")
+        # single datasets ###########
         if not datasetINPUT == "MULTIPLE":
-            self.appendOutput(self.mainTab_txt, "Single Dataset")
+            self.append_output(self.mainTab_txt, "Single Dataset")
             if self.prefix == "":
-                self.appendOutput(
+                self.append_output(
                     self.mainTab_txt,
                     "\n\n ########################################################a",
                 )
-                self.appendOutput(
+                self.append_output(
                     self.mainTab_txt,
-                    "	No cbf images found in directory, please select dataset directory",
+                    "	No cbf images found in directory, "
+                    "please select dataset directory",
                 )
                 return
-            self.runXia2dataset(self.dataset, datasetINPUT)
-        ###### multiple datasets ###########
+            self.run_xia2_dataset(self.dataset, datasetINPUT)
+        # multiple datasets ###########
         if datasetINPUT == "MULTIPLE":  # if multiple input has been utilised
-            self.appendOutput(self.mainTab_txt, "\n Multiple dataset proocessing\n")
-            # {'01_Prot1_21': ['/dls/i19-2/data/2020/cy23401-1/01_Prot1_21', 'Prot1_21_', [1, 2, 3]]}
-            # {dataset: [datasetPath, prefix, runs]}
-            if runImageSelector == False:
-                for datasetKey in self.multipleDataset:
-                    dataset = datasetKey
-                    datasetPath = self.multipleDataset[datasetKey][0]
-                    prefix = self.multipleDataset[datasetKey][1]
-                    runList = self.multipleDataset[datasetKey][2]
-                    if prefix == "":
-                        self.appendOutput(
+            self.append_output(self.mainTab_txt, "\n Multiple dataset processing\n")
+            # {
+            #     "01_Prot1_21": [
+            #         "/dls/i19-2/data/2020/cy23401-1/01_Prot1_21",
+            #         "Prot1_21_",
+            #         [1, 2, 3],
+            #     ]
+            # }
+            # {dataset: [dataset_path, prefix, runs]}
+            if not runImageSelector:
+                for dataset_key in self.multipleDataset:
+                    dataset_path, prefix, _ = self.multipleDataset[dataset_key]
+                    if not prefix:
+                        self.append_output(
                             self.mainTab_txt,
-                            "\n\n ########################################################b",
+                            "\n\n ############################"
+                            "############################b",
                         )
-                        self.appendOutput(
+                        self.append_output(
                             self.mainTab_txt,
-                            "	No cbf images found in directory, please select dataset directory",
+                            "	No cbf images found in directory, "
+                            "please select dataset directory",
                         )
                         return
-                    self.runXia2dataset(datasetKey, datasetPath)
+                    self.run_xia2_dataset(dataset_key, dataset_path)
             else:
-                for datasetKey in self.multipleDataset:
-                    dataset = datasetKey
-                    datasetPath = self.multipleDataset[datasetKey][0] + "/"
-                    prefix = self.multipleDataset[datasetKey][1]
-                    runs = self.multipleDataset[datasetKey][2]
+                for dataset_key in self.multipleDataset:
+                    dataset = dataset_key
+                    dataset_path = self.multipleDataset[dataset_key][0] + "/"
+                    prefix = self.multipleDataset[dataset_key][1]
+                    runs = self.multipleDataset[dataset_key][2]
                     if prefix == "":
-                        self.appendOutput(
+                        self.append_output(
                             self.mainTab_txt,
-                            "\n\n ########################################################c",
+                            "\n\n ############################"
+                            "############################c",
                         )
-                        self.appendOutput(
+                        self.append_output(
                             self.mainTab_txt,
-                            "	No cbf images found in directory, please select dataset directory",
+                            "	No cbf images found in directory, "
+                            "please select dataset directory",
                         )
                         return
                     else:
-                        xia2Input = ""
+                        xia2_input = ""
                         if runSelection:
                             for entry in runSelection:
-                                xia2Input = (
-                                    xia2Input
+                                xia2_input = (
+                                    xia2_input
                                     + " image="
-                                    + datasetPath
+                                    + dataset_path
                                     + prefix
                                     + str("%02d_00001.cbf" % int(entry))
                                 )
                                 if entry in imageSelection:
-                                    xia2Input = xia2Input + ":" + imageSelection[entry]
+                                    xia2_input = (
+                                        xia2_input + ":" + imageSelection[entry]
+                                    )
                         else:  # runs have NOT been selected
                             for run in runs:
-                                xia2Input = (
-                                    xia2Input
+                                xia2_input = (
+                                    xia2_input
                                     + " image="
-                                    + datasetPath
+                                    + dataset_path
                                     + prefix
                                     + str("%02d_00001.cbf" % int(run))
                                 )
                                 if (run - 1) in imageSelection:
-                                    xia2Input = (
-                                        xia2Input + ":" + imageSelection[run - 1]
+                                    xia2_input = (
+                                        xia2_input + ":" + imageSelection[run - 1]
                                     )
-                    self.runXia2dataset(dataset, xia2Input)
+                    self.run_xia2_dataset(dataset, xia2_input)
 
-    def runXia2dataset(self, inputDataset, xia2Input):  # prefix # visit # dataset
+    def run_xia2_dataset(self, input_dataset, xia2_input):  # prefix # visit # dataset
         # create processing path
-        timeDate = str(datetime.utcnow().strftime("%Y%m%d_%H%M"))
+        time_date = str(datetime.utcnow().strftime("%Y%m%d_%H%M"))
         self.processingPath = (
-            self.visit + "processing/xia2GUI/" + inputDataset + "_" + timeDate + "/"
+            f"{self.visit}processing/xia2GUI/{input_dataset}_{time_date}/"
         )
         if not os.path.exists(self.visit + "processing/xia2GUI/"):
             os.makedirs(self.visit + "processing/xia2GUI/")
@@ -774,22 +774,22 @@ class Ui_MainWindow(object):
         self.processingPath__path.setText(self.processingPath)
         self.tabsProcessingPath[self.tabsNum] = self.processingPath
 
-        self.appendOutput(self.mainTab_txt, "Xia2 command:")
-        inputXia2Command = (
-            self.xia2command + xia2Input + xia2OptionsList
-        )  # this is the bit I think i need to change!!! # dataset and prefix I would guess is required
-        self.appendOutput(self.mainTab_txt, "	" + inputXia2Command)
+        self.append_output(self.mainTab_txt, "Xia2 command:")
+        # this is the bit I think i need to change!!!
+        # dataset and prefix I would guess is required
+        input_xia2_command = self.xia2command + xia2_input + xia2OptionsList
+        self.append_output(self.mainTab_txt, "	" + input_xia2_command)
 
         # create job file
 
-        jobFile = self.processingPath + "job.sh"
-        with open(jobFile, "a") as jF:
+        job_file = self.processingPath + "job.sh"
+        with open(job_file, "a") as jF:
             jF.write(str("cd " + self.processingPath) + "\n")
             jF.write(str("module load dials" + self.dialVersion) + "\n")
-            jF.write(str(inputXia2Command) + "\n")
+            jF.write(str(input_xia2_command) + "\n")
 
-        ###################################################################################################################
-        ### open new tab with dataset and date
+        ################################################################################
+        # open new tab with dataset and date
         self.tabs[self.tabsNum] = QtWidgets.QWidget()
         self.tabs[self.tabsNum].setObjectName("tabs[tabNum]")
 
@@ -800,7 +800,7 @@ class Ui_MainWindow(object):
         self.tabstxt[self.tabsNum].setObjectName("tabstxt[tabNum]")
 
         # buttons
-        tabNum = int(self.tabsNum)
+        tab_num = int(self.tabsNum)
 
         self.tabsIV[self.tabsNum] = QtWidgets.QPushButton(self.tabs[self.tabsNum])
         self.tabsIV[self.tabsNum].setGeometry(QtCore.QRect(120, 0, 151, 31))
@@ -808,7 +808,7 @@ class Ui_MainWindow(object):
         self.tabsIV[self.tabsNum].setObjectName("xia2output_dialsImage")
         self.tabsIV[self.tabsNum].setText("Image Viewer")
         self.tabsIV[self.tabsNum].clicked.connect(
-            lambda: self.runDialsImageViewer(tabNum)
+            lambda: self.run_dials_image_viewer(tab_num)
         )
 
         self.tabsRLV[self.tabsNum] = QtWidgets.QPushButton(self.tabs[self.tabsNum])
@@ -817,7 +817,7 @@ class Ui_MainWindow(object):
         self.tabsRLV[self.tabsNum].setObjectName("xia2output_reciprocal")
         self.tabsRLV[self.tabsNum].setText("Reciprocal Lattice")
         self.tabsRLV[self.tabsNum].clicked.connect(
-            lambda: self.runDialsReciprocalLattice(tabNum)
+            lambda: self.run_dials_reciprocal_lattice(tab_num)
         )
 
         self.tabsHTML[self.tabsNum] = QtWidgets.QPushButton(self.tabs[self.tabsNum])
@@ -825,92 +825,97 @@ class Ui_MainWindow(object):
         self.tabsHTML[self.tabsNum].setFont(self.fontSize10)
         self.tabsHTML[self.tabsNum].setObjectName("xia2output_html")
         self.tabsHTML[self.tabsNum].setText("HTML")
-        self.tabsHTML[self.tabsNum].clicked.connect(lambda: self.runDialsHTML(tabNum))
+        self.tabsHTML[self.tabsNum].clicked.connect(
+            lambda: self.run_dials_html(tab_num)
+        )
 
         self.xia2output.addTab(self.tabs[self.tabsNum], "")
         self.xia2output.setTabText(
             self.xia2output.indexOf(self.tabs[self.tabsNum]),
-            inputDataset + "_" + timeDate,
+            input_dataset + "_" + time_date,
         )
 
         # edit plain text
         self.tabstxt[self.tabsNum].appendPlainText("\nRunning xia2\n")
         self.tabstxt[self.tabsNum].appendPlainText("Xia2 command:")
-        self.tabstxt[self.tabsNum].appendPlainText("	" + inputXia2Command + "\n")
+        self.tabstxt[self.tabsNum].appendPlainText("	" + input_xia2_command + "\n")
 
-        ###################################################################################################################
+        ################################################################################
         # run xia2
 
-        if inputDataset == "":
-            tabName = self.tabstxt[self.tabsNum]
-            datasetErrorStatment = "\n\n Dataset has not be selected (File>Open) \n\n"
-            self.appendOutput(self.mainTab_txt, datasetErrorStatment)
-            appendOutput(tabName, datasetErrorStatment)
+        if input_dataset == "":
+            tab_name = self.tabstxt[self.tabsNum]
+            dataset_error_statement = (
+                "\n\n No dataset has been selected (File>Open) \n\n"
+            )
+            self.append_output(self.mainTab_txt, dataset_error_statement)
+            self.append_output(tab_name, dataset_error_statement)
         else:
             if computingLocation == "Local":
-                # run xai2 locally
-                subprocess.Popen(["sh", jobFile])
+                # run xia2 locally
+                subprocess.Popen(["sh", job_file])
             else:
                 # run xia2 on cluster?
                 # module load global/cluster
-                # "qsub -pe smp 1 -q medium.q " + jobFile
+                # "qsub -pe smp 1 -q medium.q " + job_file
                 # module load global/hamilton
-                # qsub -pe smp 20 -cwd -q all.q -P i19-2 -o /dev/null -e /dev/null job.sh
+                # qsub -pe smp 20 -cwd -q all.q -P i19-2 -o /dev/null -e /dev/null \
+                #   job.sh
 
                 if "staging" in self.visit.split("/"):
                     os.system(
-                        "module load global/cluster && qsub -pe smp 1 -q medium.q "
-                        + jobFile
+                        f"module load global/cluster && qsub -pe smp 1 "
+                        f"-q medium.q {job_file}"
                     )
                 else:
                     os.system(
-                        "module load global/hamilton && qsub -pe smp 20 -q all.q -P i19-2 -o /dev/null -e /dev/null "
-                        + jobFile
+                        "module load global/hamilton && qsub -pe smp 20 "
+                        f"-q all.q -P i19-2 -o /dev/null -e /dev/null {job_file}"
                     )
 
-            ###################################################################################################################
+            ############################################################################
             # output xia2.txt into tab
-            self.thread = mythread2(
+            self.thread = MyThread2(
                 self.processingPath,
-                inputDataset,
+                input_dataset,
                 self.tabstxt,
                 self.tabsNum,
                 self.mainTab_txt,
                 "xia2.txt",
             )
 
-            self.thread.finished.connect(self.threadFinished)
-            self.thread.started.connect(self.threadStarted)
+            self.thread.finished.connect(self.thread_finished)
+            self.thread.started.connect(self.thread_started)
             # self.thread.terminated.connect(self.threadTerminated)
 
             self.thread.start()
 
-        ###################################################################################################################
+        ################################################################################
         self.tabsNum += 1
         if self.tabsNum > 8:
             self.tabsNum = 0
 
-    def runScreen19(self):
-        self.appendOutput(self.mainTab_txt, "\nRunning screen19\n")
+    def run_screen19(self):
+        self.append_output(self.mainTab_txt, "\nRunning screen19\n")
         if self.prefix == "":
-            self.appendOutput(
+            self.append_output(
                 self.mainTab_txt,
                 "\n\n ########################################################a",
             )
-            self.appendOutput(
+            self.append_output(
                 self.mainTab_txt,
                 "	No cbf images found in directory, please select dataset directory",
             )
             return
         else:
             # create processing path
-            timeDate = str(datetime.utcnow().strftime("%Y%m%d_%H%M"))
+            time_date = str(datetime.utcnow().strftime("%Y%m%d_%H%M"))
             self.processingPath = (
                 self.visit
                 + "processing/xia2GUI/"
                 + self.dataset
                 + "_s19_"
-                + timeDate
+                + time_date
                 + "/"
             )
             if not os.path.exists(self.visit + "processing/xia2GUI/"):
@@ -921,31 +926,33 @@ class Ui_MainWindow(object):
             self.processingPath__path.setText(self.processingPath)
             self.tabsProcessingPath[self.tabsNum] = self.processingPath
 
-            self.appendOutput(self.mainTab_txt, "screen19 command:")
+            self.append_output(self.mainTab_txt, "screen19 command:")
 
             # remove unwanted xia2 commands
-            screen19OptionsList = ""
+            screen19_options_list = ""
             for command in xia2OptionsList.split(" "):
                 if command == "small_molecule=true":
                     pass
                 else:
-                    screen19OptionsList = screen19OptionsList + command + " "
+                    screen19_options_list = screen19_options_list + command + " "
 
-            inputScreen19Command = "screen19 " + self.datasetPath + screen19OptionsList
-            self.appendOutput(self.mainTab_txt, "	" + inputScreen19Command)
+            input_screen19_command = (
+                "screen19 " + self.datasetPath + screen19_options_list
+            )
+            self.append_output(self.mainTab_txt, "	" + input_screen19_command)
 
             # create job file
-            jobFile = self.processingPath + "job.sh"
-            with open(jobFile, "a") as jF:
-                jF.write(str("cd " + self.processingPath) + "\n")
-                jF.write(str("module load dials" + self.dialVersion) + "\n")
-                jF.write(str(inputScreen19Command) + "\n")
+            job_file = self.processingPath + "job.sh"
+            with open(job_file, "a") as jf:
+                jf.write(str("cd " + self.processingPath) + "\n")
+                jf.write(str("module load dials" + self.dialVersion) + "\n")
+                jf.write(str(input_screen19_command) + "\n")
 
-            ###################################################################################################################
-            ### open new tab with dataset and date
+            ############################################################################
+            # open new tab with dataset and date
             self.tabs[self.tabsNum] = QtWidgets.QWidget()
 
-            self.tabs[self.tabsNum].setObjectName("tabs[tabNum]")
+            self.tabs[self.tabsNum].setObjectName("tabs[tab_num]")
 
             # plain text
             # clear previous??
@@ -953,10 +960,10 @@ class Ui_MainWindow(object):
                 self.tabs[self.tabsNum]
             )
             self.tabstxt[self.tabsNum].setGeometry(QtCore.QRect(0, 32, 756, 372))
-            self.tabstxt[self.tabsNum].setObjectName("tabstxt[tabNum]")
+            self.tabstxt[self.tabsNum].setObjectName("tabstxt[tab_num]")
 
             # buttons
-            tabNum = int(self.tabsNum)
+            tab_num = int(self.tabsNum)
 
             self.tabsIV[self.tabsNum] = QtWidgets.QPushButton(self.tabs[self.tabsNum])
             self.tabsIV[self.tabsNum].setGeometry(QtCore.QRect(120, 0, 151, 31))
@@ -964,7 +971,7 @@ class Ui_MainWindow(object):
             self.tabsIV[self.tabsNum].setObjectName("xia2output_dialsImage")
             self.tabsIV[self.tabsNum].setText("Image Viewer")
             self.tabsIV[self.tabsNum].clicked.connect(
-                lambda: self.runDialsImageViewer(tabNum)
+                lambda: self.run_dials_image_viewer(tab_num)
             )
 
             self.tabsRLV[self.tabsNum] = QtWidgets.QPushButton(self.tabs[self.tabsNum])
@@ -973,7 +980,7 @@ class Ui_MainWindow(object):
             self.tabsRLV[self.tabsNum].setObjectName("xia2output_reciprocal")
             self.tabsRLV[self.tabsNum].setText("Reciprocal Lattice")
             self.tabsRLV[self.tabsNum].clicked.connect(
-                lambda: self.runDialsReciprocalLattice(tabNum)
+                lambda: self.run_dials_reciprocal_lattice(tab_num)
             )
 
             self.tabsHTML[self.tabsNum] = QtWidgets.QPushButton(self.tabs[self.tabsNum])
@@ -982,51 +989,51 @@ class Ui_MainWindow(object):
             self.tabsHTML[self.tabsNum].setObjectName("xia2output_html")
             self.tabsHTML[self.tabsNum].setText("HTML")
             self.tabsHTML[self.tabsNum].clicked.connect(
-                lambda: self.runDialsHTML(tabNum)
+                lambda: self.run_dials_html(tab_num)
             )
 
             self.xia2output.addTab(self.tabs[self.tabsNum], "")
             self.xia2output.setTabText(
                 self.xia2output.indexOf(self.tabs[self.tabsNum]),
-                self.dataset + "_s19_" + timeDate,
+                self.dataset + "_s19_" + time_date,
             )
 
             # edit plain text
             self.tabstxt[self.tabsNum].appendPlainText("\nRunning screen19\n")
             self.tabstxt[self.tabsNum].appendPlainText("screen19 command:")
             self.tabstxt[self.tabsNum].appendPlainText(
-                "	" + inputScreen19Command + "\n"
+                "	" + input_screen19_command + "\n"
             )
 
-            ###################################################################################################################
+            ############################################################################
             # run screen19
 
             if self.dataset == "":
-                tabName = self.tabstxt[self.tabsNum]
-                datasetErrorStatment = (
+                tab_name = self.tabstxt[self.tabsNum]
+                dataset_error_statement = (
                     "\n\n Dataset has not be selected (File>Open) \n\n"
                 )
-                self.appendOutput(self.mainTab_txt, datasetErrorStatment)
-                appendOutput(tabName, datasetErrorStatment)
+                self.append_output(self.mainTab_txt, dataset_error_statement)
+                self.append_output(tab_name, dataset_error_statement)
             else:
                 if computingLocation == "Local":
                     # run screen19 locally
-                    subprocess.Popen(["sh", jobFile])
+                    subprocess.Popen(["sh", job_file])
                 else:
                     if "staging" in self.visit.split("/"):
                         os.system(
                             "module load global/cluster && qsub -pe smp 1 -q medium.q "
-                            + jobFile
+                            + job_file
                         )
                     else:
                         os.system(
-                            "module load global/hamilton && qsub -pe smp 20 -q all.q -P i19-2 -o /dev/null -e /dev/null "
-                            + jobFile
+                            "module load global/hamilton && qsub -pe smp 20 "
+                            f"-q all.q -P i19-2 -o /dev/null -e /dev/null {job_file}"
                         )
 
-                ###################################################################################################################
+                ########################################################################
                 # output xia2.txt into tab
-                self.thread = mythread2(
+                self.thread = MyThread2(
                     self.processingPath,
                     self.dataset,
                     self.tabstxt,
@@ -1035,477 +1042,485 @@ class Ui_MainWindow(object):
                     "screen19.log",
                 )
 
-                self.thread.finished.connect(self.threadFinished)
-                self.thread.started.connect(self.threadStarted)
+                self.thread.finished.connect(self.thread_finished)
+                self.thread.started.connect(self.thread_started)
                 # self.thread.terminated.connect(self.threadTerminated)
 
                 self.thread.start()
 
-            ###################################################################################################################
+            ############################################################################
             self.tabsNum += 1
             if self.tabsNum > 8:
                 self.tabsNum = 0
 
-    def threadStarted(self):
-        self.appendOutput(self.mainTab_txt, "\n*** Thread Started ***\n")
+    def thread_started(self):
+        self.append_output(self.mainTab_txt, "\n*** Thread Started ***\n")
 
-    def threadFinished(self):
-        self.appendOutput(self.mainTab_txt, "\n*** Thread Finished ***\n")
+    def thread_finished(self):
+        self.append_output(self.mainTab_txt, "\n*** Thread Finished ***\n")
 
-    def stopThread():
-        self.appendOutput(self.mainTab_txt, "\n*** Stopping Thead ***\n")
-        # self.mythread2.stop()
-        # self.mythread2.quit()
+    def stop_thread(self):
+        self.append_output(self.mainTab_txt, "\n*** Stopping Thead ***\n")
+        # self.MyThread2.stop()
+        # self.MyThread2.quit()
 
-    #### open run dials Reciprocal Lattice viewer ####
-    def runDialsReciprocalLattice(self, tabsNum):
-        self.appendOutput(self.mainTab_txt, "Opening dials reciprocal lattice viewer")
-        self.appendOutput(
-            self.mainTab_txt, "Processing path:" + self.tabsProcessingPath[tabsNum]
+    # open run dials Reciprocal Lattice viewer ####
+    def run_dials_reciprocal_lattice(self, tabs_num):
+        self.append_output(self.mainTab_txt, "Opening dials reciprocal lattice viewer")
+        self.append_output(
+            self.mainTab_txt, "Processing path:" + self.tabsProcessingPath[tabs_num]
         )
 
-        latestExpt = ""
-        latestExptTime = ""
-        latestRefl = ""
-        latestReflTime = ""
+        latest_expt = ""
+        latest_expt_time = ""
+        latest_refl = ""
+        latest_refl_time = ""
 
-        exptFiles = glob.glob(
-            self.tabsProcessingPath[tabsNum] + "/**/*.expt", recursive=True
+        expt_files = glob.glob(
+            self.tabsProcessingPath[tabs_num] + "/**/*.expt", recursive=True
         )
-        reflFiles = glob.glob(
-            self.tabsProcessingPath[tabsNum] + "/**/*.refl", recursive=True
+        refl_files = glob.glob(
+            self.tabsProcessingPath[tabs_num] + "/**/*.refl", recursive=True
         )
-        for exptFile in exptFiles:
-            fileTime = os.path.getmtime(exptFile)
-            if latestExptTime == "":
-                latestExpt = exptFile
-                latestExptTime = fileTime
+        for expt_file in expt_files:
+            file_time = os.path.getmtime(expt_file)
+            if latest_expt_time == "":
+                latest_expt = expt_file
+                latest_expt_time = file_time
             else:
-                if fileTime > latestExptTime:
-                    latestExpt = exptFile
-                    latestExptTime = fileTime
-        for reflFile in reflFiles:
-            fileTime = os.path.getmtime(reflFile)
-            if latestReflTime == "":
-                latestRefl = reflFile
-                latestReflTime = fileTime
+                if file_time > latest_expt_time:
+                    latest_expt = expt_file
+                    latest_expt_time = file_time
+        for refl_file in refl_files:
+            file_time = os.path.getmtime(refl_file)
+            if latest_refl_time == "":
+                latest_refl = refl_file
+                latest_refl_time = file_time
             else:
-                if fileTime > latestReflTime:
-                    latestRefl = reflFile
-                    latestReflTime = fileTime
-        if latestExpt == "":
-            self.appendOutput(
+                if file_time > latest_refl_time:
+                    latest_refl = refl_file
+                    latest_refl_time = file_time
+        if latest_expt == "":
+            self.append_output(
                 self.mainTab_txt,
-                "\n\n *** Expt was not present in processing path, please wait unit after inital importing *** \n\n",
+                "\n\n *** Expt was not present in processing path, "
+                "please wait unit after initial importing *** \n\n",
             )
             return
-        if latestRefl == "":
-            self.appendOutput(
+        if latest_refl == "":
+            self.append_output(
                 self.mainTab_txt,
-                "\n\n ***Refl was not present in processing path, please wait unit after inital spot finding *** \n\n",
+                "\n\n ***Refl was not present in processing path, "
+                "please wait unit after initial spot finding *** \n\n",
             )
             return
         else:
             try:
-                self.appendOutput(
-                    self.mainTab_txt, "\nReflection file: " + str(latestRefl)
+                self.append_output(
+                    self.mainTab_txt, "\nReflection file: " + str(latest_refl)
                 )
-                self.appendOutput(
-                    self.mainTab_txt, "Experiment file: " + str(latestExpt) + "\n"
+                self.append_output(
+                    self.mainTab_txt, "Experiment file: " + str(latest_expt) + "\n"
                 )
                 subprocess.Popen(
                     [
                         "sh",
-                        "/dls_sw/i19/scripts/MarkWarren/PyQT/1_basic/dialsReciprocalLatticeViewer.sh",
-                        latestExpt,
-                        latestRefl,
+                        "/dls_sw/i19/scripts/MarkWarren/PyQT/1_basic/"
+                        "dialsReciprocalLatticeViewer.sh",
+                        latest_expt,
+                        latest_refl,
                     ]
                 )
             except:
-                self.appendOutput(self.mainTab_txt, "Running dials image viewer failed")
+                self.append_output(
+                    self.mainTab_txt, "Running dials image viewer failed"
+                )
 
-    def runDialsImageViewer(self, tabsNum):
-        self.appendOutput(self.mainTab_txt, "Opening dials image viewer")
-        self.appendOutput(
-            self.mainTab_txt, "Processing path:" + self.tabsProcessingPath[tabsNum]
+    def run_dials_image_viewer(self, tabs_num):
+        self.append_output(self.mainTab_txt, "Opening dials image viewer")
+        self.append_output(
+            self.mainTab_txt, "Processing path:" + self.tabsProcessingPath[tabs_num]
         )
 
-        latestExpt = ""
-        latestExptTime = ""
-        latestRefl = ""
-        latestReflTime = ""
+        latest_expt = ""
+        latest_expt_time = ""
+        latest_refl = ""
+        latest_refl_time = ""
 
-        exptFiles = glob.glob(
-            self.tabsProcessingPath[tabsNum] + "/**/*.expt", recursive=True
+        expt_files = glob.glob(
+            self.tabsProcessingPath[tabs_num] + "/**/*.expt", recursive=True
         )
-        reflFiles = glob.glob(
-            self.tabsProcessingPath[tabsNum] + "/**/*.refl", recursive=True
+        refl_files = glob.glob(
+            self.tabsProcessingPath[tabs_num] + "/**/*.refl", recursive=True
         )
-        for exptFile in exptFiles:
-            fileTime = os.path.getmtime(exptFile)
-            if latestExptTime == "":
-                latestExpt = exptFile
-                latestExptTime = fileTime
+        for expt_file in expt_files:
+            file_time = os.path.getmtime(expt_file)
+            if latest_expt_time == "":
+                latest_expt = expt_file
+                latest_expt_time = file_time
             else:
-                if fileTime > latestExptTime:
-                    latestExpt = exptFile
-                    latestExptTime = fileTime
-        for reflFile in reflFiles:
-            fileTime = os.path.getmtime(reflFile)
-            if latestReflTime == "":
-                latestRefl = reflFile
-                latestReflTime = fileTime
+                if file_time > latest_expt_time:
+                    latest_expt = expt_file
+                    latest_expt_time = file_time
+        for reflFile in refl_files:
+            file_time = os.path.getmtime(reflFile)
+            if latest_refl_time == "":
+                latest_refl = reflFile
+                latest_refl_time = file_time
             else:
-                if fileTime > latestReflTime:
-                    latestRefl = reflFile
-                    latestReflTime = fileTime
-        if latestExpt == "":
-            self.appendOutput(
+                if file_time > latest_refl_time:
+                    latest_refl = reflFile
+                    latest_refl_time = file_time
+        if latest_expt == "":
+            self.append_output(
                 self.mainTab_txt,
-                "\n\n ***Expt was not present in processing path, please wait unit after inital importing *** \n\n",
+                "\n\n ***Expt was not present in processing path, "
+                "please wait unit after initial importing *** \n\n",
             )
         else:
             try:
-                self.appendOutput(
-                    self.mainTab_txt, "\nReflection file: " + str(latestRefl)
+                self.append_output(
+                    self.mainTab_txt, "\nReflection file: " + str(latest_refl)
                 )
-                self.appendOutput(
-                    self.mainTab_txt, "Experiment file: " + str(latestExpt) + "\n"
+                self.append_output(
+                    self.mainTab_txt, "Experiment file: " + str(latest_expt) + "\n"
                 )
                 subprocess.Popen(
                     [
                         "sh",
-                        "/dls_sw/i19/scripts/MarkWarren/PyQT/1_basic/dialsImageViewer.sh",
-                        latestExpt,
-                        latestRefl,
+                        "/dls_sw/i19/scripts/MarkWarren/PyQT/1_basic/"
+                        "dialsImageViewer.sh",
+                        latest_expt,
+                        latest_refl,
                     ]
                 )
             except:
-                self.appendOutput(
+                self.append_output(
                     self.mainTab_txt,
                     "\n\n ***Running dials image viewer failed *** \n\n",
                 )
 
-    def runDialsHTML(self, tabsNum):
-        self.appendOutput(self.mainTab_txt, "Opening HTML")
-        self.appendOutput(
-            self.mainTab_txt, "Processing path:" + self.tabsProcessingPath[tabsNum]
+    def run_dials_html(self, tabs_num):
+        self.append_output(self.mainTab_txt, "Opening HTML")
+        self.append_output(
+            self.mainTab_txt, "Processing path:" + self.tabsProcessingPath[tabs_num]
         )
 
-        latestHTML = ""
-        latestHTMLTime = ""
+        latest_html = ""
+        latest_html_time = ""
 
-        htmlFiles = glob.glob(
-            self.tabsProcessingPath[tabsNum] + "/**/*.html", recursive=True
+        html_files = glob.glob(
+            self.tabsProcessingPath[tabs_num] + "/**/*.html", recursive=True
         )
-        for htmlFile in htmlFiles:
-            fileTime = os.path.getmtime(htmlFile)
-            if latestHTMLTime == "":
-                latestHTML = htmlFile
-                latestHTMLTime = fileTime
+        for html_file in html_files:
+            file_time = os.path.getmtime(html_file)
+            if latest_html_time == "":
+                latest_html = html_file
+                latest_html_time = file_time
             else:
-                if fileTime > latestHTMLTime:
-                    latestHTML = htmlFile
-                    latestHTMLTime = fileTime
+                if file_time > latest_html_time:
+                    latest_html = html_file
+                    latest_html_time = file_time
 
-        if latestHTML == "":
-            self.appendOutput(
+        if latest_html == "":
+            self.append_output(
                 self.mainTab_txt,
                 (
-                    "\n\n *** html file was not present in processing path, please wait unit after inital importing *** \n\n"
+                    "\n\n *** html file was not present in processing path, "
+                    "please wait unit after initial importing *** \n\n"
                 ),
             )
         else:
-            self.appendOutput(self.mainTab_txt, "HTML file: " + str(latestHTML))
+            self.append_output(self.mainTab_txt, "HTML file: " + str(latest_html))
             try:
                 subprocess.Popen(
                     [
                         "sh",
                         "/dls_sw/i19/scripts/MarkWarren/PyQT/1_basic/html.sh",
-                        latestHTML,
+                        latest_html,
                     ]
                 )
             except:
-                self.appendOutput(self.mainTab_txt, "Running dials image viewer failed")
+                self.append_output(
+                    self.mainTab_txt, "Running dials image viewer failed"
+                )
 
-    ### version menu, change version
-    def versionCurrent(self):
-        self.appendOutput(self.mainTab_txt, "Changing to dials version to current.")
-        dialVersionPop = (
+    # version menu, change version
+    def version_current(self):
+        self.append_output(self.mainTab_txt, "Changing to dials version to current.")
+        dial_version_pop = (
             os.popen("module unload dials; module load dials; dials.version")
             .read()
             .split("-")[0]
             .split(" ")[1]
         )
         self.dialVersion = ""
-        # updata version lable
-        self.menuVersion.setTitle("Version(" + dialVersionPop + ")")
-        self.appendOutput(self.mainTab_txt, "	Version(" + dialVersionPop + ")")
+        # update version label
+        self.menuVersion.setTitle("Version(" + dial_version_pop + ")")
+        self.append_output(self.mainTab_txt, "	Version(" + dial_version_pop + ")")
 
-    ### version menu, change version to latest
-    def versionLatest(self):
-        self.appendOutput(self.mainTab_txt, "Changing to dials version to latest.")
-        dialVersionPop = (
+    # version menu, change version to latest
+    def version_latest(self):
+        self.append_output(self.mainTab_txt, "Changing to dials version to latest.")
+        dial_version_pop = (
             os.popen("module unload dials; module load dials/latest; dials.version")
             .read()
             .split("-")[0]
             .split(" ")[1]
         )
         self.dialVersion = "/latest"
-        # updata version lable
-        self.menuVersion.setTitle("Version(" + dialVersionPop + ")")
-        self.appendOutput(self.mainTab_txt, "	Version(" + dialVersionPop + ")")
+        # update version label
+        self.menuVersion.setTitle("Version(" + dial_version_pop + ")")
+        self.append_output(self.mainTab_txt, "	Version(" + dial_version_pop + ")")
 
-    ### version menu, change version to now
-    def VersionNow(self):
-        self.appendOutput(self.mainTab_txt, "Changing to dials version to Now.")
-        dialVersionPop = (
+    # version menu, change version to now
+    def version_now(self):
+        self.append_output(self.mainTab_txt, "Changing to dials version to Now.")
+        dial_version_pop = (
             os.popen("module unload dials; module load dials/now; dials.version")
             .read()
             .split("-")[0]
             .split(" ")[1]
         )
         self.dialVersion = "/now"
-        # updata version lable
-        self.menuVersion.setTitle("Version(" + dialVersionPop + ")")
-        self.appendOutput(self.mainTab_txt, "	Version(" + dialVersionPop + ")")
+        # update version label
+        self.menuVersion.setTitle("Version(" + dial_version_pop + ")")
+        self.append_output(self.mainTab_txt, "	Version(" + dial_version_pop + ")")
 
-    ### version menu, change version to 1.4
-    def Version1_4(self):
-        self.appendOutput(self.mainTab_txt, "Changing to dials version to 1.4.")
-        dialVersionPop = (
+    # version menu, change version to 1.4
+    def version_1_4(self):
+        self.append_output(self.mainTab_txt, "Changing to dials version to 1.4.")
+        dial_version_pop = (
             os.popen("module unload dials; module load dials/1.4; dials.version")
             .read()
             .split("-")[0]
             .split(" ")[1]
         )
         self.dialVersion = "/1.4"
-        # updata version lable
-        self.menuVersion.setTitle("Version(" + dialVersionPop + ")")
-        self.appendOutput(self.mainTab_txt, "	Version(" + dialVersionPop + ")")
+        # update version label
+        self.menuVersion.setTitle("Version(" + dial_version_pop + ")")
+        self.append_output(self.mainTab_txt, "	Version(" + dial_version_pop + ")")
 
-    ### version menu, change version to 2.1
-    def Version2_1(self):
-        self.appendOutput(self.mainTab_txt, "Changing to dials version to 2.1.")
-        dialVersionPop = (
+    # version menu, change version to 2.1
+    def version_2_1(self):
+        self.append_output(self.mainTab_txt, "Changing to dials version to 2.1.")
+        dial_version_pop = (
             os.popen("module unload dials; module load dials/2.1; dials.version")
             .read()
             .split("-")[0]
             .split(" ")[1]
         )
         self.dialVersion = "/2.1"
-        # updata version lable
-        self.menuVersion.setTitle("Version(" + dialVersionPop + ")")
-        self.appendOutput(self.mainTab_txt, "	Version(" + dialVersionPop + ")")
+        # update version label
+        self.menuVersion.setTitle("Version(" + dial_version_pop + ")")
+        self.append_output(self.mainTab_txt, "	Version(" + dial_version_pop + ")")
 
-    ### close tabs ######
+    # close tabs ######
     def close_handler(self, index):
-        self.appendOutput(self.mainTab_txt, "close_handler called, index = %s" % index)
+        self.append_output(self.mainTab_txt, "close_handler called, index = %s" % index)
         self.xia2output.removeTab(index)
 
     ####################################################
-    def retranslateUi(self, MainWindow):
+    def retranslate_ui(self, main_window):
         _translate = QtCore.QCoreApplication.translate
         # main window tile
-        MainWindow.setWindowTitle(
-            _translate("MainWindow", "Chemical Crystallography Xia2 GUI")
+        main_window.setWindowTitle(
+            _translate("main_window", "Chemical Crystallography Xia2 GUI")
         )
         # File menu
-        self.menuFile.setTitle(_translate("MainWindow", "File"))
-        self.menuFile_Open.setText(_translate("MainWindow", "Open"))
+        self.menuFile.setTitle(_translate("main_window", "File"))
+        self.menuFile_Open.setText(_translate("main_window", "Open"))
         self.menuFile_Open.setStatusTip(
-            _translate("MainWindow", "Open the dataset - select dataset folder")
+            _translate("main_window", "Open the dataset - select dataset folder")
         )
-        self.menuFile_Open.setShortcut(_translate("MainWindow", "Ctrl+O"))
-        self.menuFile_Open_Multiple.setText(_translate("MainWindow", "Open Multiple"))
+        self.menuFile_Open.setShortcut(_translate("main_window", "Ctrl+O"))
+        self.menuFile_Open_Multiple.setText(_translate("main_window", "Open Multiple"))
         self.menuFile_Open_Multiple.setStatusTip(
             _translate(
-                "MainWindow",
-                "Open multiple datasets - selected multiple datasets uning the Ctrl button",
+                "main_window",
+                "Open multiple datasets - "
+                "select multiple datasets using the Ctrl button",
             )
         )
-        self.menuFile_Open_Multiple.setShortcut(_translate("MainWindow", "Ctrl+M"))
-        self.menuFile_Close_GUI.setText(_translate("MainWindow", "Close GUI"))
+        self.menuFile_Open_Multiple.setShortcut(_translate("main_window", "Ctrl+M"))
+        self.menuFile_Close_GUI.setText(_translate("main_window", "Close GUI"))
         self.menuFile_Close_GUI.setStatusTip(
-            _translate("MainWindow", "This will close the GUI")
+            _translate("main_window", "This will close the GUI")
         )
-        self.menuFile_Close_GUI.setShortcut(_translate("MainWindow", "Ctrl+C"))
+        self.menuFile_Close_GUI.setShortcut(_translate("main_window", "Ctrl+C"))
         # Edit menu
-        self.menuEdit.setTitle(_translate("MainWindow", "Edit"))
-        self.menuEdit_CopyCommand.setText(_translate("MainWindow", "Copy Command #"))
-        self.menuEdit_SaveSettings.setText(_translate("MainWindow", "Save Settings #"))
+        self.menuEdit.setTitle(_translate("main_window", "Edit"))
+        self.menuEdit_CopyCommand.setText(_translate("main_window", "Copy Command #"))
+        self.menuEdit_SaveSettings.setText(_translate("main_window", "Save Settings #"))
         self.menuEdit_SaveSettings.setStatusTip(
-            _translate("MainWindow", "Save all the GUI settings to a .txt file")
+            _translate("main_window", "Save all the GUI settings to a .txt file")
         )
-        self.menuEdit_LoadSettings.setText(_translate("MainWindow", "Load Settings #"))
+        self.menuEdit_LoadSettings.setText(_translate("main_window", "Load Settings #"))
         self.menuEdit_LoadSettings.setStatusTip(
-            _translate("MainWindow", "Load previous save GUI settings")
+            _translate("main_window", "Load previous save GUI settings")
         )
         # View menu
-        self.menuView.setTitle(_translate("MainWindow", "View"))
+        self.menuView.setTitle(_translate("main_window", "View"))
         # Settings menu
-        self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
+        self.menuSettings.setTitle(_translate("main_window", "Settings"))
         # Version menu
-        dialVersionPop = os.popen("dials.version").read().split("-")[0].split(" ")[1]
+        dial_version_pop = os.popen("dials.version").read().split("-")[0].split(" ")[1]
         self.menuVersion.setTitle(
-            _translate("MainWindow", "Version(" + dialVersionPop + ")")
+            _translate("main_window", "Version(" + dial_version_pop + ")")
         )
-        self.menuVersion_current.setText(_translate("MainWindow", "dials_current"))
-        self.menuVersion_latest.setText(_translate("MainWindow", "dials_latest"))
-        self.menuVersion_now.setText(_translate("MainWindow", "dials_now"))
-        self.menuVersion_1_4.setText(_translate("MainWindow", "dials_1.4 #"))
-        self.menuVersion_2_1.setText(_translate("MainWindow", "dials_2.1 #"))
-        # Dataset lables info
-        self.labelsDataset.setText(_translate("MainWindow", "Dataset"))
-        self.labelsPrefix.setText(_translate("MainWindow", "Prefix"))
-        self.labelsImages.setText(_translate("MainWindow", "Runs\Images"))
-        self.datasetInfo_dataset.setText(_translate("MainWindow", "none"))
-        self.datasetInfo_prefix.setText(_translate("MainWindow", "none"))
-        self.datasetInfo_images.setText(_translate("MainWindow", "0"))
+        self.menuVersion_current.setText(_translate("main_window", "dials_current"))
+        self.menuVersion_latest.setText(_translate("main_window", "dials_latest"))
+        self.menuVersion_now.setText(_translate("main_window", "dials_now"))
+        self.menuVersion_1_4.setText(_translate("main_window", "dials_1.4 #"))
+        self.menuVersion_2_1.setText(_translate("main_window", "dials_2.1 #"))
+        # Dataset labels info
+        self.labelsDataset.setText(_translate("main_window", "Dataset"))
+        self.labelsPrefix.setText(_translate("main_window", "Prefix"))
+        self.labelsImages.setText(_translate("main_window", "Runs images"))
+        self.datasetInfo_dataset.setText(_translate("main_window", "none"))
+        self.datasetInfo_prefix.setText(_translate("main_window", "none"))
+        self.datasetInfo_images.setText(_translate("main_window", "0"))
         # view buttons
-        self.viewButtons_xia2.setText(_translate("MainWindow", "Run Xia2"))
+        self.viewButtons_xia2.setText(_translate("main_window", "Run Xia2"))
         self.viewButtons_xia2.setStatusTip(
-            _translate("MainWindow", "Run Xia2 with current dataset and options")
+            _translate("main_window", "Run Xia2 with current dataset and options")
         )
 
-        self.viewButtons_screen19.setText(_translate("MainWindow", "Run screen19"))
+        self.viewButtons_screen19.setText(_translate("main_window", "Run screen19"))
         self.viewButtons_screen19.setStatusTip(
-            _translate("MainWindow", "Run screen with current dataset and options")
+            _translate("main_window", "Run screen with current dataset and options")
         )
 
-        self.viewButtons_options.setText(_translate("MainWindow", "Xia2 Options"))
+        self.viewButtons_options.setText(_translate("main_window", "Xia2 Options"))
         self.viewButtons_options.setStatusTip(
             _translate(
-                "MainWindow",
+                "main_window",
                 "Opens a second window with all additional xia2 processing options",
             )
         )
-        self.viewButtons_albula.setText(_translate("MainWindow", "Open Albula"))
+        self.viewButtons_albula.setText(_translate("main_window", "Open Albula"))
         self.viewButtons_albula.setStatusTip(
             _translate(
-                "MainWindow", "Open Albula which is image viewing program from Detris"
+                "main_window", "Open Albula which is image viewing program from Dectris"
             )
         )
         # processing path
-        self.processingPath__path.setText(_translate("MainWindow", "none"))
-        self.processingPath_label.setText(_translate("MainWindow", "Processing Path"))
+        self.processingPath__path.setText(_translate("main_window", "none"))
+        self.processingPath_label.setText(_translate("main_window", "Processing Path"))
         # xia2 command
-        self.command_label.setText(_translate("MainWindow", "xia2 Command"))
+        self.command_label.setText(_translate("main_window", "xia2 Command"))
         self.command_command.setPlainText(
-            _translate("MainWindow", "xia2 small_molecule=true dataset_path")
+            _translate("main_window", "xia2 small_molecule=true dataset_path")
         )
         self.command_command.setStatusTip(
-            _translate("MainWindow", "Current xia2 command (do not manually edit)")
+            _translate("main_window", "Current xia2 command (do not manually edit)")
         )
 
-        # self.mainTab_txt.setText(_translate("MainWindow", "Main"))
+        # self.main_tab_txt.setText(_translate("main_window", "Main"))
 
 
-###############################################################################################################################################
-###############################################################################################################################################
-###############################################################################################################################################
-###############################################################################################################################################
+########################################################################################
+########################################################################################
+########################################################################################
+########################################################################################
 
 
-class mythread2(QThread):
+class MyThread2(QtCore.QThread):
     # finished = pyqtSignal(object)
-    finished = pyqtSignal()
+    finished = QtCore.pyqtSignal()
 
-    def __init__(self, processingPath, dataset, tabstxt, tabsNum, mainTab_txt, logFile):
-        QThread.__init__(self)
-        self.processingPath = processingPath
+    def __init__(
+        self, processing_path, dataset, tabstxt, tabs_num, main_tab_txt, log_file
+    ):
+        QtCore.QThread.__init__(self)
+        self.processingPath = processing_path
         self.tabstxt = tabstxt
-        self.tabsNum = tabsNum
+        self.tabsNum = tabs_num
         self.dataset = dataset
-        self.mainTab_txt = mainTab_txt
-        self.logFile = logFile
+        self.mainTab_txt = main_tab_txt
+        self.logFile = log_file
 
     def __del__(self):
         self.wait()
 
     def run(self):
-        tabName = self.tabstxt[self.tabsNum]
-        mainTab_txt = self.mainTab_txt
-        xia2txtlinesNumPrevious = 0
-        isRunning = "Yes"
+        tab_name = self.tabstxt[self.tabsNum]
+        main_tab_txt = self.mainTab_txt
+        xia2_txt_lines_num_previous = 0
+        is_running = "Yes"
         sleep(3)
-        while isRunning == "Yes":
+        while is_running == "Yes":
             xia2txt = self.processingPath + self.logFile
             if os.path.isfile(xia2txt):
-                xia2txtlines = [line.strip() for line in open(xia2txt)]
-                newLines = xia2txtlines[xia2txtlinesNumPrevious:]
-                if len(newLines) == 0:
+                xia2_txt_lines = [line.strip() for line in open(xia2txt)]
+                new_lines = xia2_txt_lines[xia2_txt_lines_num_previous:]
+                if len(new_lines) == 0:
                     pass
                 else:
-                    newLinesPrint = "\n".join(newLines)
-                    xia2txtlinesNumPrevious = len(xia2txtlines)
+                    new_lines_print = "\n".join(new_lines)
+                    xia2_txt_lines_num_previous = len(xia2_txt_lines)
                     try:
-                        tabName.appendPlainText(newLinesPrint)
-                        tabName.moveCursor(QtGui.QTextCursor.End)
+                        tab_name.appendPlainText(new_lines_print)
+                        tab_name.moveCursor(QtGui.QTextCursor.End)
                     except:
-                        mainTab_txt.appendPlainText("Unable to update new lines to txt")
-                        mainTab_txt.moveCursor(QtGui.QTextCursor.End)
-                    if "Status: normal termination" in xia2txtlines:
-                        outputMessage = "\n\nEnd of xia2 processing detected.\nStopping output to tab\n\n"
-                        mainTab_txt.appendPlainText(outputMessage)
-                        mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        main_tab_txt.appendPlainText(
+                            "Unable to update new lines to txt"
+                        )
+                        main_tab_txt.moveCursor(QtGui.QTextCursor.End)
+                    if "Status: normal termination" in xia2_txt_lines:
+                        output_message = (
+                            "\n\nEnd of xia2 processing detected.\n"
+                            "Stopping output to tab\n\n"
+                        )
+                        main_tab_txt.appendPlainText(output_message)
+                        main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         sleep(0.1)
-                        tabName.appendPlainText(outputMessage)
-                        tabName.moveCursor(QtGui.QTextCursor.End)
-                    if "xia2.support@gmail.com" in xia2txtlines:
-                        outputMessage = "\n\nEnd of xia2 processing detected.\nStopping output to tab\n\n"
-                        mainTab_txt.appendPlainText(outputMessage)
-                        mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        tab_name.appendPlainText(output_message)
+                        tab_name.moveCursor(QtGui.QTextCursor.End)
+                    if "xia2.support@gmail.com" in xia2_txt_lines:
+                        output_message = (
+                            "\n\nEnd of xia2 processing detected.\n"
+                            "Stopping output to tab\n\n"
+                        )
+                        main_tab_txt.appendPlainText(output_message)
+                        main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         sleep(0.1)
-                        tabName.appendPlainText(outputMessage)
-                        tabName.moveCursor(QtGui.QTextCursor.End)
+                        tab_name.appendPlainText(output_message)
+                        tab_name.moveCursor(QtGui.QTextCursor.End)
             else:
-                mainTab_txt.appendPlainText("xia2.txt file does not exist yet")
-                mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                main_tab_txt.appendPlainText("xia2.txt file does not exist yet")
+                main_tab_txt.moveCursor(QtGui.QTextCursor.End)
             sleep(5)
-        mainTab_txt.appendPlainText("finishing")
-        mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+        main_tab_txt.appendPlainText("finishing")
+        main_tab_txt.moveCursor(QtGui.QTextCursor.End)
         self.finished.emit()
 
 
-###############################################################################################################################################
-###############################################################################################################################################
-###############################################################################################################################################
-###############################################################################################################################################
+########################################################################################
+########################################################################################
+########################################################################################
+########################################################################################
 
 
-def handle_results(result_queue):
-    # while True:
-    #    result = result_queue.get()
-    #    Ui_MainWindow.appendOutput(self.mainTab_txt,"Got result {}".format(result))
-    pass
-
-
-###############################################################################################################################################
-###############################################################################################################################################
-###############################################################################################################################################
-###############################################################################################################################################
-
-
-class Ui_Xia2Options:
+class UIXia2Options:
     def __init__(
         self,
         xia2command,
-        datasetPath,
+        dataset_path,
         command_command,
         visit,
-        mainTab_txt,
-        runList,
+        main_tab_txt,
+        run_list,
         prefix,
-        openingVisit,
+        opening_visit,
     ):
         self.xia2command = xia2command
-        self.datasetPath = datasetPath
-        self.runList = runList
+        self.datasetPath = dataset_path
+        self.runList = run_list
         self.command_command = command_command
         self.refGeometryPath = ""
         self.visit = visit
-        self.mainTab_txt = mainTab_txt
+        self.mainTab_txt = main_tab_txt
         global runImageSelector
         runImageSelector = False
         global runSelection
@@ -1513,45 +1528,45 @@ class Ui_Xia2Options:
         global imageSelection
         imageSelection = {}
         self.prefix = prefix
-        self.openingVisit = openingVisit
+        self.openingVisit = opening_visit
 
-    def setupUi(self, Xia2Options):
+    def setup_ui(self, xia2_options):
 
-        Xia2Options.setObjectName("Xia2Options")
-        # Xia2Options.resize(613, 454)
-        Xia2Options.resize(613, 600)
-        self.centralwidget = QtWidgets.QWidget(Xia2Options)
+        xia2_options.setObjectName("xia2_options")
+        # xia2_options.resize(613, 454)
+        xia2_options.resize(613, 600)
+        self.centralwidget = QtWidgets.QWidget(xia2_options)
         self.centralwidget.setObjectName("centralwidget")
 
         # update button
         self.updateButton = QtWidgets.QPushButton(self.centralwidget)
         self.updateButton.setGeometry(QtCore.QRect(10, 0, 131, 28))
         self.updateButton.setObjectName("updateButton")
-        self.updateButton.clicked.connect(self.updateOptions)
+        self.updateButton.clicked.connect(self.update_options)
 
         # reset button
         self.resetButton = QtWidgets.QPushButton(self.centralwidget)
         self.resetButton.setGeometry(QtCore.QRect(150, 0, 131, 28))
         self.resetButton.setObjectName("resetButton")
-        self.resetButton.clicked.connect(self.resetOptions)
+        self.resetButton.clicked.connect(self.reset_options)
 
         # save button
         self.saveButton = QtWidgets.QPushButton(self.centralwidget)
         self.saveButton.setGeometry(QtCore.QRect(290, 0, 131, 28))
         self.saveButton.setObjectName("saveButton")
-        self.saveButton.clicked.connect(self.saveOptions)
+        self.saveButton.clicked.connect(self.save_options)
 
         # load button
         self.loadButton = QtWidgets.QPushButton(self.centralwidget)
         self.loadButton.setGeometry(QtCore.QRect(430, 0, 131, 28))
         self.loadButton.setObjectName("loadButton")
-        self.loadButton.clicked.connect(self.loadOptions)
+        self.loadButton.clicked.connect(self.load_options)
 
         self.xia2options = QtWidgets.QTabWidget(self.centralwidget)
         self.xia2options.setGeometry(QtCore.QRect(0, 30, 601, 520))
         self.xia2options.setObjectName("xia2options")
 
-        ###############################################################################################
+        ################################################################################
         # dials import
 
         self.xia2options_Import = QtWidgets.QWidget()
@@ -1573,7 +1588,7 @@ class Ui_Xia2Options:
             "import_ReferenceGeometry_browse"
         )
         self.import_ReferenceGeometry_browse.clicked.connect(
-            self.browseForReferenceModel
+            self.browse_for_reference_model
         )
         self.import_ReferenceGeometry_path = QtWidgets.QLabel(self.xia2options_Import)
         self.import_ReferenceGeometry_path.setGeometry(QtCore.QRect(260, 50, 271, 16))
@@ -1891,7 +1906,7 @@ class Ui_Xia2Options:
         self.Import_type_comboBox.addItem("")
         self.Import_type_comboBox.addItem("")
 
-        ###############################################################################################
+        ################################################################################
         # spotFinding
         self.xia2options_SpotFinding = QtWidgets.QWidget()
         self.xia2options_SpotFinding.setObjectName("xia2options_SpotFinding")
@@ -2123,7 +2138,7 @@ class Ui_Xia2Options:
             "e.g. 0,612,824,858 (x0, x1, y0, y1)"
         )
 
-        ###############################################################################################
+        ################################################################################
         # indexing
         self.xia2options_Indexing = QtWidgets.QWidget()
         self.xia2options_Indexing.setObjectName("xia2options_Indexing")
@@ -2195,7 +2210,7 @@ class Ui_Xia2Options:
         self.Index_outliers_checkBox.setGeometry(QtCore.QRect(10, 220, 261, 20))
         self.Index_outliers_checkBox.setObjectName("Index_outliers_checkBox")
 
-        ###############################################################################################
+        ################################################################################
         # dials integrate
         self.xia2options_integrate = QtWidgets.QWidget()
         self.xia2options_integrate.setObjectName("xia2options_integrate")
@@ -2257,7 +2272,7 @@ class Ui_Xia2Options:
             "Integrate_minCellDegree_label"
         )
 
-        ###############################################################################################
+        ################################################################################
         # dials refine
         self.xia2options_refine_scale = QtWidgets.QWidget()
         self.xia2options_refine_scale.setObjectName("xia2options_refine_scale")
@@ -2279,7 +2294,7 @@ class Ui_Xia2Options:
             "Refine_FixBeamDetector_checkBox"
         )
 
-        ###############################################################################################
+        ################################################################################
         # dials other
         self.xia2options_Other = QtWidgets.QWidget()
         self.xia2options_Other.setObjectName("xia2options_Other")
@@ -2326,7 +2341,7 @@ class Ui_Xia2Options:
         self.Other_clusterOrLocal_comboBox.addItem("")
         self.Other_clusterOrLocal_comboBox.addItem("")
 
-        ###############################################################################################
+        ################################################################################
         # dials ALL
         self.xia2options_ALL = QtWidgets.QWidget()
         self.xia2options_ALL.setObjectName("xia2options_ALL")
@@ -2336,20 +2351,16 @@ class Ui_Xia2Options:
         self.ALL_plainTextEdit.setGeometry(QtCore.QRect(150, 10, 291, 121))
         self.ALL_plainTextEdit.setObjectName("ALL_plainTextEdit")
 
-        ###############################################################################################
+        ################################################################################
         # dials HP
         self.xia2options_HP = QtWidgets.QWidget()
         self.xia2options_HP.setObjectName("xia2options_HP")
         self.xia2options.addTab(self.xia2options_HP, "")
 
-        self.HP_correction_shaddowing_checkBox = QtWidgets.QCheckBox(
-            self.xia2options_HP
-        )
-        self.HP_correction_shaddowing_checkBox.setGeometry(
-            QtCore.QRect(10, 20, 321, 20)
-        )
-        self.HP_correction_shaddowing_checkBox.setObjectName(
-            "HP_correction_shaddowing_checkBox"
+        self.HP_correction_shadowing_checkBox = QtWidgets.QCheckBox(self.xia2options_HP)
+        self.HP_correction_shadowing_checkBox.setGeometry(QtCore.QRect(10, 20, 321, 20))
+        self.HP_correction_shadowing_checkBox.setObjectName(
+            "HP_correction_shadowing_checkBox"
         )
 
         self.HP_scanVarying_checkBox = QtWidgets.QCheckBox(self.xia2options_HP)
@@ -2364,7 +2375,9 @@ class Ui_Xia2Options:
         self.HP_ReferenceGeometry_browse = QtWidgets.QPushButton(self.xia2options_HP)
         self.HP_ReferenceGeometry_browse.setGeometry(QtCore.QRect(160, 45, 93, 28))
         self.HP_ReferenceGeometry_browse.setObjectName("HP_ReferenceGeometry_browse")
-        self.HP_ReferenceGeometry_browse.clicked.connect(self.browseForReferenceModel)
+        self.HP_ReferenceGeometry_browse.clicked.connect(
+            self.browse_for_reference_model
+        )
         self.HP_ReferenceGeometry_path = QtWidgets.QLabel(self.xia2options_HP)
         self.HP_ReferenceGeometry_path.setGeometry(QtCore.QRect(260, 50, 271, 16))
         self.HP_ReferenceGeometry_path.setObjectName("HP_ReferenceGeometry_path")
@@ -2502,7 +2515,7 @@ class Ui_Xia2Options:
         self.HP_runStartEnd_label_10 = QtWidgets.QLabel(self.xia2options_HP)
         self.HP_runStartEnd_label_10.setGeometry(QtCore.QRect(486, 280, 31, 20))
         self.HP_runStartEnd_label_10.setObjectName("HP_runStartEnd_label_10")
-        # probmatic data options
+        # problematic data options
         self.HP_FixBeamDetector_checkBox = QtWidgets.QCheckBox(self.xia2options_HP)
         self.HP_FixBeamDetector_checkBox.setGeometry(QtCore.QRect(10, 320, 151, 20))
         self.HP_FixBeamDetector_checkBox.setObjectName("HP_FixBeamDetector_checkBox")
@@ -2555,19 +2568,19 @@ class Ui_Xia2Options:
         self.HP_difficulty_label_3.setGeometry(QtCore.QRect(230, 305, 141, 20))
         self.HP_difficulty_label_3.setObjectName("HP_difficulty_label_3")
         self.HP_difficulty_label_3.setAutoFillBackground(True)
-        ###############################################################################################
-        Xia2Options.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(Xia2Options)
+        ################################################################################
+        xia2_options.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(xia2_options)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 613, 26))
         self.menubar.setObjectName("menubar")
-        Xia2Options.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(Xia2Options)
+        xia2_options.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(xia2_options)
         self.statusbar.setObjectName("statusbar")
-        Xia2Options.setStatusBar(self.statusbar)
+        xia2_options.setStatusBar(self.statusbar)
 
-        self.retranslateUi(Xia2Options)
+        self.retranslate_ui(xia2_options)
         self.xia2options.setCurrentIndex(0)
-        QtCore.QMetaObject.connectSlotsByName(Xia2Options)
+        QtCore.QMetaObject.connectSlotsByName(xia2_options)
 
         self.optionListImport = [
             self.import_TrustBeamCentre,
@@ -2663,7 +2676,7 @@ class Ui_Xia2Options:
         ]
 
         self.optionListHP = [
-            self.HP_correction_shaddowing_checkBox,
+            self.HP_correction_shadowing_checkBox,
             self.HP_ReferenceGeometry_checkBox,
             self.HP_gasket_checkBox,
             self.HP_gasketUser_checkBox,
@@ -2690,64 +2703,72 @@ class Ui_Xia2Options:
         ]
 
         # load previous settings:
-        self.loadOptionsAuto()
+        self.load_options_auto()
 
-    def browseForReferenceModel(self):
+    def browse_for_reference_model(self):
         path = self.openingVisit
         os.chdir(path)
-        self.refGeometryPath = QFileDialog.getOpenFileName(filter="expt(*.expt)")[0]
-        # qfd = QFileDialog()
+        self.refGeometryPath = QtWidgets.QFileDialog.getOpenFileName(
+            filter="expt(*.expt)"
+        )[0]
+        # qfd = QtWidgets.QFileDialog()
         # path = "D:\ennine\SIG HTB\BGN"
         # filter = "csv(*.csv)"
-        # f = QFileDialog.getOpenFileName(qfd, title, path, filter)
+        # f = QtWidgets.QFileDialog.getOpenFileName(qfd, title, path, filter)
         if self.refGeometryPath:
-            refGeometryPathTxt = str(self.refGeometryPath)
-            refGeometryFileTxt = refGeometryPathTxt.split("/")[-1]
+            ref_geometry_path_txt = str(self.refGeometryPath)
+            ref_geometry_file_txt = ref_geometry_path_txt.split("/")[-1]
 
-            outputMessage = (
+            output_message = (
                 "Reference Geometry Path:\n	"
-                + str(refGeometryPathTxt)
+                + str(ref_geometry_path_txt)
                 + "\nReference Geometry File:\n	"
-                + str(refGeometryFileTxt)
+                + str(ref_geometry_file_txt)
             )
-            self.mainTab_txt.appendPlainText(outputMessage)
+            self.mainTab_txt.appendPlainText(output_message)
             self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
 
-            self.import_ReferenceGeometry_path.setText(refGeometryFileTxt)
+            self.import_ReferenceGeometry_path.setText(ref_geometry_file_txt)
             self.import_ReferenceGeometry_path.setScaledContents(True)
 
-            self.HP_ReferenceGeometry_path.setText(refGeometryFileTxt)
+            self.HP_ReferenceGeometry_path.setText(ref_geometry_file_txt)
             self.HP_ReferenceGeometry_path.setScaledContents(True)
 
-    def updateOptions(self):
+    def update_options(self):
         options = ""
 
-        #### inport #######
-        for varible in self.optionListImport:
-            if varible.isChecked():
-                if varible == self.import_TrustBeamCentre:
+        # import #######
+        for variable in self.optionListImport:
+            if variable.isChecked():
+                if variable == self.import_TrustBeamCentre:
                     options = options + " trust_beam_centre=true"
-                if varible == self.import_ReferenceGeometry:
+                if variable == self.import_ReferenceGeometry:
                     if self.refGeometryPath == "":
-                        outputMessage = "	*** Reference Geometry Error. Please select .expt file with browse button first ***"
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        output_message = (
+                            "	*** Reference Geometry Error. Please select "
+                            ".expt file with browse button first ***"
+                        )
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         options = (
                             options + " reference_geometry=" + str(self.refGeometryPath)
                         )
-                if varible == self.import_DD:
+                if variable == self.import_DD:
                     if self.import_DD_lineEdit.text() == "":
-                        outputMessage = "	*** Detector Distance Error. Please input detector distance e.g. 85.01"
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        output_message = (
+                            "	*** Detector Distance Error. Please input "
+                            "detector distance e.g. 85.01"
+                        )
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
-                        outputMessage = "Detector distance: " + str(
+                        output_message = "Detector distance: " + str(
                             self.import_DD_lineEdit.text()
                         )
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         options = (
                             options
@@ -2755,25 +2776,25 @@ class Ui_Xia2Options:
                             + str(self.import_DD_lineEdit.text())
                         )
 
-                if varible == self.import_BeamCentre:
+                if variable == self.import_BeamCentre:
                     if self.import_BeamCentre_X_lineEdit.text() == "":
-                        outputMessage = "	*** Beam Centre Error. Please input Y"
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        output_message = "	*** Beam Centre Error. Please input Y"
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     elif self.import_BeamCentre_Y_lineEdit.text() == "":
-                        outputMessage = "	*** Detector Distance Error. Please input X"
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        output_message = "	*** Detector Distance Error. Please input X"
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
-                        outputMessage = (
+                        output_message = (
                             "Detector distance: "
                             + str(self.import_BeamCentre_X_lineEdit.text())
                             + ","
                             + str(self.import_BeamCentre_Y_lineEdit.text())
                         )
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         options = (
                             options
@@ -2783,17 +2804,20 @@ class Ui_Xia2Options:
                             + str(self.import_BeamCentre_Y_lineEdit.text())
                         )
 
-                if varible == self.import_Wavelengh:
+                if variable == self.import_Wavelengh:
                     if self.import_wavelength_lineEdit.text() == "":
-                        outputMessage = "	*** Wavelength Input Error. Please add wavelength e.g. 85.01"
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        output_message = (
+                            "	*** Wavelength Input Error. "
+                            "Please add wavelength e.g. 85.01"
+                        )
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
-                        outputMessage = "Wavelength: " + str(
+                        output_message = "Wavelength: " + str(
                             self.import_wavelength_lineEdit.text()
                         )
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         options = (
                             options
@@ -2801,13 +2825,13 @@ class Ui_Xia2Options:
                             + str(self.import_wavelength_lineEdit.text())
                         )
 
-                if varible == self.Import_FixBeamDetector_checkBox:
+                if variable == self.Import_FixBeamDetector_checkBox:
                     options = (
-                        options
-                        + " integrate.phil_file=/dls_sw/i19/scripts/HP/intergration_additional_inputs.phil"
+                        options + " integrate.phil_file=/dls_sw/i19/scripts/HP/"
+                        "integration_additional_inputs.phil"
                     )
 
-                if varible == self.Import_RunSelector_checkBox:
+                if variable == self.Import_RunSelector_checkBox:
                     global runSelection
                     runSelection = []
                     global runImageSelector
@@ -2819,19 +2843,22 @@ class Ui_Xia2Options:
                         "Run selector:	" + str(runSelection)
                     )
                     self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
-                if varible == self.Import_type_checkBox:
+                if variable == self.Import_type_checkBox:
                     if self.Import_type_comboBox.currentText() == "Protein":
                         pass
                     else:
                         options = options + " small_molecule=True"
 
-        #### spot finding #######
-        for varible in self.optionListSpotFinding:
-            if varible.isChecked():
-                if varible == self.findSpots_sigmaStrong:
+        # spot finding #######
+        for variable in self.optionListSpotFinding:
+            if variable.isChecked():
+                if variable == self.findSpots_sigmaStrong:
                     if self.findSpots_sigmaStrong_lineEdit.text() == "":
-                        outputMessage = "	*** Sigma Strong Error, please entre sigma strong e.g. 6 ***"
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        output_message = (
+                            "	*** Sigma Strong Error."
+                            " Please enter sigma strong e.g. 6 ***"
+                        )
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
@@ -2840,10 +2867,13 @@ class Ui_Xia2Options:
                             + " sigma_strong="
                             + str(self.findSpots_sigmaStrong_lineEdit.text())
                         )
-                if varible == self.findSpots_minSpot:
+                if variable == self.findSpots_minSpot:
                     if self.findSpots_minSpot_lineEdit.text() == "":
-                        outputMessage = "	*** Min Spot Size Error, please entre min spots size e.g. 2 ***"
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        output_message = (
+                            "	*** Min Spot Size Error, "
+                            "please entre min spots size e.g. 2 ***"
+                        )
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
@@ -2852,10 +2882,13 @@ class Ui_Xia2Options:
                             + " min_spot_size="
                             + str(self.findSpots_minSpot_lineEdit.text())
                         )
-                if varible == self.findSpots_maxSpot:
+                if variable == self.findSpots_maxSpot:
                     if self.findSpots_maxSpot_lineEdit.text() == "":
-                        outputMessage = "	*** Max Spot Size Error, please entre max spots size e.g. 2 ***"
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        output_message = (
+                            "	*** Max Spot Size Error, "
+                            "please entre max spots size e.g. 2 ***"
+                        )
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
@@ -2864,12 +2897,12 @@ class Ui_Xia2Options:
                             + " max_spot_size="
                             + str(self.findSpots_maxSpot_lineEdit.text())
                         )
-                if varible == self.findSpots_dmin:
+                if variable == self.findSpots_dmin:
                     if self.findSpots_dmin_lineEdit.text() == "":
-                        outputMessage = (
+                        output_message = (
                             "	*** D_min Error, please entre d_min e.g. 0.84 ***"
                         )
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
@@ -2878,12 +2911,12 @@ class Ui_Xia2Options:
                             + " d_min="
                             + str(self.findSpots_dmin_lineEdit.text())
                         )
-                if varible == self.findSpots_dmax:
+                if variable == self.findSpots_dmax:
                     if self.findSpots_dmax_lineEdit.text() == "":
-                        outputMessage = (
+                        output_message = (
                             "	*** D_max Error, please entre d_max e.g. 10 ***"
                         )
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
@@ -2892,41 +2925,41 @@ class Ui_Xia2Options:
                             + " d_max="
                             + str(self.findSpots_dmax_lineEdit.text())
                         )
-                if varible == self.findSpots_iceRings:
+                if variable == self.findSpots_iceRings:
                     options = options + " ice_rings=true"
 
-                if varible == self.findSpots_powderRings:
+                if variable == self.findSpots_powderRings:
 
-                    powderRing_lineEdits = [
+                    powder_ring_line_edits = [
                         self.findSpots_powderRingsUC_lineEdit.text(),
                         self.findSpots_powderRingsSG_lineEdit.text(),
                         self.findSpots_powderRingsW_lineEdit.text(),
                     ]
-                    for entry in powderRing_lineEdits:
+                    for entry in powder_ring_line_edits:
                         if entry == "":
-                            outputMessage = "	*** Powder ring mask error ***"
-                            self.mainTab_txt.appendPlainText(outputMessage)
+                            output_message = "	*** Powder ring mask error ***"
+                            self.mainTab_txt.appendPlainText(output_message)
                             self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
                     else:
-                        ice_rings_UV_command = " ice_rings.unit_cell=" + str(
+                        ice_rings_uv_command = " ice_rings.unit_cell=" + str(
                             self.findSpots_powderRingsUC_lineEdit.text()
                         )
-                        ice_rings_SG_command = " ice_rings.space_group=" + str(
+                        ice_rings_sg_command = " ice_rings.space_group=" + str(
                             self.findSpots_powderRingsSG_lineEdit.text()
                         )
-                        ice_rings_W_command = " ice_rings.width=" + str(
+                        ice_rings_w_command = " ice_rings.width=" + str(
                             self.findSpots_powderRingsW_lineEdit.text()
                         )
                         options = (
                             options
-                            + ice_rings_UV_command
-                            + ice_rings_SG_command
-                            + ice_rings_W_command
+                            + ice_rings_uv_command
+                            + ice_rings_sg_command
+                            + ice_rings_w_command
                         )
 
-                if varible == self.findSpots_resolutionRange:
-                    fingSpot_resRange_list = [
+                if variable == self.findSpots_resolutionRange:
+                    find_spot_res_range_list = [
                         self.findSpots_resolutionRange_lineEdit_1.text(),
                         self.findSpots_resolutionRange_lineEdit_2.text(),
                         self.findSpots_resolutionRange_lineEdit_3.text(),
@@ -2938,14 +2971,17 @@ class Ui_Xia2Options:
                         self.findSpots_resolutionRange_lineEdit_9.text(),
                         self.findSpots_resolutionRange_lineEdit_10.text(),
                     ]
-                    for res in fingSpot_resRange_list:
+                    for res in find_spot_res_range_list:
                         if not res == "":
                             options = options + " resolution_range=" + str(res)
 
-                if varible == self.findSpots_circleMask:
+                if variable == self.findSpots_circleMask:
                     if self.findSpots_circleMask_lineEdit.text() == "":
-                        outputMessage = "	*** Circle Mask Error, please entre is the following format: xc,yc,r ***"
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        output_message = (
+                            "	*** Circle Mask Error, please entre is the "
+                            "following format: xc,yc,r ***"
+                        )
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
@@ -2955,10 +2991,13 @@ class Ui_Xia2Options:
                             + str(self.findSpots_circleMask_lineEdit.text())
                         )
 
-                if varible == self.findSpots_recMask:
+                if variable == self.findSpots_recMask:
                     if self.findSpots_recMask_lineEdit.text() == "":
-                        outputMessage = "	*** Rectangle Mask Error, please entre is the following format: x0,x1,y0,y1 ***"
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        output_message = (
+                            "	*** Rectangle Mask Error, please entre is "
+                            "the following format: x0,x1,y0,y1 ***"
+                        )
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
@@ -2968,42 +3007,42 @@ class Ui_Xia2Options:
                             + str(self.findSpots_recMask_lineEdit.text())
                         )
 
-        #### indexing #######
-        for varible in self.optionListIndexing:
-            if varible.isChecked():
-                if varible == self.Index_method_checkBox:
+        # indexing #######
+        for variable in self.optionListIndexing:
+            if variable.isChecked():
+                if variable == self.Index_method_checkBox:
                     options = (
                         options
                         + " method="
                         + str(self.Index_method_comboBox.currentText())
                     )
-                if varible == self.Index_scanVarying_checkBox:
+                if variable == self.Index_scanVarying_checkBox:
                     options = options + " scan_varying=False"
-                if varible == self.Index_UN_SG_checkBox:
-                    UC_SG_lineEdits = [
+                if variable == self.Index_UN_SG_checkBox:
+                    uc_sg_line_edits = [
                         self.Index_UN_lineEdit.text(),
                         self.Index_SG_lineEdit.text(),
                     ]
-                    for entry in UC_SG_lineEdits:
+                    for entry in uc_sg_line_edits:
                         self.mainTab_txt.appendPlainText(entry)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         if entry == "":
-                            outputMessage = (
+                            output_message = (
                                 "	*** Error in unit cell or space group entry ***"
                             )
-                            self.mainTab_txt.appendPlainText(outputMessage)
+                            self.mainTab_txt.appendPlainText(output_message)
                             self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
                     else:
-                        UC_command = " unit_cell=" + str(self.Index_UN_lineEdit.text())
-                        SG_command = " space_group=" + str(
+                        uc_command = " unit_cell=" + str(self.Index_UN_lineEdit.text())
+                        sg_command = " space_group=" + str(
                             self.Index_SG_lineEdit.text()
                         )
-                        options = options + UC_command + SG_command
-                if varible == self.Index_minCell_checkBox:
+                        options = options + uc_command + sg_command
+                if variable == self.Index_minCell_checkBox:
                     if self.Index_minCell_lineEdit.text() == "":
-                        outputMessage = "	*** Please entre valid min cell ***"
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        output_message = "	*** Please entre valid min cell ***"
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
@@ -3012,10 +3051,10 @@ class Ui_Xia2Options:
                             + " min_cell="
                             + str(self.Index_minCell_lineEdit.text())
                         )
-                if varible == self.Index_maxCell_checkBox:
+                if variable == self.Index_maxCell_checkBox:
                     if self.Index_maxCell_lineEdit.text() == "":
-                        outputMessage = "	*** Please entre valid max cell ***"
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        output_message = "	*** Please entre valid max cell ***"
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
@@ -3024,199 +3063,209 @@ class Ui_Xia2Options:
                             + " max_cell="
                             + str(self.Index_maxCell_lineEdit.text())
                         )
-                if varible == self.Index_multiprocessing_checkBox:
+                if variable == self.Index_multiprocessing_checkBox:
                     options = options + " multi_sweep_processing=True"
-                if varible == self.Index_multiSweepRefine_checkBox:
+                if variable == self.Index_multiSweepRefine_checkBox:
                     options = options + " multi_sweep_refinement=False"
-                if varible == self.Index_outliers_checkBox:
+                if variable == self.Index_outliers_checkBox:
                     options = options + " outlier.algorithm=null"
 
-        #### integrate #####
-        for varible in self.optionListIntegrate:
-            if varible.isChecked():
-                if varible == self.Integrate_keepAllReflections_checkBox:
+        # integrate #####
+        for variable in self.optionListIntegrate:
+            if variable.isChecked():
+                if variable == self.Integrate_keepAllReflections_checkBox:
                     options = options + " keep_all_reflections=true"
-                if varible == self.Integrate_scanVarying_checkBox:
+                if variable == self.Integrate_scanVarying_checkBox:
                     options = options + " scan_varying=False"
-                if varible == self.Integrate_minSpotProfile_checkBox:
-                    spotProfile_lineEdits = [
+                if variable == self.Integrate_minSpotProfile_checkBox:
+                    spot_profile_line_edits = [
                         self.Integrate_minCellOverall_lineEdit.text(),
                         self.Integrate_minCellDegree_lineEdit.text(),
                     ]
-                    for entry in spotProfile_lineEdits:
+                    for entry in spot_profile_line_edits:
                         if entry == "":
-                            outputMessage = (
+                            output_message = (
                                 "	*** Error in overall or per degree entry ***"
                             )
-                            self.mainTab_txt.appendPlainText(outputMessage)
+                            self.mainTab_txt.appendPlainText(output_message)
                             self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
                         if self.visit == "":
-                            outputMessage = (
-                                "	*** For this option a .phil need to be created, this requires a the visit to be known."
+                            output_message = (
+                                "	*** For this option a .phil need to be created, "
+                                "this requires a the visit to be known."
                                 "	Please open a dataset and retry (File>Open). ***"
                             )
-                            self.mainTab_txt.appendPlainText(outputMessage)
+                            self.mainTab_txt.appendPlainText(output_message)
                             self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
                     else:
                         try:
-                            overallLine = (
+                            overall_line = (
                                 "	profile.gaussian_rs.min_spots.overall="
                                 + str(self.Integrate_minCellOverall_lineEdit.text())
                                 + "\n"
                             )
-                            degreeLine = (
+                            degree_line = (
                                 "	profile.gaussian_rs.min_spots.per_degree="
                                 + str(self.Integrate_minCellDegree_lineEdit.text())
                                 + "\n"
                             )
-                            xia2GUI_Path = self.visit + "processing/xia2GUI/"
-                            if not os.path.exists(xia2GUI_Path):
-                                os.makedirs(xia2GUI_Path)
-                            philFile = (
-                                xia2GUI_Path + "intergration_additional_inputs.phil"
+                            xia2_gui_path = self.visit + "processing/xia2GUI/"
+                            if not os.path.exists(xia2_gui_path):
+                                os.makedirs(xia2_gui_path)
+                            phil_file = (
+                                xia2_gui_path + "integration_additional_inputs.phil"
                             )
-                            with open(philFile, "a") as f:
+                            with open(phil_file, "a") as f:
                                 f.write(
                                     "refinement_additional_inputs.phil:\n"
-                                    + overallLine
-                                    + degreeLine
+                                    + overall_line
+                                    + degree_line
                                 )
-                            options = options + " integrate.phil_file=" + philFile
+                            options = options + " integrate.phil_file=" + phil_file
                         except:
-                            outputMessage = (
+                            output_message = (
                                 "\n	*** was not able to generate .phil file *** "
                             )
-                            self.mainTab_txt.appendPlainText(outputMessage)
+                            self.mainTab_txt.appendPlainText(output_message)
                             self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
 
-        #### refine ####
-        for varible in self.optionListRefineScale:
-            if varible.isChecked():
-                if varible == self.Refine_method_checkBox:
+        # refine ####
+        for variable in self.optionListRefineScale:
+            if variable.isChecked():
+                if variable == self.Refine_method_checkBox:
                     options = (
                         options
                         + " method="
                         + str(self.Refine_method_comboBox.currentText())
                     )
-                if varible == self.Refine_FixBeamDetector_checkBox:
-                    xia2GUI_Path = self.visit + "processing/xia2GUI/"
-                    if not os.path.exists(xia2GUI_Path):
-                        os.makedirs(xia2GUI_Path)
-                    philFile = xia2GUI_Path + "refine_additional_inputs.phil"
-                    with open(philFile, "a") as f:
-                        refineLine1 = "refinement.parameterisation.beam.fix=all\n"
-                        refineLine2 = "refinement.parameterisation.detector.fix=all\n"
-                        refineLine3 = (
+                if variable == self.Refine_FixBeamDetector_checkBox:
+                    xia2_gui_path = self.visit + "processing/xia2GUI/"
+                    if not os.path.exists(xia2_gui_path):
+                        os.makedirs(xia2_gui_path)
+                    phil_file = xia2_gui_path + "refine_additional_inputs.phil"
+                    with open(phil_file, "a") as f:
+                        refine_line1 = "refinement.parameterisation.beam.fix=all\n"
+                        refine_line2 = "refinement.parameterisation.detector.fix=all\n"
+                        refine_line3 = (
                             "refinement.parameterisation.auto_reduction.action=fix\n"
                         )
-                        f.write(refineLine1 + refineLine2 + refineLine3)
-                    options = options + " refine.phil_file=" + philFile
+                        f.write(refine_line1 + refine_line2 + refine_line3)
+                    options = options + " refine.phil_file=" + phil_file
 
-        #### other #####
-        for varible in self.optionListOther:
-            if varible.isChecked():
-                if varible == self.Other_failover_checkBox:
+        # other #####
+        for variable in self.optionListOther:
+            if variable.isChecked():
+                if variable == self.Other_failover_checkBox:
                     options = options + " failover=true"
-                if varible == self.Other_manualInput1_checkBox:
+                if variable == self.Other_manualInput1_checkBox:
                     options = options + " " + self.Other_manualInput1_lineEdit.text()
-                if varible == self.Other_manualInput2_checkBox:
+                if variable == self.Other_manualInput2_checkBox:
                     options = options + " " + self.Other_manualInput2_lineEdit.text()
-                if varible == self.Other_manualInput3_checkBox:
+                if variable == self.Other_manualInput3_checkBox:
                     options = options + " " + self.Other_manualInput3_lineEdit.text()
-                if varible == self.Other_manualInput4_checkBox:
+                if variable == self.Other_manualInput4_checkBox:
                     options = options + " " + self.Other_manualInput4_lineEdit.text()
 
-        #### HP #####
-        for varible in self.optionListHP:
-            if varible.isChecked():
-                if varible == self.HP_correction_shaddowing_checkBox:
+        # HP #####
+        for variable in self.optionListHP:
+            if variable.isChecked():
+                if variable == self.HP_correction_shadowing_checkBox:
                     options = (
                         options
-                        + " high_pressure.correction=True dynamic_shadowing=True resolution_range=999,15"
+                        + " high_pressure.correction=True dynamic_shadowing=True "
+                        "resolution_range=999,15"
                     )
-                if varible == self.HP_scanVarying_checkBox:
+                if variable == self.HP_scanVarying_checkBox:
                     options = options + " scan_varying=False"
-                if varible == self.HP_ReferenceGeometry_checkBox:
+                if variable == self.HP_ReferenceGeometry_checkBox:
                     if self.refGeometryPath == "":
-                        outputMessage = "	*** Reference Geometry Error. Please select .expt file with browse button first ***"
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        output_message = (
+                            "	*** Reference Geometry Error. "
+                            "Please select .expt file with browse button first ***"
+                        )
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         options = (
                             options + " reference_geometry=" + str(self.refGeometryPath)
                         )
-                if varible == self.HP_gasket_checkBox:
-                    gasketType = str(self.HP_gasket_comboBox.currentText())
-                    if gasketType == "Tungsten":
+                if variable == self.HP_gasket_checkBox:
+                    gasket_type = str(self.HP_gasket_comboBox.currentText())
+                    if gasket_type == "Tungsten":
                         options = (
-                            options
-                            + " ice_rings.filter=True ice_rings.unit_cell=3.1652,3.1652,3.1652,90,90,90 ice_rings.space_group=Im-3m ice_rings.width=0.02"
+                            options + " ice_rings.filter=True "
+                            "ice_rings.unit_cell=3.1652,3.1652,3.1652,90,90,90 "
+                            "ice_rings.space_group=Im-3m "
+                            "ice_rings.width=0.02"
                         )
-                    if gasketType == "Steel":
-                        # steel gaskets are often either Fe or Ni. The unit cell for Fe is given below.
+                    if gasket_type == "Steel":
+                        # Steel gaskets are often either Fe or Ni.
+                        # The unit cell for Fe is given below.
                         options = (
-                            options
-                            + " ice_rings.filter=True ice_rings.unit_cell=2.87,2.87,2.87,90,90,90 ice_rings.space_group=Im-3m ice_rings.width=0.02"
+                            options + " ice_rings.filter=True "
+                            "ice_rings.unit_cell=2.87,2.87,2.87,90,90,90 "
+                            "ice_rings.space_group=Im-3m "
+                            "ice_rings.width=0.02"
                         )
 
-                if varible == self.HP_gasketUser_checkBox:
-                    powderRing_lineEdits = [
+                if variable == self.HP_gasketUser_checkBox:
+                    powder_ring_line_edits = [
                         self.HP_gasketUserUC_lineEdit.text(),
                         self.HP_gasketUserSG_lineEdit.text(),
                         self.HP_gasketUserW_lineEdit.text(),
                     ]
-                    for entry in powderRing_lineEdits:
+                    for entry in powder_ring_line_edits:
                         if entry == "":
-                            outputMessage = "	*** Powder ring mask error ***"
-                            self.mainTab_txt.appendPlainText(outputMessage)
+                            output_message = "	*** Powder ring mask error ***"
+                            self.mainTab_txt.appendPlainText(output_message)
                             self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
                     else:
-                        ice_rings_UV_command = " ice_rings.unit_cell=" + str(
+                        ice_rings_uv_command = " ice_rings.unit_cell=" + str(
                             self.HP_gasketUserUC_lineEdit.text()
                         )
-                        ice_rings_SG_command = " ice_rings.space_group=" + str(
+                        ice_rings_sg_command = " ice_rings.space_group=" + str(
                             self.HP_gasketUserSG_lineEdit.text()
                         )
-                        ice_rings_W_command = " ice_rings.width=" + str(
+                        ice_rings_w_command = " ice_rings.width=" + str(
                             self.HP_gasketUserW_lineEdit.text()
                         )
                         options = (
                             options
-                            + ice_rings_UV_command
-                            + ice_rings_SG_command
-                            + ice_rings_W_command
+                            + ice_rings_uv_command
+                            + ice_rings_sg_command
+                            + ice_rings_w_command
                         )
                 # medium difficulty:
-                if varible == self.HP_UN_SG_checkBox:
-                    UC_SG_lineEdits = [
+                if variable == self.HP_UN_SG_checkBox:
+                    uc_sg_line_edits = [
                         self.HP_UN_lineEdit.text(),
                         self.HP_SG_lineEdit.text(),
                     ]
-                    for entry in UC_SG_lineEdits:
+                    for entry in uc_sg_line_edits:
                         self.mainTab_txt.appendPlainText(entry)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         if entry == "":
-                            outputMessage = (
+                            output_message = (
                                 "	*** Error in unit cell or space group entry ***"
                             )
-                            self.mainTab_txt.appendPlainText(outputMessage)
+                            self.mainTab_txt.appendPlainText(output_message)
                             self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
                     else:
-                        UC_command = " unit_cell=" + str(self.HP_UN_lineEdit.text())
-                        SG_command = " space_group=" + str(self.HP_SG_lineEdit.text())
-                        options = options + UC_command + SG_command
+                        uc_command = " unit_cell=" + str(self.HP_UN_lineEdit.text())
+                        sg_command = " space_group=" + str(self.HP_SG_lineEdit.text())
+                        options = options + uc_command + sg_command
 
-                if varible == self.HP_dmin_checkBox:
+                if variable == self.HP_dmin_checkBox:
                     if self.HP_dmin_lineEdit.text() == "":
-                        outputMessage = (
+                        output_message = (
                             "	*** D_min HP Error, please entre d_min e.g. 0.84 ***"
                         )
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
@@ -3224,7 +3273,7 @@ class Ui_Xia2Options:
                             options + " d_min=" + str(self.HP_dmin_lineEdit.text())
                         )
 
-                if varible == self.HP_runStartEnd_checkBox:
+                if variable == self.HP_runStartEnd_checkBox:
                     runImageSelector = True
                     counter = 0
                     self.runStartEnd_lineEdits = [
@@ -3248,26 +3297,29 @@ class Ui_Xia2Options:
                             global imageSelection
                             imageSelection[counter] = entry
                             counter += 1
-                    outputMessage = "Image start/end option selected.\n" "	" + str(
+                    output_message = "Image start/end option selected.\n" "	" + str(
                         imageSelection
                     )
-                    self.mainTab_txt.appendPlainText(outputMessage)
+                    self.mainTab_txt.appendPlainText(output_message)
                     self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
 
-                if varible == self.HP_FixBeamDetector_checkBox:
+                if variable == self.HP_FixBeamDetector_checkBox:
                     options = (
-                        options
-                        + " integrate.phil_file=/dls_sw/i19/scripts/HP/intergration_additional_inputs.phil"
+                        options + " integrate.phil_file=/dls_sw/i19/scripts/HP/"
+                        "integration_additional_inputs.phil"
                     )
-                    # intergration_additional_inputs.phil:
+                    # integration_additional_inputs.phil:
                     # refinement.parameterisation.beam.fix=all
                     # refinement.parameterisation.detector.fix=all
                     # refinement.parameterisation.auto_reduction.action=fix
 
-                if varible == self.HP_anvilThickness_checkBox:
+                if variable == self.HP_anvilThickness_checkBox:
                     if self.HP_anvilThickness_lineEdit.text() == "":
-                        outputMessage = "	*** Anvil Thickness Input Error, please entre thickness e.g. 2.1 ***"
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        output_message = (
+                            "	*** Anvil Thickness Input Error, "
+                            "please enter thickness e.g. 2.1 ***"
+                        )
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
@@ -3277,15 +3329,19 @@ class Ui_Xia2Options:
                             + str(self.HP_anvilThickness_lineEdit.text())
                         )
 
-                if varible == self.HP_anvilOpeningAngle_checkBox:
+                if variable == self.HP_anvilOpeningAngle_checkBox:
                     if self.HP_anvilOpeningAngle_lineEdit.text() == "":
-                        outputMessage = "	*** Anvil Opening Angle Input Error, please entre opening angle e.g. 38 ***"
-                        self.mainTab_txt.appendPlainText(outputMessage)
+                        output_message = (
+                            "	*** Anvil Opening Angle Input Error, "
+                            "please enter opening angle e.g. 38 ***"
+                        )
+                        self.mainTab_txt.appendPlainText(output_message)
                         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         pass
-                        # options = options + " high_pressure.anvil.angle=" + str(self.HP_anvilOpeningAngle_lineEdit.text())
+                        # options = options + " high_pressure.anvil.angle=" + \
+                        #           str(self.HP_anvilOpeningAngle_lineEdit.text())
 
         global xia2OptionsList
         xia2OptionsList = options
@@ -3293,22 +3349,23 @@ class Ui_Xia2Options:
 
         if not datasetINPUT == "MULTIPLE":
 
-            if runImageSelector == False:
-                datasetInput = self.datasetPath
+            if not runImageSelector:
+                dataset_input = self.datasetPath
 
-            else:  ############################# causing issues when multiple ###########
+            else:  # causing issues when multiple ###########
                 if self.datasetPath == "":
-                    datasetInput = self.datasetPath
+                    dataset_input = self.datasetPath
                     self.mainTab_txt.appendPlainText(
-                        "Dataset must be selected before selecting runs or images start/end"
+                        "Dataset must be selected before selecting runs or images "
+                        "start/end"
                     )
                     self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                 else:
-                    datasetInput = ""
+                    dataset_input = ""
                     if runSelection:  # runs have been selected
                         for entry in runSelection:
-                            datasetInput = (
-                                datasetInput
+                            dataset_input = (
+                                dataset_input
                                 + " image="
                                 + self.datasetPath
                                 + "/"
@@ -3316,13 +3373,13 @@ class Ui_Xia2Options:
                                 + str("%02d_00001.cbf" % int(entry))
                             )
                             if (entry - 1) in imageSelection:
-                                datasetInput = (
-                                    datasetInput + ":" + imageSelection[entry - 1]
+                                dataset_input = (
+                                    dataset_input + ":" + imageSelection[entry - 1]
                                 )
                     else:  # runs have NOT been selected
                         for run in self.runList:
-                            datasetInput = (
-                                datasetInput
+                            dataset_input = (
+                                dataset_input
                                 + " image="
                                 + self.datasetPath
                                 + "/"
@@ -3330,13 +3387,13 @@ class Ui_Xia2Options:
                                 + str("%02d_00001.cbf" % int(run))
                             )
                             if (run - 1) in imageSelection:
-                                datasetInput = (
-                                    datasetInput + ":" + imageSelection[run - 1]
+                                dataset_input = (
+                                    dataset_input + ":" + imageSelection[run - 1]
                                 )
 
-            datasetINPUT = datasetInput
+            datasetINPUT = dataset_input
 
-        optionsUndateText = (
+        options_update_text = (
             "\n\nUpdating options"
             + "\n	Xia2 command: "
             + "\n	"
@@ -3344,25 +3401,23 @@ class Ui_Xia2Options:
             + datasetINPUT
             + xia2OptionsList
         )
-        self.mainTab_txt.appendPlainText(optionsUndateText)
+        self.mainTab_txt.appendPlainText(options_update_text)
         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
 
-        Ui_MainWindow.updateOptionsFunction(
-            self.xia2command, datasetINPUT, self.command_command
-        )
+        UIMainWindow.update_options(datasetINPUT, self.command_command)
 
         try:
-            self.saveOptionsAuto()
+            self.save_options_auto()
         except:
-            optionsUndateText = (
+            options_update_text = (
                 "\n	Auto saving options didn't work, try selecting a dataset first."
             )
-            self.mainTab_txt.appendPlainText(optionsUndateText)
+            self.mainTab_txt.appendPlainText(options_update_text)
             self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
 
-    def resetOptions(self):
-        outputMessage = "\nReseting options"
-        self.mainTab_txt.appendPlainText(outputMessage)
+    def reset_options(self):
+        output_message = "\nResetting options"
+        self.mainTab_txt.appendPlainText(output_message)
         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
 
         for checkboxes in self.optionListImport:
@@ -3393,7 +3448,7 @@ class Ui_Xia2Options:
             return
         if os.path.isfile(self.visit + "processing/autoSaveOptions.txt"):
             optionFile = self.visit + "processing/autoSaveOptions.txt"
-            with open(optionFile, "w") as oF:
+            with open(optionFile, "w"):
                 pass
 
         global xia2OptionsList
@@ -3402,7 +3457,7 @@ class Ui_Xia2Options:
         global datasetINPUT
         datasetINPUT = self.datasetPath
 
-        optionsUndateText = (
+        options_update_text = (
             "\n\nUpdating options"
             + "\n	Xia2 command: "
             + "\n	"
@@ -3410,20 +3465,18 @@ class Ui_Xia2Options:
             + datasetINPUT
             + xia2OptionsList
         )
-        self.mainTab_txt.appendPlainText(optionsUndateText)
+        self.mainTab_txt.appendPlainText(options_update_text)
         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
 
-        Ui_MainWindow.updateOptionsFunction(
-            self.xia2command, datasetINPUT, self.command_command
-        )
+        UIMainWindow.update_options(datasetINPUT, self.command_command)
 
-    def optionFileTextFunction(self):
-        optionFileText = ""
+    def option_file_text_function(self):
+        option_file_text = ""
         for num, checkboxes in enumerate(self.optionListImport):
             if checkboxes.isChecked():
                 if num == 1:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "I "
                         + str(num)
                         + " "
@@ -3431,8 +3484,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 2:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "I "
                         + str(num)
                         + " "
@@ -3440,8 +3493,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 3:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "I "
                         + str(num)
                         + " "
@@ -3451,8 +3504,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 4:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "I "
                         + str(num)
                         + " "
@@ -3460,8 +3513,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 7:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "I "
                         + str(num)
                         + " "
@@ -3469,16 +3522,16 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 else:
-                    optionFileText = optionFileText + "I " + str(num) + "\n"
+                    option_file_text = option_file_text + "I " + str(num) + "\n"
         for num, checkboxes in enumerate(self.runSelectorList):
             if checkboxes.isChecked():
-                optionFileText = optionFileText + "RS " + str(num) + "\n"
+                option_file_text = option_file_text + "RS " + str(num) + "\n"
         # spot finding
         for num, checkboxes in enumerate(self.optionListSpotFinding):
             if checkboxes.isChecked():
                 if num == 0:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "SF "
                         + str(num)
                         + " "
@@ -3486,8 +3539,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 1:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "SF "
                         + str(num)
                         + " "
@@ -3495,8 +3548,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 2:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "SF "
                         + str(num)
                         + " "
@@ -3504,8 +3557,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 3:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "SF "
                         + str(num)
                         + " "
@@ -3513,8 +3566,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 4:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "SF "
                         + str(num)
                         + " "
@@ -3522,8 +3575,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 6:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "SF "
                         + str(num)
                         + " "
@@ -3536,7 +3589,7 @@ class Ui_Xia2Options:
                     )
                 elif num == 7:
 
-                    fingSpot_resRange_list = [
+                    find_spot_res_range_list = [
                         self.findSpots_resolutionRange_lineEdit_1.text(),
                         self.findSpots_resolutionRange_lineEdit_2.text(),
                         self.findSpots_resolutionRange_lineEdit_3.text(),
@@ -3548,13 +3601,13 @@ class Ui_Xia2Options:
                         self.findSpots_resolutionRange_lineEdit_9.text(),
                         self.findSpots_resolutionRange_lineEdit_10.text(),
                     ]
-                    optionFileText = optionFileText + "SF " + str(num)
-                    for resRange in fingSpot_resRange_list:
-                        optionFileText = optionFileText + " " + str(resRange)
-                    optionFileText = optionFileText + "\n"
+                    option_file_text = option_file_text + "SF " + str(num)
+                    for resRange in find_spot_res_range_list:
+                        option_file_text = option_file_text + " " + str(resRange)
+                    option_file_text = option_file_text + "\n"
                 elif num == 8:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "SF "
                         + str(num)
                         + " "
@@ -3562,8 +3615,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 9:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "SF "
                         + str(num)
                         + " "
@@ -3571,13 +3624,13 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 else:
-                    optionFileText = optionFileText + "SF " + str(num) + "\n"
+                    option_file_text = option_file_text + "SF " + str(num) + "\n"
         # indexing
         for num, checkboxes in enumerate(self.optionListIndexing):
             if checkboxes.isChecked():
                 if num == 0:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "Ind "
                         + str(num)
                         + " "
@@ -3585,8 +3638,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 2:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "Ind "
                         + str(num)
                         + " "
@@ -3596,8 +3649,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 3:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "Ind "
                         + str(num)
                         + " "
@@ -3605,8 +3658,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 4:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "Ind "
                         + str(num)
                         + " "
@@ -3614,13 +3667,13 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 else:
-                    optionFileText = optionFileText + "Ind " + str(num) + "\n"
+                    option_file_text = option_file_text + "Ind " + str(num) + "\n"
         # Integrate
         for num, checkboxes in enumerate(self.optionListIntegrate):
             if checkboxes.isChecked():
                 if num == 2:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "Int "
                         + str(num)
                         + " "
@@ -3630,13 +3683,13 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 else:
-                    optionFileText = optionFileText + "Int " + str(num) + "\n"
+                    option_file_text = option_file_text + "Int " + str(num) + "\n"
         # Refine and Scale
         for num, checkboxes in enumerate(self.optionListRefineScale):
             if checkboxes.isChecked():
                 if num == 1:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "R "
                         + str(num)
                         + " "
@@ -3644,13 +3697,13 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 else:
-                    optionFileText = optionFileText + "R " + str(num) + "\n"
+                    option_file_text = option_file_text + "R " + str(num) + "\n"
         # Other
         for num, checkboxes in enumerate(self.optionListOther):
             if checkboxes.isChecked():
                 if num == 1:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "O "
                         + str(num)
                         + " "
@@ -3658,8 +3711,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 if num == 2:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "O "
                         + str(num)
                         + " "
@@ -3667,8 +3720,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 if num == 3:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "O "
                         + str(num)
                         + " "
@@ -3676,8 +3729,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 if num == 4:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "O "
                         + str(num)
                         + " "
@@ -3685,14 +3738,14 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 else:
-                    optionFileText = optionFileText + "O " + str(num) + "\n"
+                    option_file_text = option_file_text + "O " + str(num) + "\n"
 
         # HP
         for num, checkboxes in enumerate(self.optionListHP):
             if checkboxes.isChecked():
                 if num == 1:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "HP "
                         + str(num)
                         + " "
@@ -3700,8 +3753,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 2:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "HP "
                         + str(num)
                         + " "
@@ -3709,8 +3762,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 3:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "HP "
                         + str(num)
                         + " "
@@ -3722,8 +3775,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 4:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "HP "
                         + str(num)
                         + " "
@@ -3733,8 +3786,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 5:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "HP "
                         + str(num)
                         + " "
@@ -3742,7 +3795,7 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 6:
-                    optionFileText = optionFileText + "HP " + str(num)
+                    option_file_text = option_file_text + "HP " + str(num)
                     self.runStartEnd_lineEdits = [
                         self.HP_runStartEnd_lineEdit_1.text(),
                         self.HP_runStartEnd_lineEdit_2.text(),
@@ -3757,13 +3810,13 @@ class Ui_Xia2Options:
                     ]
                     for entry in self.runStartEnd_lineEdits:
                         if entry == "":
-                            optionFileText = optionFileText + " #"
+                            option_file_text = option_file_text + " #"
                         else:
-                            optionFileText = optionFileText + " " + str(entry)
-                    optionFileText = optionFileText + "\n"
+                            option_file_text = option_file_text + " " + str(entry)
+                    option_file_text = option_file_text + "\n"
                 elif num == 8:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "HP "
                         + str(num)
                         + " "
@@ -3771,8 +3824,8 @@ class Ui_Xia2Options:
                         + "\n"
                     )
                 elif num == 9:
-                    optionFileText = (
-                        optionFileText
+                    option_file_text = (
+                        option_file_text
                         + "HP "
                         + str(num)
                         + " "
@@ -3781,865 +3834,894 @@ class Ui_Xia2Options:
                     )
 
                 else:
-                    optionFileText = optionFileText + "HP " + str(num) + "\n"
-        return optionFileText
+                    option_file_text = option_file_text + "HP " + str(num) + "\n"
+        return option_file_text
 
-    def saveOptions(self):
-        outputMessage = "\n	Saving options"
-        self.mainTab_txt.appendPlainText(outputMessage)
+    def save_options(self):
+        output_message = "\n	Saving options"
+        self.mainTab_txt.appendPlainText(output_message)
         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
 
         path = self.openingVisit
-        optionFile = QFileDialog.getSaveFileName(None, "Save Current Options", path)[0]
+        option_file = QtWidgets.QFileDialog.getSaveFileName(
+            None, "Save Current Options", path
+        )[0]
 
-        optionFileText = self.optionFileTextFunction()
+        option_file_text = self.option_file_text_function()
 
-        outputMessage = (
-            "\n	File location: " + str(optionFile) + "\n	" + str(optionFileText)
+        output_message = (
+            "\n	File location: " + str(option_file) + "\n	" + str(option_file_text)
         )
-        self.mainTab_txt.appendPlainText(outputMessage)
+        self.mainTab_txt.appendPlainText(output_message)
         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
 
-        with open(optionFile, "w") as oF:
-            pass
-        with open(optionFile, "a") as oF:
-            oF.write(optionFileText)
+        with open(option_file, "a") as oF:
+            oF.write(option_file_text)
             oF.write("")
             oF.close()
 
-    def saveOptionsAuto(self):
-        outputMessage = "\n	Saving current options"
-        self.mainTab_txt.appendPlainText(outputMessage)
+    def save_options_auto(self):
+        output_message = "\n	Saving current options"
+        self.mainTab_txt.appendPlainText(output_message)
         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
 
         if self.visit == "":
             return
-        else:
-            optionFile = self.visit + "processing/autoSaveOptions.txt"
 
-        optionFileText = self.optionFileTextFunction()
+        option_file = self.visit + "processing/autoSaveOptions.txt"
 
-        outputMessage = (
-            "\n	File location: " + str(optionFile) + "\n	" + str(optionFileText)
+        option_file_text = self.option_file_text_function()
+
+        output_message = (
+            "\n	File location: " + str(option_file) + "\n	" + str(option_file_text)
         )
-        self.mainTab_txt.appendPlainText(outputMessage)
+        self.mainTab_txt.appendPlainText(output_message)
         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
 
-        with open(optionFile, "w") as oF:
-            pass
-        with open(optionFile, "a") as oF:
-            oF.write(optionFileText)
-            oF.write("")
-            oF.close()
+        with open(option_file, "a") as of:
+            of.write(option_file_text)
+            of.write("")
+            of.close()
 
-    def loadOptionsAuto(self):
+    def load_options_auto(self):
         if self.visit == "":
-            outputMessage = "	Visit/Dataset has not been selected, therefore previous settings will not be loaded"
-            self.mainTab_txt.appendPlainText(outputMessage)
+            output_message = (
+                "	Visit/Dataset has not been selected, "
+                "therefore previous settings will not be loaded"
+            )
+            self.mainTab_txt.appendPlainText(output_message)
             self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
             return
         if os.path.isfile(self.visit + "processing/autoSaveOptions.txt"):
-            savedOptionsPathTxt = self.visit + "processing/autoSaveOptions.txt"
-            self.loadOptionsMain(savedOptionsPathTxt)
+            saved_options_path_txt = self.visit + "processing/autoSaveOptions.txt"
+            self.load_options_main(saved_options_path_txt)
         else:
             return
 
-    def loadOptions(self):
-        outputMessage = "\nLoading options"
-        self.mainTab_txt.appendPlainText(outputMessage)
+    def load_options(self):
+        output_message = "\nLoading options"
+        self.mainTab_txt.appendPlainText(output_message)
         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
 
         path = self.openingVisit
         os.chdir(path)
-        self.savedOptionsPath = QFileDialog.getOpenFileName()[0]
+        self.savedOptionsPath = QtWidgets.QFileDialog.getOpenFileName()[0]
         if self.savedOptionsPath:
-            savedOptionsPathTxt = str(self.savedOptionsPath)
-            savedOptionsFileTxt = self.savedOptionsPath.split("/")[-1]
-        self.loadOptionsMain(savedOptionsPathTxt)
+            saved_options_path_txt = str(self.savedOptionsPath)
+            self.load_options_main(saved_options_path_txt)
 
-    def loadOptionsMain(self, savedOptionsPathTxt):
-        outputMessage = "	Loading previous settings (" + savedOptionsPathTxt + ")"
-        self.mainTab_txt.appendPlainText(outputMessage)
+    def load_options_main(self, saved_options_path_txt):
+        output_message = "	Loading previous settings (" + saved_options_path_txt + ")"
+        self.mainTab_txt.appendPlainText(output_message)
         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
         try:
-            with open(savedOptionsPathTxt) as optionsInput:
+            with open(saved_options_path_txt) as optionsInput:
                 for line in optionsInput:
-                    lineSplit = line.split(" ")
-                    # print(line)
-                    if lineSplit[0] == "I":
-                        if int(lineSplit[1]) == 1:
-                            self.refGeometryPath = lineSplit[2]
-                            refGeometryPathTxt = str(self.refGeometryPath)
-                            refGeometryFileTxt = refGeometryPathTxt.split("/")[-1]
+                    line_split = line.split(" ")
+                    if line_split[0] == "I":
+                        if int(line_split[1]) == 1:
+                            self.refGeometryPath = line_split[2]
+                            ref_geometry_path_txt = str(self.refGeometryPath)
+                            ref_geometry_file_txt = ref_geometry_path_txt.split("/")[-1]
                             self.import_ReferenceGeometry_path.setText(
-                                refGeometryFileTxt
+                                ref_geometry_file_txt
                             )
                             self.import_ReferenceGeometry_path.setScaledContents(True)
-                            self.HP_ReferenceGeometry_path.setText(refGeometryFileTxt)
+                            self.HP_ReferenceGeometry_path.setText(
+                                ref_geometry_file_txt
+                            )
                             self.HP_ReferenceGeometry_path.setScaledContents(True)
-                            self.optionListImport[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 2:
-                            self.import_DD_lineEdit.setText(lineSplit[2])
-                            self.optionListImport[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 3:
-                            self.import_BeamCentre_X_lineEdit.setText(lineSplit[2])
-                            self.import_BeamCentre_Y_lineEdit.setText(lineSplit[3])
-                            self.optionListImport[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 4:
-                            self.import_wavelength_lineEdit.setText(lineSplit[2])
-                            self.optionListImport[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 7:
-                            self.Import_type_comboBox.setCurrentIndex(int(lineSplit[2]))
-                            self.optionListImport[int(lineSplit[1])].setChecked(True)
+                            self.optionListImport[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 2:
+                            self.import_DD_lineEdit.setText(line_split[2])
+                            self.optionListImport[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 3:
+                            self.import_BeamCentre_X_lineEdit.setText(line_split[2])
+                            self.import_BeamCentre_Y_lineEdit.setText(line_split[3])
+                            self.optionListImport[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 4:
+                            self.import_wavelength_lineEdit.setText(line_split[2])
+                            self.optionListImport[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 7:
+                            self.Import_type_comboBox.setCurrentIndex(
+                                int(line_split[2])
+                            )
+                            self.optionListImport[int(line_split[1])].setChecked(True)
                         else:
-                            self.optionListImport[int(lineSplit[1])].setChecked(True)
-                    if lineSplit[0] == "SF":
-                        if int(lineSplit[1]) == 0:
-                            self.findSpots_sigmaStrong_lineEdit.setText(lineSplit[2])
-                            self.optionListSpotFinding[int(lineSplit[1])].setChecked(
+                            self.optionListImport[int(line_split[1])].setChecked(True)
+                    if line_split[0] == "SF":
+                        if int(line_split[1]) == 0:
+                            self.findSpots_sigmaStrong_lineEdit.setText(line_split[2])
+                            self.optionListSpotFinding[int(line_split[1])].setChecked(
                                 True
                             )
-                        if int(lineSplit[1]) == 1:
-                            self.findSpots_minSpot_lineEdit.setText(lineSplit[2])
-                            self.optionListSpotFinding[int(lineSplit[1])].setChecked(
+                        if int(line_split[1]) == 1:
+                            self.findSpots_minSpot_lineEdit.setText(line_split[2])
+                            self.optionListSpotFinding[int(line_split[1])].setChecked(
                                 True
                             )
-                        if int(lineSplit[1]) == 2:
-                            self.findSpots_maxSpot_lineEdit.setText(lineSplit[2])
-                            self.optionListSpotFinding[int(lineSplit[1])].setChecked(
+                        if int(line_split[1]) == 2:
+                            self.findSpots_maxSpot_lineEdit.setText(line_split[2])
+                            self.optionListSpotFinding[int(line_split[1])].setChecked(
                                 True
                             )
-                        if int(lineSplit[1]) == 3:
-                            self.findSpots_dmin_lineEdit.setText(lineSplit[2])
-                            self.optionListSpotFinding[int(lineSplit[1])].setChecked(
+                        if int(line_split[1]) == 3:
+                            self.findSpots_dmin_lineEdit.setText(line_split[2])
+                            self.optionListSpotFinding[int(line_split[1])].setChecked(
                                 True
                             )
-                        if int(lineSplit[1]) == 4:
-                            self.findSpots_dmax_lineEdit.setText(lineSplit[2])
-                            self.optionListSpotFinding[int(lineSplit[1])].setChecked(
+                        if int(line_split[1]) == 4:
+                            self.findSpots_dmax_lineEdit.setText(line_split[2])
+                            self.optionListSpotFinding[int(line_split[1])].setChecked(
                                 True
                             )
-                        if int(lineSplit[1]) == 6:
-                            self.findSpots_powderRingsUC_lineEdit.setText(lineSplit[2])
-                            self.findSpots_powderRingsSG_lineEdit.setText(lineSplit[3])
-                            self.findSpots_powderRingsW_lineEdit.setText(lineSplit[4])
-                            self.optionListSpotFinding[int(lineSplit[1])].setChecked(
+                        if int(line_split[1]) == 6:
+                            self.findSpots_powderRingsUC_lineEdit.setText(line_split[2])
+                            self.findSpots_powderRingsSG_lineEdit.setText(line_split[3])
+                            self.findSpots_powderRingsW_lineEdit.setText(line_split[4])
+                            self.optionListSpotFinding[int(line_split[1])].setChecked(
                                 True
                             )
-                        if int(lineSplit[1]) == 7:
+                        if int(line_split[1]) == 7:
                             self.findSpots_resolutionRange_lineEdit_1.setText(
-                                lineSplit[2]
+                                line_split[2]
                             )
                             self.findSpots_resolutionRange_lineEdit_2.setText(
-                                lineSplit[3]
+                                line_split[3]
                             )
                             self.findSpots_resolutionRange_lineEdit_3.setText(
-                                lineSplit[4]
+                                line_split[4]
                             )
                             self.findSpots_resolutionRange_lineEdit_4.setText(
-                                lineSplit[5]
+                                line_split[5]
                             )
                             self.findSpots_resolutionRange_lineEdit_5.setText(
-                                lineSplit[6]
+                                line_split[6]
                             )
                             self.findSpots_resolutionRange_lineEdit_6.setText(
-                                lineSplit[7]
+                                line_split[7]
                             )
                             self.findSpots_resolutionRange_lineEdit_7.setText(
-                                lineSplit[8]
+                                line_split[8]
                             )
                             self.findSpots_resolutionRange_lineEdit_8.setText(
-                                lineSplit[9]
+                                line_split[9]
                             )
                             self.findSpots_resolutionRange_lineEdit_9.setText(
-                                lineSplit[10]
+                                line_split[10]
                             )
                             self.findSpots_resolutionRange_lineEdit_10.setText(
-                                lineSplit[11]
+                                line_split[11]
                             )
-                            self.optionListSpotFinding[int(lineSplit[1])].setChecked(
+                            self.optionListSpotFinding[int(line_split[1])].setChecked(
                                 True
                             )
-                        if int(lineSplit[1]) == 8:
-                            self.findSpots_circleMask_lineEdit.setText(lineSplit[2])
-                            self.optionListSpotFinding[int(lineSplit[1])].setChecked(
+                        if int(line_split[1]) == 8:
+                            self.findSpots_circleMask_lineEdit.setText(line_split[2])
+                            self.optionListSpotFinding[int(line_split[1])].setChecked(
                                 True
                             )
-                        if int(lineSplit[1]) == 9:
-                            self.findSpots_recMask_lineEdit.setText(lineSplit[2])
-                            self.optionListSpotFinding[int(lineSplit[1])].setChecked(
+                        if int(line_split[1]) == 9:
+                            self.findSpots_recMask_lineEdit.setText(line_split[2])
+                            self.optionListSpotFinding[int(line_split[1])].setChecked(
                                 True
                             )
                         else:
-                            self.optionListSpotFinding[int(lineSplit[1])].setChecked(
+                            self.optionListSpotFinding[int(line_split[1])].setChecked(
                                 True
                             )
-                    if lineSplit[0] == "Ind":
-                        if int(lineSplit[1]) == 0:
+                    if line_split[0] == "Ind":
+                        if int(line_split[1]) == 0:
                             self.Index_method_comboBox.setCurrentIndex(
-                                int(lineSplit[2])
+                                int(line_split[2])
                             )
-                            self.optionListIndexing[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 2:
-                            self.Index_UN_lineEdit.setText((lineSplit[2]))
-                            self.Index_SG_lineEdit.setText((lineSplit[3]))
-                            self.optionListIndexing[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 3:
-                            self.Index_minCell_lineEdit.setText((lineSplit[2]))
-                            self.optionListIndexing[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 4:
-                            self.Index_maxCell_lineEdit.setText((lineSplit[2]))
-                            self.optionListIndexing[int(lineSplit[1])].setChecked(True)
+                            self.optionListIndexing[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 2:
+                            self.Index_UN_lineEdit.setText((line_split[2]))
+                            self.Index_SG_lineEdit.setText((line_split[3]))
+                            self.optionListIndexing[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 3:
+                            self.Index_minCell_lineEdit.setText((line_split[2]))
+                            self.optionListIndexing[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 4:
+                            self.Index_maxCell_lineEdit.setText((line_split[2]))
+                            self.optionListIndexing[int(line_split[1])].setChecked(True)
                         else:
-                            self.optionListIndexing[int(lineSplit[1])].setChecked(True)
-                    if lineSplit[0] == "Int":
-                        if int(lineSplit[1]) == 2:
+                            self.optionListIndexing[int(line_split[1])].setChecked(True)
+                    if line_split[0] == "Int":
+                        if int(line_split[1]) == 2:
                             self.Integrate_minCellOverall_lineEdit.setText(
-                                (lineSplit[2])
+                                (line_split[2])
                             )
                             self.Integrate_minCellDegree_lineEdit.setText(
-                                (lineSplit[3])
+                                (line_split[3])
                             )
-                            self.optionListIntegrate[int(lineSplit[1])].setChecked(True)
+                            self.optionListIntegrate[int(line_split[1])].setChecked(
+                                True
+                            )
                         else:
-                            self.optionListIntegrate[int(lineSplit[1])].setChecked(True)
-                    if lineSplit[0] == "R":
-                        if int(lineSplit[1]) == 1:
+                            self.optionListIntegrate[int(line_split[1])].setChecked(
+                                True
+                            )
+                    if line_split[0] == "R":
+                        if int(line_split[1]) == 1:
                             self.Refine_method_comboBox.setCurrentIndex(
-                                int(lineSplit[2])
+                                int(line_split[2])
                             )
-                            self.optionListRefineScale[int(lineSplit[1])].setChecked(
+                            self.optionListRefineScale[int(line_split[1])].setChecked(
                                 True
                             )
                         else:
-                            self.optionListRefineScale[int(lineSplit[1])].setChecked(
+                            self.optionListRefineScale[int(line_split[1])].setChecked(
                                 True
                             )
-                    if lineSplit[0] == "O":
-                        if int(lineSplit[1]) == 1:
-                            self.Other_manualInput1_lineEdit.setText((lineSplit[2]))
-                            self.optionListOther[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 2:
-                            self.Other_manualInput2_lineEdit.setText((lineSplit[2]))
-                            self.optionListOther[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 3:
-                            self.Other_manualInput3_lineEdit.setText((lineSplit[2]))
-                            self.optionListOther[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 4:
-                            self.Other_manualInput4_lineEdit.setText((lineSplit[2]))
-                            self.optionListOther[int(lineSplit[1])].setChecked(True)
+                    if line_split[0] == "O":
+                        if int(line_split[1]) == 1:
+                            self.Other_manualInput1_lineEdit.setText((line_split[2]))
+                            self.optionListOther[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 2:
+                            self.Other_manualInput2_lineEdit.setText((line_split[2]))
+                            self.optionListOther[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 3:
+                            self.Other_manualInput3_lineEdit.setText((line_split[2]))
+                            self.optionListOther[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 4:
+                            self.Other_manualInput4_lineEdit.setText((line_split[2]))
+                            self.optionListOther[int(line_split[1])].setChecked(True)
                         else:
-                            self.optionListOther[int(lineSplit[1])].setChecked(True)
-                    if lineSplit[0] == "HP":
-                        if int(lineSplit[1]) == 1:
-                            self.refGeometryPath = lineSplit[2]
-                            refGeometryPathTxt = str(self.refGeometryPath)
-                            refGeometryFileTxt = refGeometryPathTxt.split("/")[-1]
+                            self.optionListOther[int(line_split[1])].setChecked(True)
+                    if line_split[0] == "HP":
+                        if int(line_split[1]) == 1:
+                            self.refGeometryPath = line_split[2]
+                            ref_geometry_path_txt = str(self.refGeometryPath)
+                            ref_geometry_file_txt = ref_geometry_path_txt.split("/")[-1]
                             self.import_ReferenceGeometry_path.setText(
-                                refGeometryFileTxt
+                                ref_geometry_file_txt
                             )
                             self.import_ReferenceGeometry_path.setScaledContents(True)
-                            self.HP_ReferenceGeometry_path.setText(refGeometryFileTxt)
+                            self.HP_ReferenceGeometry_path.setText(
+                                ref_geometry_file_txt
+                            )
                             self.HP_ReferenceGeometry_path.setScaledContents(True)
-                            self.optionListHP[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 2:
-                            self.HP_gasket_comboBox.setCurrentIndex(int(lineSplit[2]))
-                            self.optionListHP[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 3:
-                            self.HP_gasketUserUC_lineEdit.setText((lineSplit[2]))
-                            self.HP_gasketUserSG_lineEdit.setText((lineSplit[3]))
-                            self.HP_gasketUserW_lineEdit.setText((lineSplit[4]))
-                            self.optionListHP[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 4:
-                            self.HP_UN_lineEdit.setText((lineSplit[2]))
-                            self.HP_SG_lineEdit.setText((lineSplit[3]))
-                            self.optionListHP[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 5:
-                            self.HP_dmin_lineEdit.setText((lineSplit[2]))
-                            self.optionListHP[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 6:
-                            #### if # then skip ###
-                            if not "#" in lineSplit[2]:
-                                self.HP_runStartEnd_lineEdit_1.setText((lineSplit[2]))
-                            if not "#" in lineSplit[3]:
-                                self.HP_runStartEnd_lineEdit_2.setText((lineSplit[3]))
-                            if not "#" in lineSplit[4]:
-                                self.HP_runStartEnd_lineEdit_3.setText((lineSplit[4]))
-                            if not "#" in lineSplit[5]:
-                                self.HP_runStartEnd_lineEdit_4.setText((lineSplit[5]))
-                            if not "#" in lineSplit[6]:
-                                self.HP_runStartEnd_lineEdit_5.setText((lineSplit[6]))
-                            if not "#" in lineSplit[7]:
-                                self.HP_runStartEnd_lineEdit_6.setText((lineSplit[7]))
-                            if not "#" in lineSplit[8]:
-                                self.HP_runStartEnd_lineEdit_7.setText((lineSplit[8]))
-                            if not "#" in lineSplit[9]:
-                                self.HP_runStartEnd_lineEdit_8.setText((lineSplit[9]))
-                            if not "#" in lineSplit[10]:
-                                self.HP_runStartEnd_lineEdit_9.setText((lineSplit[10]))
-                            if not "#" in lineSplit[11]:
-                                self.HP_runStartEnd_lineEdit_10.setText((lineSplit[11]))
-                            self.optionListHP[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 8:
-                            self.HP_anvilThickness_lineEdit.setText((lineSplit[2]))
-                            self.optionListHP[int(lineSplit[1])].setChecked(True)
-                        if int(lineSplit[1]) == 9:
-                            self.HP_anvilOpeningAngle_lineEdit.setText((lineSplit[2]))
-                            self.optionListHP[int(lineSplit[1])].setChecked(True)
+                            self.optionListHP[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 2:
+                            self.HP_gasket_comboBox.setCurrentIndex(int(line_split[2]))
+                            self.optionListHP[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 3:
+                            self.HP_gasketUserUC_lineEdit.setText((line_split[2]))
+                            self.HP_gasketUserSG_lineEdit.setText((line_split[3]))
+                            self.HP_gasketUserW_lineEdit.setText((line_split[4]))
+                            self.optionListHP[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 4:
+                            self.HP_UN_lineEdit.setText((line_split[2]))
+                            self.HP_SG_lineEdit.setText((line_split[3]))
+                            self.optionListHP[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 5:
+                            self.HP_dmin_lineEdit.setText((line_split[2]))
+                            self.optionListHP[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 6:
+                            # if # then skip ###
+                            if "#" not in line_split[2]:
+                                self.HP_runStartEnd_lineEdit_1.setText((line_split[2]))
+                            if "#" not in line_split[3]:
+                                self.HP_runStartEnd_lineEdit_2.setText((line_split[3]))
+                            if "#" not in line_split[4]:
+                                self.HP_runStartEnd_lineEdit_3.setText((line_split[4]))
+                            if "#" not in line_split[5]:
+                                self.HP_runStartEnd_lineEdit_4.setText((line_split[5]))
+                            if "#" not in line_split[6]:
+                                self.HP_runStartEnd_lineEdit_5.setText((line_split[6]))
+                            if "#" not in line_split[7]:
+                                self.HP_runStartEnd_lineEdit_6.setText((line_split[7]))
+                            if "#" not in line_split[8]:
+                                self.HP_runStartEnd_lineEdit_7.setText((line_split[8]))
+                            if "#" not in line_split[9]:
+                                self.HP_runStartEnd_lineEdit_8.setText((line_split[9]))
+                            if "#" not in line_split[10]:
+                                self.HP_runStartEnd_lineEdit_9.setText((line_split[10]))
+                            if "#" not in line_split[11]:
+                                self.HP_runStartEnd_lineEdit_10.setText(
+                                    (line_split[11])
+                                )
+                            self.optionListHP[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 8:
+                            self.HP_anvilThickness_lineEdit.setText((line_split[2]))
+                            self.optionListHP[int(line_split[1])].setChecked(True)
+                        if int(line_split[1]) == 9:
+                            self.HP_anvilOpeningAngle_lineEdit.setText((line_split[2]))
+                            self.optionListHP[int(line_split[1])].setChecked(True)
                         else:
-                            self.optionListHP[int(lineSplit[1])].setChecked(True)
-                    if lineSplit[0] == "RS":
-                        self.runSelectorList[int(lineSplit[1])].setChecked(True)
+                            self.optionListHP[int(line_split[1])].setChecked(True)
+                    if line_split[0] == "RS":
+                        self.runSelectorList[int(line_split[1])].setChecked(True)
 
         except:
-            outputMessage = (
-                "	Error in loading saved options (" + savedOptionsPathTxt + ")"
+            output_message = (
+                "	Error in loading saved options (" + saved_options_path_txt + ")"
             )
-            self.mainTab_txt.appendPlainText(outputMessage)
+            self.mainTab_txt.appendPlainText(output_message)
             self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
-            print(savedOptionsPathTxt)
+            print(saved_options_path_txt)
 
-    def retranslateUi(self, Xia2Options):
+    def retranslate_ui(self, xia2_options):
         _translate = QtCore.QCoreApplication.translate
-        Xia2Options.setWindowTitle(
-            _translate("Xia2Options", "Options - Xia2 Additional Commands")
+        xia2_options.setWindowTitle(
+            _translate("xia2_options", "Options - Xia2 Additional Commands")
         )
 
-        self.updateButton.setText(_translate("Xia2Options", "Update Command"))
+        self.updateButton.setText(_translate("xia2_options", "Update Command"))
         self.updateButton.setStatusTip(
             _translate(
-                "Xia2Options", "Update the xia2 command with the current selection"
+                "xia2_options", "Update the xia2 command with the current selection"
             )
         )
-        self.resetButton.setText(_translate("Xia2Options", "Reset"))
+        self.resetButton.setText(_translate("xia2_options", "Reset"))
         self.resetButton.setStatusTip(
-            _translate("Xia2Options", "The rest button will uncheck all check boxes")
+            _translate("xia2_options", "The rest button will uncheck all check boxes")
         )
-        self.saveButton.setText(_translate("Xia2Options", "Save"))
+        self.saveButton.setText(_translate("xia2_options", "Save"))
         self.saveButton.setStatusTip(
-            _translate("Xia2Options", "Save the current options")
+            _translate("xia2_options", "Save the current options")
         )
-        self.loadButton.setText(_translate("Xia2Options", "Load"))
+        self.loadButton.setText(_translate("xia2_options", "Load"))
         self.loadButton.setStatusTip(
-            _translate("Xia2Options", "Load a pre-saved option selection")
+            _translate("xia2_options", "Load a pre-saved option selection")
         )
 
         self.import_TrustBeamCentre.setText(
-            _translate("Xia2Options", "Trust beam centre")
+            _translate("xia2_options", "Trust beam centre")
         )
         self.import_TrustBeamCentre.setStatusTip(
             _translate(
-                "Xia2Options", "Trust the beam centre in the headers, do not refine"
+                "xia2_options", "Trust the beam centre in the headers, do not refine"
             )
         )
-        self.import_DD.setText(_translate("Xia2Options", "Detector Distance"))
+        self.import_DD.setText(_translate("xia2_options", "Detector Distance"))
         self.import_DD.setStatusTip(
             _translate(
-                "Xia2Options", "Override the detector distance from the image header"
+                "xia2_options", "Override the detector distance from the image header"
             )
         )
-        self.import_BeamCentre.setText(_translate("Xia2Options", "Beam Centre"))
+        self.import_BeamCentre.setText(_translate("xia2_options", "Beam Centre"))
         self.import_BeamCentre.setStatusTip(
-            _translate("Xia2Options", "Override the beam centre from the image headers")
+            _translate(
+                "xia2_options", "Override the beam centre from the image headers"
+            )
         )
-        self.import_BeamCentre_X_label.setText(_translate("Xia2Options", "X"))
-        self.import_BeamCentre_Y_label.setText(_translate("Xia2Options", "Y"))
+        self.import_BeamCentre_X_label.setText(_translate("xia2_options", "X"))
+        self.import_BeamCentre_Y_label.setText(_translate("xia2_options", "Y"))
         self.import_ReferenceGeometry.setText(
-            _translate("Xia2Options", "Reference Geometry")
+            _translate("xia2_options", "Reference Geometry")
         )
         self.import_ReferenceGeometry.setStatusTip(
             _translate(
-                "Xia2Options", "Experimental geometry from the models selected (.expt)"
+                "xia2_options", "Experimental geometry from the models selected (.expt)"
             )
         )
         self.import_ReferenceGeometry_path.setText(
-            _translate("Xia2Options", "Path/To/instrumentModdel.expt")
+            _translate("xia2_options", "Path/To/instrument_model.expt")
         )
         self.import_ReferenceGeometry_browse.setText(
-            _translate("Xia2Options", "Browse")
+            _translate("xia2_options", "Browse")
         )
-        self.import_Wavelengh.setText(_translate("Xia2Options", "Wavelength"))
+        self.import_Wavelengh.setText(_translate("xia2_options", "Wavelength"))
         self.import_Wavelengh.setStatusTip(
-            _translate("Xia2Options", "Override the beam wavelength")
+            _translate("xia2_options", "Override the beam wavelength")
         )
         self.Import_FixBeamDetector_checkBox.setText(
-            _translate("Xia2Options", "Fix instrument model")
+            _translate("xia2_options", "Fix instrument model")
         )
         self.Import_RunSelector_checkBox.setText(
-            _translate("Xia2Options", "Run Select")
+            _translate("xia2_options", "Run Select")
         )
-        self.Import_RunSelector_checkBox_1.setText(_translate("Xia2Options", "1"))
-        self.Import_RunSelector_checkBox_2.setText(_translate("Xia2Options", "2"))
-        self.Import_RunSelector_checkBox_3.setText(_translate("Xia2Options", "3"))
-        self.Import_RunSelector_checkBox_4.setText(_translate("Xia2Options", "4"))
-        self.Import_RunSelector_checkBox_5.setText(_translate("Xia2Options", "5"))
-        self.Import_RunSelector_checkBox_6.setText(_translate("Xia2Options", "6"))
-        self.Import_RunSelector_checkBox_7.setText(_translate("Xia2Options", "7"))
-        self.Import_RunSelector_checkBox_8.setText(_translate("Xia2Options", "8"))
-        self.Import_RunSelector_checkBox_9.setText(_translate("Xia2Options", "9"))
-        self.Import_RunSelector_checkBox_10.setText(_translate("Xia2Options", "10"))
-        self.Import_RunSelector_checkBox_11.setText(_translate("Xia2Options", "11"))
-        self.Import_RunSelector_checkBox_12.setText(_translate("Xia2Options", "12"))
+        self.Import_RunSelector_checkBox_1.setText(_translate("xia2_options", "1"))
+        self.Import_RunSelector_checkBox_2.setText(_translate("xia2_options", "2"))
+        self.Import_RunSelector_checkBox_3.setText(_translate("xia2_options", "3"))
+        self.Import_RunSelector_checkBox_4.setText(_translate("xia2_options", "4"))
+        self.Import_RunSelector_checkBox_5.setText(_translate("xia2_options", "5"))
+        self.Import_RunSelector_checkBox_6.setText(_translate("xia2_options", "6"))
+        self.Import_RunSelector_checkBox_7.setText(_translate("xia2_options", "7"))
+        self.Import_RunSelector_checkBox_8.setText(_translate("xia2_options", "8"))
+        self.Import_RunSelector_checkBox_9.setText(_translate("xia2_options", "9"))
+        self.Import_RunSelector_checkBox_10.setText(_translate("xia2_options", "10"))
+        self.Import_RunSelector_checkBox_11.setText(_translate("xia2_options", "11"))
+        self.Import_RunSelector_checkBox_12.setText(_translate("xia2_options", "12"))
 
-        self.Import_RunSelector_checkBox_13.setText(_translate("Xia2Options", "13"))
-        self.Import_RunSelector_checkBox_14.setText(_translate("Xia2Options", "14"))
-        self.Import_RunSelector_checkBox_15.setText(_translate("Xia2Options", "15"))
-        self.Import_RunSelector_checkBox_16.setText(_translate("Xia2Options", "16"))
-        self.Import_RunSelector_checkBox_17.setText(_translate("Xia2Options", "17"))
-        self.Import_RunSelector_checkBox_18.setText(_translate("Xia2Options", "18"))
-        self.Import_RunSelector_checkBox_19.setText(_translate("Xia2Options", "19"))
-        self.Import_RunSelector_checkBox_20.setText(_translate("Xia2Options", "20"))
-        self.Import_RunSelector_checkBox_21.setText(_translate("Xia2Options", "21"))
-        self.Import_RunSelector_checkBox_22.setText(_translate("Xia2Options", "22"))
-        self.Import_RunSelector_checkBox_23.setText(_translate("Xia2Options", "23"))
-        self.Import_RunSelector_checkBox_24.setText(_translate("Xia2Options", "24"))
+        self.Import_RunSelector_checkBox_13.setText(_translate("xia2_options", "13"))
+        self.Import_RunSelector_checkBox_14.setText(_translate("xia2_options", "14"))
+        self.Import_RunSelector_checkBox_15.setText(_translate("xia2_options", "15"))
+        self.Import_RunSelector_checkBox_16.setText(_translate("xia2_options", "16"))
+        self.Import_RunSelector_checkBox_17.setText(_translate("xia2_options", "17"))
+        self.Import_RunSelector_checkBox_18.setText(_translate("xia2_options", "18"))
+        self.Import_RunSelector_checkBox_19.setText(_translate("xia2_options", "19"))
+        self.Import_RunSelector_checkBox_20.setText(_translate("xia2_options", "20"))
+        self.Import_RunSelector_checkBox_21.setText(_translate("xia2_options", "21"))
+        self.Import_RunSelector_checkBox_22.setText(_translate("xia2_options", "22"))
+        self.Import_RunSelector_checkBox_23.setText(_translate("xia2_options", "23"))
+        self.Import_RunSelector_checkBox_24.setText(_translate("xia2_options", "24"))
 
-        self.Import_RunSelector_checkBox_25.setText(_translate("Xia2Options", "25"))
-        self.Import_RunSelector_checkBox_26.setText(_translate("Xia2Options", "26"))
-        self.Import_RunSelector_checkBox_27.setText(_translate("Xia2Options", "27"))
-        self.Import_RunSelector_checkBox_28.setText(_translate("Xia2Options", "28"))
-        self.Import_RunSelector_checkBox_29.setText(_translate("Xia2Options", "29"))
-        self.Import_RunSelector_checkBox_30.setText(_translate("Xia2Options", "30"))
-        self.Import_RunSelector_checkBox_31.setText(_translate("Xia2Options", "31"))
-        self.Import_RunSelector_checkBox_32.setText(_translate("Xia2Options", "32"))
-        self.Import_RunSelector_checkBox_33.setText(_translate("Xia2Options", "33"))
-        self.Import_RunSelector_checkBox_34.setText(_translate("Xia2Options", "34"))
-        self.Import_RunSelector_checkBox_35.setText(_translate("Xia2Options", "35"))
-        self.Import_RunSelector_checkBox_36.setText(_translate("Xia2Options", "36"))
+        self.Import_RunSelector_checkBox_25.setText(_translate("xia2_options", "25"))
+        self.Import_RunSelector_checkBox_26.setText(_translate("xia2_options", "26"))
+        self.Import_RunSelector_checkBox_27.setText(_translate("xia2_options", "27"))
+        self.Import_RunSelector_checkBox_28.setText(_translate("xia2_options", "28"))
+        self.Import_RunSelector_checkBox_29.setText(_translate("xia2_options", "29"))
+        self.Import_RunSelector_checkBox_30.setText(_translate("xia2_options", "30"))
+        self.Import_RunSelector_checkBox_31.setText(_translate("xia2_options", "31"))
+        self.Import_RunSelector_checkBox_32.setText(_translate("xia2_options", "32"))
+        self.Import_RunSelector_checkBox_33.setText(_translate("xia2_options", "33"))
+        self.Import_RunSelector_checkBox_34.setText(_translate("xia2_options", "34"))
+        self.Import_RunSelector_checkBox_35.setText(_translate("xia2_options", "35"))
+        self.Import_RunSelector_checkBox_36.setText(_translate("xia2_options", "36"))
 
-        self.Import_type_checkBox.setText(_translate("Xia2Options", "method"))
+        self.Import_type_checkBox.setText(_translate("xia2_options", "method"))
         self.Import_type_checkBox.setStatusTip(
-            _translate("Xia2Options", "Different indexing algorithms for indexing.")
+            _translate("xia2_options", "Different indexing algorithms for indexing.")
         )
-        self.Import_type_comboBox.setItemText(0, _translate("Xia2Options", "Chemical"))
-        self.Import_type_comboBox.setItemText(1, _translate("Xia2Options", "Protein"))
+        self.Import_type_comboBox.setItemText(0, _translate("xia2_options", "Chemical"))
+        self.Import_type_comboBox.setItemText(1, _translate("xia2_options", "Protein"))
 
         self.xia2options.setTabText(
             self.xia2options.indexOf(self.xia2options_Import),
-            _translate("Xia2Options", "Import"),
+            _translate("xia2_options", "Import"),
         )
 
         self.findSpots_sigmaStrong.setStatusTip(
             _translate(
-                "Xia2Options",
+                "xia2_options",
                 "Area above which the pixel will be classified as strong.",
             )
         )
-        self.findSpots_sigmaStrong.setText(_translate("Xia2Options", "sigma_strong"))
+        self.findSpots_sigmaStrong.setText(_translate("xia2_options", "sigma_strong"))
         self.findSpots_minSpot.setStatusTip(
             _translate(
-                "Xia2Options",
-                "The minimum number of contiguous pixels for a spot to be accepted by the filtering algorithm.",
+                "xia2_options",
+                "The minimum number of contiguous pixels "
+                "for a spot to be accepted by the filtering algorithm.",
             )
         )
-        self.findSpots_minSpot.setText(_translate("Xia2Options", "min spot size"))
+        self.findSpots_minSpot.setText(_translate("xia2_options", "min spot size"))
         self.findSpots_maxSpot.setStatusTip(
             _translate(
-                "Xia2Options",
-                "The minimum number of contiguous pixels for a spot to be accepted by the filtering algorithm.",
+                "xia2_options",
+                "The minimum number of contiguous pixels "
+                "for a spot to be accepted by the filtering algorithm.",
             )
         )
-        self.findSpots_maxSpot.setText(_translate("Xia2Options", "max spot size"))
+        self.findSpots_maxSpot.setText(_translate("xia2_options", "max spot size"))
         self.findSpots_dmin.setStatusTip(
             _translate(
-                "Xia2Options",
-                "The high resolution limit in Angstrom for a pixel to be accepted by the filtering algorithm.",
+                "xia2_options",
+                "The high resolution limit in Angstrom "
+                "for a pixel to be accepted by the filtering algorithm.",
             )
         )
-        self.findSpots_dmin.setText(_translate("Xia2Options", "d min"))
+        self.findSpots_dmin.setText(_translate("xia2_options", "d min"))
         self.findSpots_dmax.setStatusTip(
             _translate(
-                "Xia2Options",
-                "The low resolution limit in Angstrom for a pixel to be accepted by the filtering algorithm.",
+                "xia2_options",
+                "The low resolution limit in Angstrom "
+                "for a pixel to be accepted by the filtering algorithm.",
             )
         )
-        self.findSpots_dmax.setText(_translate("Xia2Options", "d max"))
+        self.findSpots_dmax.setText(_translate("xia2_options", "d max"))
         self.findSpots_iceRings.setStatusTip(
-            _translate("Xia2Options", "Mask to remove spots from ice rings")
+            _translate("xia2_options", "Mask to remove spots from ice rings")
         )
-        self.findSpots_iceRings.setText(_translate("Xia2Options", "ice rings"))
+        self.findSpots_iceRings.setText(_translate("xia2_options", "ice rings"))
         self.findSpots_powderRings.setStatusTip(
             _translate(
-                "Xia2Options",
-                "Generates a powder mask for given unit cell and space group input, reflections under with mask will not be used",
+                "xia2_options",
+                "Generates a powder mask for given unit cell and space group input, "
+                "reflections under the mask will not be used",
             )
         )
-        self.findSpots_powderRings.setText(_translate("Xia2Options", "powder rings"))
+        self.findSpots_powderRings.setText(_translate("xia2_options", "powder rings"))
         self.findSpots_powderRingsUC_label.setText(
-            _translate("Xia2Options", "Unit Cell")
+            _translate("xia2_options", "Unit Cell")
         )
         self.findSpots_powderRingsSG_label.setText(
-            _translate("Xia2Options", "Space Group")
+            _translate("xia2_options", "Space Group")
         )
-        self.findSpots_powderRingsW_label.setText(_translate("Xia2Options", "width"))
+        self.findSpots_powderRingsW_label.setText(_translate("xia2_options", "width"))
         self.findSpots_resolutionRange.setStatusTip(
             _translate(
-                "Xia2Options",
-                "Generates a mask between the given resolutions, reflections under with mask will not be used",
+                "xia2_options",
+                "Generates a mask between the given resolutions, "
+                "reflections under with mask will not be used",
             )
         )
         self.findSpots_resolutionRange.setText(
-            _translate("Xia2Options", "resolution range")
+            _translate("xia2_options", "resolution range")
         )
         self.findSpots_circleMask.setStatusTip(
             _translate(
-                "Xia2Options",
-                "Generates a circular mask, reflections under with mask will not be used",
+                "xia2_options",
+                "Generates a circular mask, "
+                "reflections under with mask will not be used",
             )
         )
-        self.findSpots_circleMask.setText(_translate("Xia2Options", "Circle mask"))
+        self.findSpots_circleMask.setText(_translate("xia2_options", "Circle mask"))
         self.findSpots_recMask.setStatusTip(
             _translate(
-                "Xia2Options",
-                "Generates a rectangle mask, reflections under with mask will not be used",
+                "xia2_options",
+                "Generates a rectangle mask, "
+                "reflections under with mask will not be used",
             )
         )
-        self.findSpots_recMask.setText(_translate("Xia2Options", "Rectangle mask"))
+        self.findSpots_recMask.setText(_translate("xia2_options", "Rectangle mask"))
 
-        self.Index_method_checkBox.setText(_translate("Xia2Options", "method"))
+        self.Index_method_checkBox.setText(_translate("xia2_options", "method"))
         self.Index_method_checkBox.setStatusTip(
-            _translate("Xia2Options", "Different indexing algorithms for indexing.")
+            _translate("xia2_options", "Different indexing algorithms for indexing.")
         )
-        self.Index_method_comboBox.setItemText(0, _translate("Xia2Options", "fft1d"))
-        self.Index_method_comboBox.setItemText(1, _translate("Xia2Options", "fft3d"))
+        self.Index_method_comboBox.setItemText(0, _translate("xia2_options", "fft1d"))
+        self.Index_method_comboBox.setItemText(1, _translate("xia2_options", "fft3d"))
         self.Index_method_comboBox.setItemText(
-            2, _translate("Xia2Options", "real_space_grid_search")
+            2, _translate("xia2_options", "real_space_grid_search")
         )
         self.Index_method_comboBox.setItemText(
-            3, _translate("Xia2Options", "low_res_spot_match")
+            3, _translate("xia2_options", "low_res_spot_match")
         )
         self.Index_scanVarying_checkBox.setText(
-            _translate("Xia2Options", "scan varying off")
+            _translate("xia2_options", "scan varying off")
         )
         self.Index_scanVarying_checkBox.setStatusTip(
-            _translate("Xia2Options", "Does not allows models to vary during a scan.")
+            _translate("xia2_options", "Does not allows models to vary during a scan.")
         )
         self.Index_UN_SG_checkBox.setText(
-            _translate("Xia2Options", "Unit Cell and Space Group")
+            _translate("xia2_options", "Unit Cell and Space Group")
         )
         self.Index_UN_SG_checkBox.setStatusTip(
             _translate(
-                "Xia2Options",
+                "xia2_options",
                 "User input of known unit cell and space group (must provide both).",
             )
         )
-        self.Index_UN_label.setText(_translate("Xia2Options", "Unit Cell"))
-        self.Index_SG_label.setText(_translate("Xia2Options", "Space Group"))
+        self.Index_UN_label.setText(_translate("xia2_options", "Unit Cell"))
+        self.Index_SG_label.setText(_translate("xia2_options", "Space Group"))
         self.Index_minCell_checkBox.setText(
-            _translate("Xia2Options", "minimium cell length")
+            _translate("xia2_options", "minimum cell length")
         )
         self.Index_minCell_checkBox.setStatusTip(
-            _translate("Xia2Options", "Minimum unit cell volume (in Angstrom^3).")
+            _translate("xia2_options", "Minimum unit cell volume (in Angstrom^3).")
         )
         self.Index_maxCell_checkBox.setText(
-            _translate("Xia2Options", "maximium cell length")
+            _translate("xia2_options", "maximum cell length")
         )
         self.Index_maxCell_checkBox.setStatusTip(
             _translate(
-                "Xia2Options",
+                "xia2_options",
                 "Maximum length of candidate unit cell basis vectors (in Angstrom).",
             )
         )
         self.Index_multiprocessing_checkBox.setText(
-            _translate("Xia2Options", "Multi sweep indexing")
+            _translate("xia2_options", "Multi sweep indexing")
         )
         self.Index_multiprocessing_checkBox.setStatusTip(
-            _translate("Xia2Options", "Index and process each run individually.")
+            _translate("xia2_options", "Index and process each run individually.")
         )
         self.Index_multiSweepRefine_checkBox.setText(
-            _translate("Xia2Options", "Multi sweep refine")
+            _translate("xia2_options", "Multi sweep refine")
         )
         self.Index_multiSweepRefine_checkBox.setStatusTip(
-            _translate("Xia2Options", "Refine and process each run individually.")
+            _translate("xia2_options", "Refine and process each run individually.")
         )
         self.Index_outliers_checkBox.setText(
-            _translate("Xia2Options", "Include outliers")
+            _translate("xia2_options", "Include outliers")
         )
         self.Index_outliers_checkBox.setStatusTip(
             _translate(
-                "Xia2Options", "Included all spots from spot finding (no rejection)."
+                "xia2_options", "Included all spots from spot finding (no rejection)."
             )
         )
 
         self.Integrate_keepAllReflections_checkBox.setText(
-            _translate("Xia2Options", "Keep all reflections")
+            _translate("xia2_options", "Keep all reflections")
         )
         self.Integrate_keepAllReflections_checkBox.setStatusTip(
             _translate(
-                "Xia2Options",
+                "xia2_options",
                 "Will add a max resolution cutoff on individual runs based on cc-half.",
             )
         )
         self.Integrate_scanVarying_checkBox.setText(
-            _translate("Xia2Options", "Scan Varying Off")
+            _translate("xia2_options", "Scan Varying Off")
         )
         self.Integrate_scanVarying_checkBox.setStatusTip(
-            _translate("Xia2Options", "Does not allows models to vary during a scan.")
+            _translate("xia2_options", "Does not allows models to vary during a scan.")
         )
 
         self.Integrate_minSpotProfile_checkBox.setText(
-            _translate("Xia2Options", "Min Spots profiles")
+            _translate("xia2_options", "Min Spots profiles")
         )
         self.Integrate_minSpotProfile_checkBox.setStatusTip(
             _translate(
-                "Xia2Options",
-                "The minimum number of spots needed to do the profile moddeling",
+                "xia2_options",
+                "The minimum number of spots needed to do the profile modelling",
             )
         )
 
         self.Integrate_minCellOverall_label.setText(
-            _translate("Xia2Options", "Overall")
+            _translate("xia2_options", "Overall")
         )
         self.Integrate_minCellOverall_label.setStatusTip(
             _translate(
-                "Xia2Options",
-                "The minimum number of spots needed to do the profile moddel per overall.",
+                "xia2_options",
+                "The minimum total number of spots needed to make the profile model.",
             )
         )
         self.Integrate_minCellDegree_label.setText(
-            _translate("Xia2Options", "Per degree")
+            _translate("xia2_options", "Per degree")
         )
         self.Integrate_minCellDegree_label.setStatusTip(
             _translate(
-                "Xia2Options",
-                "The minimum number of spots needed to do the profile moddel per degree.",
+                "xia2_options",
+                "The minimum number of spots needed per degree to make the profile "
+                "model.",
             )
         )
 
         self.Refine_FixBeamDetector_checkBox.setText(
-            _translate("Xia2Options", "Fix instrument model")
+            _translate("xia2_options", "Fix instrument model")
         )
         self.Refine_FixBeamDetector_checkBox.setStatusTip(
             _translate(
-                "Xia2Options",
-                "Will fix beam, detector and goniometer parameters during refinment.",
+                "xia2_options",
+                "Will fix beam, detector and goniometer parameters during refinement.",
             )
         )
 
-        self.Refine_method_checkBox.setText(_translate("Xia2Options", "scaling method"))
-        self.Refine_method_checkBox.setStatusTip(
-            _translate("Xia2Options", "Algorithm used during scaling.")
+        self.Refine_method_checkBox.setText(
+            _translate("xia2_options", "scaling method")
         )
-        self.Refine_method_comboBox.setItemText(0, _translate("Xia2Options", "dials"))
+        self.Refine_method_checkBox.setStatusTip(
+            _translate("xia2_options", "Algorithm used during scaling.")
+        )
+        self.Refine_method_comboBox.setItemText(0, _translate("xia2_options", "dials"))
         self.Refine_method_comboBox.setItemText(
-            1, _translate("Xia2Options", "dials-aimless")
+            1, _translate("xia2_options", "dials-aimless")
         )
 
-        self.Other_failover_checkBox.setText(_translate("Xia2Options", "Failover"))
+        self.Other_failover_checkBox.setText(_translate("xia2_options", "Failover"))
         self.Other_failover_checkBox.setStatusTip(
             _translate(
-                "Xia2Options",
+                "xia2_options",
                 "Will proceed with processing even if a single scan fails.",
             )
         )
 
         self.Other_manualInput1_checkBox.setText(
-            _translate("Xia2Options", "Manual Input 1")
+            _translate("xia2_options", "Manual Input 1")
         )
         self.Other_manualInput1_checkBox.setStatusTip(
-            _translate("Xia2Options", "Manual input of xia command.")
+            _translate("xia2_options", "Manual input of xia command.")
         )
         self.Other_manualInput2_checkBox.setText(
-            _translate("Xia2Options", "Manual Input 2")
+            _translate("xia2_options", "Manual Input 2")
         )
         self.Other_manualInput2_checkBox.setStatusTip(
-            _translate("Xia2Options", "Manual input of xia command.")
+            _translate("xia2_options", "Manual input of xia command.")
         )
         self.Other_manualInput3_checkBox.setText(
-            _translate("Xia2Options", "Manual Input 3")
+            _translate("xia2_options", "Manual Input 3")
         )
         self.Other_manualInput3_checkBox.setStatusTip(
-            _translate("Xia2Options", "Manual input of xia command.")
+            _translate("xia2_options", "Manual input of xia command.")
         )
         self.Other_manualInput4_checkBox.setText(
-            _translate("Xia2Options", "Manual Input 4")
+            _translate("xia2_options", "Manual Input 4")
         )
         self.Other_manualInput4_checkBox.setStatusTip(
-            _translate("Xia2Options", "Manual input of xia command.")
+            _translate("xia2_options", "Manual input of xia command.")
         )
 
         self.Other_clusterOrLocal_label.setText(
-            _translate("Xia2Options", "Processing computer")
+            _translate("xia2_options", "Processing computer")
         )
         self.Other_clusterOrLocal_label.setStatusTip(
             _translate(
-                "Xia2Options", "Pick if the processing is local or on a cluster node."
+                "xia2_options", "Pick if the processing is local or on a cluster node."
             )
         )
         self.Other_clusterOrLocal_comboBox.setItemText(
-            0, _translate("Xia2Options", "Cluster")
+            0, _translate("xia2_options", "Cluster")
         )
         self.Other_clusterOrLocal_comboBox.setItemText(
-            1, _translate("Xia2Options", "Local")
+            1, _translate("xia2_options", "Local")
         )
 
         self.ALL_plainTextEdit.setPlainText(
             _translate(
-                "Xia2Options",
-                "Plan to automatically generate a list of all options from the xia2-working.phil file. ",
+                "xia2_options",
+                "Plan to automatically generate a list of all options "
+                "from the xia2-working.phil file. ",
             )
         )
 
-        self.HP_correction_shaddowing_checkBox.setText(
-            _translate("Xia2Options", "High pressure correction and dynamic shadowing")
+        self.HP_correction_shadowing_checkBox.setText(
+            _translate("xia2_options", "High pressure correction and dynamic shadowing")
         )
-        self.HP_correction_shaddowing_checkBox.setStatusTip(
+        self.HP_correction_shadowing_checkBox.setStatusTip(
             _translate(
-                "Xia2Options",
-                "Select this option to mask part of the image shaddowed by the cell and apply correction for beam going through diamonds",
+                "xia2_options",
+                "Select this option to mask part of the image shadowed by the cell "
+                "and apply correction for beam going through the diamond anvils.",
             )
         )
         self.HP_scanVarying_checkBox.setText(
-            _translate("Xia2Options", "Scan varying off")
+            _translate("xia2_options", "Scan varying off")
         )
         self.HP_scanVarying_checkBox.setStatusTip(
-            _translate("Xia2Options", "Does not allows models to vary during a scan.")
+            _translate("xia2_options", "Does not allows models to vary during a scan.")
         )
         self.HP_ReferenceGeometry_checkBox.setText(
-            _translate("Xia2Options", "Reference Geometry")
+            _translate("xia2_options", "Reference Geometry")
         )
         self.HP_ReferenceGeometry_checkBox.setStatusTip(
             _translate(
-                "Xia2Options",
-                "Add starting instrument model from test crystal (/dls/i19-2/data/2020/visit/dataset/DataFiles/*.expt",
+                "xia2_options",
+                "Add starting instrument model from test crystal "
+                "(/dls/i19-2/data/2020/visit/dataset/DataFiles/*.expt).",
             )
         )
 
         self.HP_ReferenceGeometry_path.setText(
-            _translate("Xia2Options", "Path/To/instrumentModdel.expt")
+            _translate("xia2_options", "path/to/instrument_model.expt")
         )
-        self.HP_ReferenceGeometry_browse.setText(_translate("Xia2Options", "Browse"))
-        self.HP_gasket_checkBox.setText(_translate("Xia2Options", "Gasket"))
+        self.HP_ReferenceGeometry_browse.setText(_translate("xia2_options", "Browse"))
+        self.HP_gasket_checkBox.setText(_translate("xia2_options", "Gasket"))
         self.HP_gasket_checkBox.setStatusTip(
             _translate(
-                "Xia2Options", "Generate masks for powder rings from gasket material"
+                "xia2_options", "Generate masks for powder rings from gasket material"
             )
         )
-        self.HP_gasket_comboBox.setItemText(0, _translate("Xia2Options", "Tungsten"))
-        self.HP_gasket_comboBox.setItemText(1, _translate("Xia2Options", "Steel"))
+        self.HP_gasket_comboBox.setItemText(0, _translate("xia2_options", "Tungsten"))
+        self.HP_gasket_comboBox.setItemText(1, _translate("xia2_options", "Steel"))
         self.HP_gasket_comboBox.setStatusTip(
-            _translate("Xia2Options", "Select gasket material")
+            _translate("xia2_options", "Select gasket material")
         )
         self.HP_gasketUser_checkBox.setText(
-            _translate("Xia2Options", "Gasket (user defined)")
+            _translate("xia2_options", "Gasket (user defined)")
         )
         self.HP_gasketUser_checkBox.setStatusTip(
             _translate(
-                "Xia2Options",
+                "xia2_options",
                 "Generate masks for powder rings from gasket, user defined material",
             )
         )
-        self.HP_gasketUserW_label.setText(_translate("Xia2Options", "Width"))
-        self.HP_gasketUserSG_label.setText(_translate("Xia2Options", "Space Group"))
-        self.HP_gasketUserUC_label.setText(_translate("Xia2Options", "Unit Cell"))
+        self.HP_gasketUserW_label.setText(_translate("xia2_options", "Width"))
+        self.HP_gasketUserSG_label.setText(_translate("xia2_options", "Space Group"))
+        self.HP_gasketUserUC_label.setText(_translate("xia2_options", "Unit Cell"))
         self.HP_FixBeamDetector_checkBox.setText(
-            _translate("Xia2Options", "Fix instrument model")
+            _translate("xia2_options", "Fix instrument model")
         )
         self.HP_FixBeamDetector_checkBox.setStatusTip(
             _translate(
-                "Xia2Options",
-                "Will fix the beam and diffractometer varibles during intergration",
+                "xia2_options",
+                "Will fix the beam and diffractometer variables during integration",
             )
         )
         self.HP_dmin_checkBox.setStatusTip(
             _translate(
-                "Xia2Options",
-                "Area above which the pixel will be classified as strong. The number of standard deviations above the mean in the local, float",
+                "xia2_options",
+                "Area above which the pixel will be classified as strong. "
+                "The number of standard deviations above the mean in the local, float",
             )
         )
-        self.HP_dmin_checkBox.setText(_translate("Xia2Options", "d min"))
-        self.HP_UN_label.setText(_translate("Xia2Options", "Unit Cell"))
+        self.HP_dmin_checkBox.setText(_translate("xia2_options", "d min"))
+        self.HP_UN_label.setText(_translate("xia2_options", "Unit Cell"))
         self.HP_UN_SG_checkBox.setText(
-            _translate("Xia2Options", "Unit Cell and Space Group")
+            _translate("xia2_options", "Unit Cell and Space Group")
         )
         self.HP_UN_SG_checkBox.setStatusTip(
             _translate(
-                "Xia2Options",
+                "xia2_options",
                 "User input of known unit cell and space group (must provide both).",
             )
         )
-        self.HP_SG_label.setText(_translate("Xia2Options", "Space Group"))
+        self.HP_SG_label.setText(_translate("xia2_options", "Space Group"))
         self.HP_difficulty_label_2.setText(
-            _translate("Xia2Options", "medium difficulty options")
+            _translate("xia2_options", "medium difficulty options")
         )
         self.HP_difficulty_label_3.setText(
-            _translate("Xia2Options", "probmatic data options")
+            _translate("xia2_options", "problematic data options")
         )
         self.HP_difficulty_label_1.setText(
-            _translate("Xia2Options", "startard options")
+            _translate("xia2_options", "standard options")
         )
         self.HP_runStartEnd_checkBox.setStatusTip(
             _translate(
-                "Xia2Options",
-                "Set the start/end images that each run will processed (remove images with additional cell body powder rings)",
+                "xia2_options",
+                "Set the start/end images that each run will processed "
+                "(remove images with additional cell body powder rings)",
             )
         )
-        self.HP_runStartEnd_checkBox.setText(_translate("Xia2Options", "Run start/end"))
-        self.HP_runStartEnd_label_1.setText(_translate("Xia2Options", "r1"))
-        self.HP_runStartEnd_label_2.setText(_translate("Xia2Options", "r2"))
-        self.HP_runStartEnd_label_3.setText(_translate("Xia2Options", "r4"))
-        self.HP_runStartEnd_label_4.setText(_translate("Xia2Options", "r3"))
-        self.HP_runStartEnd_label_5.setText(_translate("Xia2Options", "r5"))
-        self.HP_runStartEnd_label_7.setText(_translate("Xia2Options", "r7"))
-        self.HP_runStartEnd_label_6.setText(_translate("Xia2Options", "r6"))
-        self.HP_runStartEnd_label_8.setText(_translate("Xia2Options", "r8"))
-        self.HP_runStartEnd_label_9.setText(_translate("Xia2Options", "r9"))
-        self.HP_runStartEnd_label_10.setText(_translate("Xia2Options", "r10"))
+        self.HP_runStartEnd_checkBox.setText(
+            _translate("xia2_options", "Run start/end")
+        )
+        self.HP_runStartEnd_label_1.setText(_translate("xia2_options", "r1"))
+        self.HP_runStartEnd_label_2.setText(_translate("xia2_options", "r2"))
+        self.HP_runStartEnd_label_3.setText(_translate("xia2_options", "r4"))
+        self.HP_runStartEnd_label_4.setText(_translate("xia2_options", "r3"))
+        self.HP_runStartEnd_label_5.setText(_translate("xia2_options", "r5"))
+        self.HP_runStartEnd_label_7.setText(_translate("xia2_options", "r7"))
+        self.HP_runStartEnd_label_6.setText(_translate("xia2_options", "r6"))
+        self.HP_runStartEnd_label_8.setText(_translate("xia2_options", "r8"))
+        self.HP_runStartEnd_label_9.setText(_translate("xia2_options", "r9"))
+        self.HP_runStartEnd_label_10.setText(_translate("xia2_options", "r10"))
 
         self.HP_anvilThickness_checkBox.setText(
-            _translate("Xia2Options", "Anvil Thickness")
+            _translate("xia2_options", "Anvil Thickness")
         )
         self.HP_anvilThickness_checkBox.setStatusTip(
-            _translate("Xia2Options", "Set DAC anvil thickness. Default: 1.5925 mm")
+            _translate("xia2_options", "Set DAC anvil thickness. Default: 1.5925 mm")
         )
         self.HP_anvilOpeningAngle_checkBox.setText(
-            _translate("Xia2Options", "Anvil Opening Angle")
+            _translate("xia2_options", "Anvil Opening Angle")
         )
         self.HP_anvilOpeningAngle_checkBox.setStatusTip(
-            _translate("Xia2Options", "Set DAC anvil thickness. Default: 40 deg")
+            _translate("xia2_options", "Set DAC anvil thickness. Default: 40 deg")
         )
 
         self.xia2options.setTabText(
             self.xia2options.indexOf(self.xia2options_SpotFinding),
-            _translate("Xia2Options", "Spot Finding"),
+            _translate("xia2_options", "Spot Finding"),
         )
         self.xia2options.setTabText(
             self.xia2options.indexOf(self.xia2options_Indexing),
-            _translate("Xia2Options", "Indexing"),
+            _translate("xia2_options", "Indexing"),
         )
         self.xia2options.setTabText(
             self.xia2options.indexOf(self.xia2options_integrate),
-            _translate("Xia2Options", "Integrate"),
+            _translate("xia2_options", "Integrate"),
         )
         self.xia2options.setTabText(
             self.xia2options.indexOf(self.xia2options_refine_scale),
-            _translate("Xia2Options", "Refine/Scale"),
+            _translate("xia2_options", "Refine/Scale"),
         )
         self.xia2options.setTabText(
             self.xia2options.indexOf(self.xia2options_Other),
-            _translate("Xia2Options", "Other"),
+            _translate("xia2_options", "Other"),
         )
         self.xia2options.setTabText(
             self.xia2options.indexOf(self.xia2options_ALL),
-            _translate("Xia2Options", "ALL"),
+            _translate("xia2_options", "ALL"),
         )
         self.xia2options.setTabText(
             self.xia2options.indexOf(self.xia2options_HP),
-            _translate("Xia2Options", "HP"),
+            _translate("xia2_options", "HP"),
         )
 
 
-###############################################################################################################################################
-###############################################################################################################################################
-###############################################################################################################################################
-###############################################################################################################################################
+########################################################################################
+########################################################################################
+########################################################################################
+########################################################################################
 if __name__ == "__main__":
-    import sys
-
     app = QtWidgets.QApplication(sys.argv)
     # QApplication.setOverrideCursor(Qt.WaitCursor)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    ui = UIMainWindow()
+    ui.setup_ui(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())

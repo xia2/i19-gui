@@ -1,3 +1,10 @@
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/xia2/i19-gui.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/xia2/i19-gui/context:python)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/xia2/i19-gui.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/xia2/i19-gui/alerts/)
+[![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+
 # i19-gui
 
 A graphical interface to the most commonly used data processing tools for single-crystal X-ray diffraction data on [beamline I19 of Diamond Light Source](https://www.diamond.ac.uk/Instruments/Crystallography/I19.html).

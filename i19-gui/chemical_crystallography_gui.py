@@ -3408,7 +3408,9 @@ class UIXia2Options:
         self.mainTab_txt.appendPlainText(options_update_text)
         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
 
-        UIMainWindow.update_options(datasetINPUT, self.command_command)
+        UIMainWindow.update_options(
+            self.xia2command, datasetINPUT, self.command_command
+        )
 
         try:
             self.save_options_auto()

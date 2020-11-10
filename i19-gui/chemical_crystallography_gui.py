@@ -2911,22 +2911,21 @@ class UIXia2Options:
                             self.mainTab_txt.appendPlainText(output_message)
                             self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
-                    else:
-                        ice_rings_uv_command = " ice_rings.unit_cell=" + str(
-                            self.findSpots_powderRingsUC_lineEdit.text()
-                        )
-                        ice_rings_sg_command = " ice_rings.space_group=" + str(
-                            self.findSpots_powderRingsSG_lineEdit.text()
-                        )
-                        ice_rings_w_command = " ice_rings.width=" + str(
-                            self.findSpots_powderRingsW_lineEdit.text()
-                        )
-                        options = (
-                            options
-                            + ice_rings_uv_command
-                            + ice_rings_sg_command
-                            + ice_rings_w_command
-                        )
+                    ice_rings_uv_command = " ice_rings.unit_cell=" + str(
+                        self.findSpots_powderRingsUC_lineEdit.text()
+                    )
+                    ice_rings_sg_command = " ice_rings.space_group=" + str(
+                        self.findSpots_powderRingsSG_lineEdit.text()
+                    )
+                    ice_rings_w_command = " ice_rings.width=" + str(
+                        self.findSpots_powderRingsW_lineEdit.text()
+                    )
+                    options = (
+                        options
+                        + ice_rings_uv_command
+                        + ice_rings_sg_command
+                        + ice_rings_w_command
+                    )
 
                 if variable == self.findSpots_resolutionRange:
                     find_spot_res_range_list = [
@@ -3003,12 +3002,9 @@ class UIXia2Options:
                             self.mainTab_txt.appendPlainText(output_message)
                             self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
-                    else:
-                        uc_command = " unit_cell=" + str(self.Index_UN_lineEdit.text())
-                        sg_command = " space_group=" + str(
-                            self.Index_SG_lineEdit.text()
-                        )
-                        options = options + uc_command + sg_command
+                    uc_command = " unit_cell=" + str(self.Index_UN_lineEdit.text())
+                    sg_command = " space_group=" + str(self.Index_SG_lineEdit.text())
+                    options = options + uc_command + sg_command
                 if variable == self.Index_minCell_checkBox:
                     if self.Index_minCell_lineEdit.text() == "":
                         output_message = "	*** Please entre valid min cell ***"
@@ -3069,28 +3065,27 @@ class UIXia2Options:
                             self.mainTab_txt.appendPlainText(output_message)
                             self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
-                    else:
-                        overall_line = (
-                            "	profile.gaussian_rs.min_spots.overall="
-                            + str(self.Integrate_minCellOverall_lineEdit.text())
-                            + "\n"
+                    overall_line = (
+                        "	profile.gaussian_rs.min_spots.overall="
+                        + str(self.Integrate_minCellOverall_lineEdit.text())
+                        + "\n"
+                    )
+                    degree_line = (
+                        "	profile.gaussian_rs.min_spots.per_degree="
+                        + str(self.Integrate_minCellDegree_lineEdit.text())
+                        + "\n"
+                    )
+                    xia2_gui_path = self.visit + "processing/xia2GUI/"
+                    if not os.path.exists(xia2_gui_path):
+                        os.makedirs(xia2_gui_path)
+                    phil_file = xia2_gui_path + "integration_additional_inputs.phil"
+                    with open(phil_file, "a") as f:
+                        f.write(
+                            "refinement_additional_inputs.phil:\n"
+                            + overall_line
+                            + degree_line
                         )
-                        degree_line = (
-                            "	profile.gaussian_rs.min_spots.per_degree="
-                            + str(self.Integrate_minCellDegree_lineEdit.text())
-                            + "\n"
-                        )
-                        xia2_gui_path = self.visit + "processing/xia2GUI/"
-                        if not os.path.exists(xia2_gui_path):
-                            os.makedirs(xia2_gui_path)
-                        phil_file = xia2_gui_path + "integration_additional_inputs.phil"
-                        with open(phil_file, "a") as f:
-                            f.write(
-                                "refinement_additional_inputs.phil:\n"
-                                + overall_line
-                                + degree_line
-                            )
-                        options = options + " integrate.phil_file=" + phil_file
+                    options = options + " integrate.phil_file=" + phil_file
 
         # refine ####
         for variable in self.optionListRefineScale:
@@ -3184,22 +3179,21 @@ class UIXia2Options:
                             self.mainTab_txt.appendPlainText(output_message)
                             self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
-                    else:
-                        ice_rings_uv_command = " ice_rings.unit_cell=" + str(
-                            self.HP_gasketUserUC_lineEdit.text()
-                        )
-                        ice_rings_sg_command = " ice_rings.space_group=" + str(
-                            self.HP_gasketUserSG_lineEdit.text()
-                        )
-                        ice_rings_w_command = " ice_rings.width=" + str(
-                            self.HP_gasketUserW_lineEdit.text()
-                        )
-                        options = (
-                            options
-                            + ice_rings_uv_command
-                            + ice_rings_sg_command
-                            + ice_rings_w_command
-                        )
+                    ice_rings_uv_command = " ice_rings.unit_cell=" + str(
+                        self.HP_gasketUserUC_lineEdit.text()
+                    )
+                    ice_rings_sg_command = " ice_rings.space_group=" + str(
+                        self.HP_gasketUserSG_lineEdit.text()
+                    )
+                    ice_rings_w_command = " ice_rings.width=" + str(
+                        self.HP_gasketUserW_lineEdit.text()
+                    )
+                    options = (
+                        options
+                        + ice_rings_uv_command
+                        + ice_rings_sg_command
+                        + ice_rings_w_command
+                    )
                 # medium difficulty:
                 if variable == self.HP_UN_SG_checkBox:
                     uc_sg_line_edits = [
@@ -3216,10 +3210,9 @@ class UIXia2Options:
                             self.mainTab_txt.appendPlainText(output_message)
                             self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
-                    else:
-                        uc_command = " unit_cell=" + str(self.HP_UN_lineEdit.text())
-                        sg_command = " space_group=" + str(self.HP_SG_lineEdit.text())
-                        options = options + uc_command + sg_command
+                    uc_command = " unit_cell=" + str(self.HP_UN_lineEdit.text())
+                    sg_command = " space_group=" + str(self.HP_SG_lineEdit.text())
+                    options = options + uc_command + sg_command
 
                 if variable == self.HP_dmin_checkBox:
                     if self.HP_dmin_lineEdit.text() == "":
@@ -3253,7 +3246,6 @@ class UIXia2Options:
                     for entry in self.runStartEnd_lineEdits:
                         if entry == "":
                             counter += 1
-                            pass
                         else:
                             global imageSelection
                             imageSelection[counter] = entry

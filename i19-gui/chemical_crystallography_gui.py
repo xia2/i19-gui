@@ -24,31 +24,26 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class UIMainWindow(object):
-    def setup_ui(self, main_window):
-        self.dialVersion = ""
-        self.datasetPath = ""
-        global datasetINPUT
-        datasetINPUT = self.datasetPath
-        self.processingPath = ""
-        self.openingVisit = "/dls/i19-2/data/2020/"
-        self.multipleDataset = {}
-        self.dataset = ""
+    def __init__(self, main_window):
+        self.dials_version = ""
+        self.opening_visit = "/dls/i19-2/data/2020/"
         self.visit = ""
-        self.runList = []
-        global runImageSelector
-        runImageSelector = False
-        global runSelection
-        runSelection = []
-        global imageSelection
-        imageSelection = {}
 
-        global computingLocation
-        computingLocation = "Cluster"
+        self.dataset_path = ""
+        self.dataset = ""
+        self.multiple_dataset = {}
+        self.processing_path = ""
 
+        self.run_list = []
+        self.run_image_selector = False
+        self.run_selection = []
+        self.image_selection = {}
         self.prefix = ""
-        global xia2OptionsList
-        xia2OptionsList = " small_molecule=true"
-        self.xia2command = "xia2 "
+
+        self.computing_location = "Cluster"
+
+        self.xia2_options_list = " small_molecule=true"
+        self.xia2_command = "xia2 "
         self.tabs = ["tab1", "tab2", "tab3", "tab4", "tab5", "tab6", "tab7", "tab8"]
         self.tabstxt = [
             "tab1t",
@@ -60,8 +55,8 @@ class UIMainWindow(object):
             "tab7t",
             "tab8t",
         ]
-        self.tabsIV = ["IV_1", "IV_2", "IV_3", "IV_4", "IV_5", "IV_6", "IV_7", "IV_8"]
-        self.tabsRLV = [
+        self.tabs_iv = ["IV_1", "IV_2", "IV_3", "IV_4", "IV_5", "IV_6", "IV_7", "IV_8"]
+        self.tabs_rlv = [
             "RLV_1",
             "RLV_2",
             "RLV_3",
@@ -71,7 +66,7 @@ class UIMainWindow(object):
             "RLV_7",
             "RLV_8",
         ]
-        self.tabsHTML = [
+        self.tabs_html = [
             "HTML_1",
             "HTML_2",
             "HTML_3",
@@ -81,7 +76,7 @@ class UIMainWindow(object):
             "HTML_7",
             "HTML_8",
         ]
-        self.tabsProcessingPath = [
+        self.tabs_processing_path = [
             "none",
             "none",
             "none",
@@ -91,138 +86,138 @@ class UIMainWindow(object):
             "none",
             "none",
         ]
-        self.tabsNum = 0
+        self.tabs_num = 0
 
-        self.fontSize14B = QtGui.QFont()
-        self.fontSize14B.setPointSize(14)
-        self.fontSize14B.setBold(True)
-        self.fontSize14B.setWeight(75)
+        self.font_size14_b = QtGui.QFont()
+        self.font_size14_b.setPointSize(14)
+        self.font_size14_b.setBold(True)
+        self.font_size14_b.setWeight(75)
 
-        self.fontSize12B = QtGui.QFont()
-        self.fontSize12B.setPointSize(10)
-        self.fontSize12B.setBold(True)
-        self.fontSize12B.setWeight(75)
+        self.font_size12_b = QtGui.QFont()
+        self.font_size12_b.setPointSize(10)
+        self.font_size12_b.setBold(True)
+        self.font_size12_b.setWeight(75)
 
-        self.fontSize10B = QtGui.QFont()
-        self.fontSize10B.setPointSize(10)
-        self.fontSize10B.setBold(True)
-        self.fontSize10B.setWeight(75)
+        self.font_size10_b = QtGui.QFont()
+        self.font_size10_b.setPointSize(10)
+        self.font_size10_b.setBold(True)
+        self.font_size10_b.setWeight(75)
 
-        self.fontSize10 = QtGui.QFont()
-        self.fontSize10.setPointSize(10)
+        self.font_size10 = QtGui.QFont()
+        self.font_size10.setPointSize(10)
 
         main_window.setObjectName("main_window")
         main_window.resize(764, 720)
 
-        self.centralwidget = QtWidgets.QWidget(main_window)
-        self.centralwidget.setObjectName("centralwidget")
-        main_window.setCentralWidget(self.centralwidget)
-        # menubar
-        self.menubar = QtWidgets.QMenuBar(main_window)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 26))
-        self.menubar.setObjectName("menubar")
-        main_window.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(main_window)
-        self.statusbar.setObjectName("statusbar")
-        main_window.setStatusBar(self.statusbar)
+        self.central_widget = QtWidgets.QWidget(main_window)
+        self.central_widget.setObjectName("central_widget")
+        main_window.setCentralWidget(self.central_widget)
+        # menu_bar
+        self.menu_bar = QtWidgets.QMenuBar(main_window)
+        self.menu_bar.setGeometry(QtCore.QRect(0, 0, 800, 26))
+        self.menu_bar.setObjectName("menu_bar")
+        main_window.setMenuBar(self.menu_bar)
+        self.status_bar = QtWidgets.QStatusBar(main_window)
+        self.status_bar.setObjectName("status_bar")
+        main_window.setStatusBar(self.status_bar)
         ################################################################################
         # menu File
-        self.menuFile = QtWidgets.QMenu(self.menubar)
-        self.menuFile.setObjectName("menuFile")
-        self.menubar.addAction(self.menuFile.menuAction())
+        self.menu_file = QtWidgets.QMenu(self.menu_bar)
+        self.menu_file.setObjectName("menu_file")
+        self.menu_bar.addAction(self.menu_file.menuAction())
         #
-        self.menuFile_Open = QtWidgets.QAction(main_window)
-        self.menuFile_Open.setObjectName("menuFile_Open")
-        self.menuFile.addAction(self.menuFile_Open)
-        self.menuFile_Open.triggered.connect(self.select_dataset)
-        self.menuFile_Open_Multiple = QtWidgets.QAction(main_window)
-        self.menuFile_Open_Multiple.setObjectName("menuFile_Open_Multiple")
-        self.menuFile.addAction(self.menuFile_Open_Multiple)
-        self.menuFile_Open_Multiple.triggered.connect(self.open_multiple)
-        self.menuFile_Close_GUI = QtWidgets.QAction(main_window)
-        self.menuFile_Close_GUI.setObjectName("menuFile_Close_GUI")
-        self.menuFile.addAction(self.menuFile_Close_GUI)
-        self.menuFile_Close_GUI.triggered.connect(self.close_gui)
+        self.menu_file_open = QtWidgets.QAction(main_window)
+        self.menu_file_open.setObjectName("menu_file_open")
+        self.menu_file.addAction(self.menu_file_open)
+        self.menu_file_open.triggered.connect(self.select_dataset)
+        self.menu_file_open_multiple = QtWidgets.QAction(main_window)
+        self.menu_file_open_multiple.setObjectName("menu_file_open_multiple")
+        self.menu_file.addAction(self.menu_file_open_multiple)
+        self.menu_file_open_multiple.triggered.connect(self.open_multiple)
+        self.menu_file_close_gui = QtWidgets.QAction(main_window)
+        self.menu_file_close_gui.setObjectName("menu_file_close_gui")
+        self.menu_file.addAction(self.menu_file_close_gui)
+        self.menu_file_close_gui.triggered.connect(self.close_gui)
         # menu Edit
-        self.menuEdit = QtWidgets.QMenu(self.menubar)
-        self.menuEdit.setObjectName("menuEdit")
-        self.menubar.addAction(self.menuEdit.menuAction())
+        self.menu_edit = QtWidgets.QMenu(self.menu_bar)
+        self.menu_edit.setObjectName("menu_edit")
+        self.menu_bar.addAction(self.menu_edit.menuAction())
         #
-        self.menuEdit_CopyCommand = QtWidgets.QAction(main_window)
-        self.menuEdit_CopyCommand.setObjectName("menuEdit_CopyCommand")
-        self.menuEdit.addAction(self.menuEdit_CopyCommand)
-        self.menuEdit_SaveSettings = QtWidgets.QAction(main_window)
-        self.menuEdit_SaveSettings.setObjectName("menuEdit_SaveSettings")
-        self.menuEdit.addAction(self.menuEdit_SaveSettings)
-        self.menuEdit_LoadSettings = QtWidgets.QAction(main_window)
-        self.menuEdit_LoadSettings.setObjectName("menuEdit_LoadSettings")
-        self.menuEdit.addAction(self.menuEdit_LoadSettings)
+        self.menu_edit_copy_command = QtWidgets.QAction(main_window)
+        self.menu_edit_copy_command.setObjectName("menu_edit_copy_command")
+        self.menu_edit.addAction(self.menu_edit_copy_command)
+        self.menu_edit_save_settings = QtWidgets.QAction(main_window)
+        self.menu_edit_save_settings.setObjectName("menu_edit_save_settings")
+        self.menu_edit.addAction(self.menu_edit_save_settings)
+        self.menu_edit_load_settings = QtWidgets.QAction(main_window)
+        self.menu_edit_load_settings.setObjectName("menu_edit_load_settings")
+        self.menu_edit.addAction(self.menu_edit_load_settings)
         # menu View
-        self.menuView = QtWidgets.QMenu(self.menubar)
-        self.menuView.setObjectName("menuView")
-        self.menubar.addAction(self.menuView.menuAction())
+        self.menu_view = QtWidgets.QMenu(self.menu_bar)
+        self.menu_view.setObjectName("menu_view")
+        self.menu_bar.addAction(self.menu_view.menuAction())
         # menu Settings
-        self.menuSettings = QtWidgets.QMenu(self.menubar)
-        self.menuSettings.setObjectName("menuSettings")
-        self.menubar.addAction(self.menuSettings.menuAction())
+        self.menu_settings = QtWidgets.QMenu(self.menu_bar)
+        self.menu_settings.setObjectName("menu_settings")
+        self.menu_bar.addAction(self.menu_settings.menuAction())
         # menu Version
-        self.menuVersion = QtWidgets.QMenu(self.menubar)
-        self.menuVersion.setObjectName("menuVersion")
-        self.menubar.addAction(self.menuVersion.menuAction())
+        self.menu_version = QtWidgets.QMenu(self.menu_bar)
+        self.menu_version.setObjectName("menu_version")
+        self.menu_bar.addAction(self.menu_version.menuAction())
         #
-        self.menuVersion_current = QtWidgets.QAction(main_window)
-        self.menuVersion_current.setObjectName("menuVersion_current")
-        self.menuVersion.addAction(self.menuVersion_current)
-        self.menuVersion_current.triggered.connect(self.version_current)
-        self.menuVersion_latest = QtWidgets.QAction(main_window)
-        self.menuVersion_latest.setObjectName("menuVersion_latest")
-        self.menuVersion.addAction(self.menuVersion_latest)
-        self.menuVersion_latest.triggered.connect(self.version_latest)
-        self.menuVersion_now = QtWidgets.QAction(main_window)
-        self.menuVersion_now.setObjectName("menuVersion_now")
-        self.menuVersion.addAction(self.menuVersion_now)
-        self.menuVersion_now.triggered.connect(self.version_now)
-        self.menuVersion_1_4 = QtWidgets.QAction(main_window)
-        self.menuVersion_1_4.setObjectName("menuVersion_1_4")
-        self.menuVersion.addAction(self.menuVersion_1_4)
-        self.menuVersion_1_4.triggered.connect(self.version_1_4)
-        self.menuVersion_2_1 = QtWidgets.QAction(main_window)
-        self.menuVersion_2_1.setObjectName("menuVersion_2_1")
-        self.menuVersion.addAction(self.menuVersion_2_1)
-        self.menuVersion_2_1.triggered.connect(self.version_2_1)
+        self.menu_version_current = QtWidgets.QAction(main_window)
+        self.menu_version_current.setObjectName("menu_version_current")
+        self.menu_version.addAction(self.menu_version_current)
+        self.menu_version_current.triggered.connect(self.version_current)
+        self.menu_version_latest = QtWidgets.QAction(main_window)
+        self.menu_version_latest.setObjectName("menu_version_latest")
+        self.menu_version.addAction(self.menu_version_latest)
+        self.menu_version_latest.triggered.connect(self.version_latest)
+        self.menu_version_now = QtWidgets.QAction(main_window)
+        self.menu_version_now.setObjectName("menu_version_now")
+        self.menu_version.addAction(self.menu_version_now)
+        self.menu_version_now.triggered.connect(self.version_now)
+        self.menu_version_1_4 = QtWidgets.QAction(main_window)
+        self.menu_version_1_4.setObjectName("menu_version_1_4")
+        self.menu_version.addAction(self.menu_version_1_4)
+        self.menu_version_1_4.triggered.connect(self.version_1_4)
+        self.menu_version_2_1 = QtWidgets.QAction(main_window)
+        self.menu_version_2_1.setObjectName("menu_version_2_1")
+        self.menu_version.addAction(self.menu_version_2_1)
+        self.menu_version_2_1.triggered.connect(self.version_2_1)
 
         ################################################################################
-        self.labelsDataset = QtWidgets.QLabel(self.centralwidget)
-        self.labelsDataset.setGeometry(QtCore.QRect(0, 0, 55, 16))
-        self.labelsDataset.setObjectName("labelsDataset")
-        self.labelsPrefix = QtWidgets.QLabel(self.centralwidget)
-        self.labelsPrefix.setGeometry(QtCore.QRect(250, 0, 55, 16))
-        self.labelsPrefix.setObjectName("labelsPrefix")
-        self.labelsImages = QtWidgets.QLabel(self.centralwidget)
-        self.labelsImages.setGeometry(QtCore.QRect(500, 0, 100, 16))
-        self.labelsImages.setObjectName("labelsImages")
-        self.labelsVersion = QtWidgets.QLabel(self.centralwidget)
-        self.labelsVersion.setGeometry(QtCore.QRect(650, 0, 81, 16))
-        self.labelsVersion.setObjectName("labelsVersion")
+        self.labels_dataset = QtWidgets.QLabel(self.central_widget)
+        self.labels_dataset.setGeometry(QtCore.QRect(0, 0, 55, 16))
+        self.labels_dataset.setObjectName("labels_dataset")
+        self.labels_prefix = QtWidgets.QLabel(self.central_widget)
+        self.labels_prefix.setGeometry(QtCore.QRect(250, 0, 55, 16))
+        self.labels_prefix.setObjectName("labels_prefix")
+        self.labels_images = QtWidgets.QLabel(self.central_widget)
+        self.labels_images.setGeometry(QtCore.QRect(500, 0, 100, 16))
+        self.labels_images.setObjectName("labels_images")
+        self.labels_version = QtWidgets.QLabel(self.central_widget)
+        self.labels_version.setGeometry(QtCore.QRect(650, 0, 81, 16))
+        self.labels_version.setObjectName("labels_version")
 
-        self.datasetInfo_dataset = QtWidgets.QLabel(self.centralwidget)
-        self.datasetInfo_dataset.setGeometry(QtCore.QRect(0, 17, 250, 28))
-        self.datasetInfo_dataset.setFont(self.fontSize12B)
-        self.datasetInfo_dataset.setObjectName("datasetInfo_dataset")
-        self.datasetInfo_prefix = QtWidgets.QLabel(self.centralwidget)
-        self.datasetInfo_prefix.setGeometry(QtCore.QRect(250, 17, 151, 28))
-        self.datasetInfo_prefix.setFont(self.fontSize12B)
-        self.datasetInfo_prefix.setObjectName("datasetInfo_prefix")
-        self.datasetInfo_images = QtWidgets.QLabel(self.centralwidget)
-        self.datasetInfo_images.setGeometry(QtCore.QRect(500, 17, 300, 28))
-        self.datasetInfo_images.setFont(self.fontSize12B)
-        self.datasetInfo_images.setObjectName("datasetInfo_images")
+        self.dataset_info_dataset = QtWidgets.QLabel(self.central_widget)
+        self.dataset_info_dataset.setGeometry(QtCore.QRect(0, 17, 250, 28))
+        self.dataset_info_dataset.setFont(self.font_size12_b)
+        self.dataset_info_dataset.setObjectName("dataset_info_dataset")
+        self.dataset_info_prefix = QtWidgets.QLabel(self.central_widget)
+        self.dataset_info_prefix.setGeometry(QtCore.QRect(250, 17, 151, 28))
+        self.dataset_info_prefix.setFont(self.font_size12_b)
+        self.dataset_info_prefix.setObjectName("dataset_info_prefix")
+        self.dataset_info_images = QtWidgets.QLabel(self.central_widget)
+        self.dataset_info_images.setGeometry(QtCore.QRect(500, 17, 300, 28))
+        self.dataset_info_images.setFont(self.font_size12_b)
+        self.dataset_info_images.setObjectName("dataset_info_images")
 
-        self.datasetInfo_line = QtWidgets.QFrame(self.centralwidget)
-        self.datasetInfo_line.setGeometry(QtCore.QRect(0, 43, 761, 16))
-        self.datasetInfo_line.setFrameShape(QtWidgets.QFrame.HLine)
-        self.datasetInfo_line.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.datasetInfo_line.setObjectName("datasetInfo_line")
+        self.dataset_info_line = QtWidgets.QFrame(self.central_widget)
+        self.dataset_info_line.setGeometry(QtCore.QRect(0, 43, 761, 16))
+        self.dataset_info_line.setFrameShape(QtWidgets.QFrame.HLine)
+        self.dataset_info_line.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.dataset_info_line.setObjectName("dataset_info_line")
 
         ################################################################################
 
@@ -372,67 +367,67 @@ class UIMainWindow(object):
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.PlaceholderText, brush)
 
-        self.viewButtons_xia2 = QtWidgets.QPushButton(self.centralwidget)
-        self.viewButtons_xia2.setGeometry(QtCore.QRect(5, 60, 151, 31))
-        self.viewButtons_xia2.setPalette(palette)
-        self.viewButtons_xia2.setFont(self.fontSize10B)
-        self.viewButtons_xia2.setObjectName("viewButtons_xia2")
-        self.viewButtons_xia2.clicked.connect(self.run_xia2)
+        self.view_buttons_xia2 = QtWidgets.QPushButton(self.central_widget)
+        self.view_buttons_xia2.setGeometry(QtCore.QRect(5, 60, 151, 31))
+        self.view_buttons_xia2.setPalette(palette)
+        self.view_buttons_xia2.setFont(self.font_size10_b)
+        self.view_buttons_xia2.setObjectName("view_buttons_xia2")
+        self.view_buttons_xia2.clicked.connect(self.run_xia2)
 
-        self.viewButtons_screen19 = QtWidgets.QPushButton(self.centralwidget)
-        self.viewButtons_screen19.setGeometry(QtCore.QRect(165, 60, 151, 31))
-        self.viewButtons_screen19.setPalette(palette)
-        self.viewButtons_screen19.setFont(self.fontSize10B)
-        self.viewButtons_screen19.setObjectName("viewButtons_screen19")
-        self.viewButtons_screen19.clicked.connect(self.run_screen19)
+        self.view_buttons_screen19 = QtWidgets.QPushButton(self.central_widget)
+        self.view_buttons_screen19.setGeometry(QtCore.QRect(165, 60, 151, 31))
+        self.view_buttons_screen19.setPalette(palette)
+        self.view_buttons_screen19.setFont(self.font_size10_b)
+        self.view_buttons_screen19.setObjectName("view_buttons_screen19")
+        self.view_buttons_screen19.clicked.connect(self.run_screen19)
 
-        self.viewButtons_options = QtWidgets.QPushButton(self.centralwidget)
-        self.viewButtons_options.setGeometry(QtCore.QRect(325, 60, 151, 31))
-        self.viewButtons_options.setFont(self.fontSize10)
-        self.viewButtons_options.setObjectName("viewButtons_options")
-        self.viewButtons_options.clicked.connect(self.open_options)
+        self.view_buttons_options = QtWidgets.QPushButton(self.central_widget)
+        self.view_buttons_options.setGeometry(QtCore.QRect(325, 60, 151, 31))
+        self.view_buttons_options.setFont(self.font_size10)
+        self.view_buttons_options.setObjectName("view_buttons_options")
+        self.view_buttons_options.clicked.connect(self.open_options)
 
-        self.viewButtons_albula = QtWidgets.QPushButton(self.centralwidget)
-        self.viewButtons_albula.setGeometry(QtCore.QRect(485, 60, 151, 31))
-        self.viewButtons_albula.setFont(self.fontSize10)
-        self.viewButtons_albula.setObjectName("viewButtons_albula")
-        self.viewButtons_albula.clicked.connect(self.run_albula)
+        self.view_buttons_albula = QtWidgets.QPushButton(self.central_widget)
+        self.view_buttons_albula.setGeometry(QtCore.QRect(485, 60, 151, 31))
+        self.view_buttons_albula.setFont(self.font_size10)
+        self.view_buttons_albula.setObjectName("view_buttons_albula")
+        self.view_buttons_albula.clicked.connect(self.run_albula)
 
-        self.viewButtons_line = QtWidgets.QFrame(self.centralwidget)
-        self.viewButtons_line.setGeometry(QtCore.QRect(0, 93, 761, 16))
-        self.viewButtons_line.setFrameShape(QtWidgets.QFrame.HLine)
-        self.viewButtons_line.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.viewButtons_line.setObjectName("viewButtons_line")
-
-        ################################################################################
-
-        self.processingPath_label = QtWidgets.QLabel(self.centralwidget)
-        self.processingPath_label.setGeometry(QtCore.QRect(2, 101, 191, 16))
-        self.processingPath_label.setObjectName("processingPath_label")
-
-        self.processingPath__path = QtWidgets.QLabel(self.centralwidget)
-        self.processingPath__path.setGeometry(QtCore.QRect(2, 115, 761, 21))
-        self.processingPath__path.setFont(self.fontSize10B)
-        self.processingPath__path.setObjectName("processingPath__path")
-
-        self.processingPath__line = QtWidgets.QFrame(self.centralwidget)
-        self.processingPath__line.setGeometry(QtCore.QRect(-1, 132, 761, 16))
-        self.processingPath__line.setFrameShape(QtWidgets.QFrame.HLine)
-        self.processingPath__line.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.processingPath__line.setObjectName("processingPath__line")
+        self.view_buttons_line = QtWidgets.QFrame(self.central_widget)
+        self.view_buttons_line.setGeometry(QtCore.QRect(0, 93, 761, 16))
+        self.view_buttons_line.setFrameShape(QtWidgets.QFrame.HLine)
+        self.view_buttons_line.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.view_buttons_line.setObjectName("view_buttons_line")
 
         ################################################################################
 
-        self.command_label = QtWidgets.QLabel(self.centralwidget)
+        self.processing_path_label = QtWidgets.QLabel(self.central_widget)
+        self.processing_path_label.setGeometry(QtCore.QRect(2, 101, 191, 16))
+        self.processing_path_label.setObjectName("processing_path_label")
+
+        self.processing_path_path = QtWidgets.QLabel(self.central_widget)
+        self.processing_path_path.setGeometry(QtCore.QRect(2, 115, 761, 21))
+        self.processing_path_path.setFont(self.font_size10_b)
+        self.processing_path_path.setObjectName("processing_path_path")
+
+        self.processing_path_line = QtWidgets.QFrame(self.central_widget)
+        self.processing_path_line.setGeometry(QtCore.QRect(-1, 132, 761, 16))
+        self.processing_path_line.setFrameShape(QtWidgets.QFrame.HLine)
+        self.processing_path_line.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.processing_path_line.setObjectName("processing_path_line")
+
+        ################################################################################
+
+        self.command_label = QtWidgets.QLabel(self.central_widget)
         self.command_label.setGeometry(QtCore.QRect(2, 142, 91, 16))
         self.command_label.setObjectName("command_label")
 
-        self.command_command = QtWidgets.QPlainTextEdit(self.centralwidget)
+        self.command_command = QtWidgets.QPlainTextEdit(self.central_widget)
         self.command_command.setGeometry(QtCore.QRect(0, 160, 761, 61))
-        self.command_command.setFont(self.fontSize10B)
+        self.command_command.setFont(self.font_size10_b)
         self.command_command.setObjectName("command_command")
 
-        self.command_line = QtWidgets.QFrame(self.centralwidget)
+        self.command_line = QtWidgets.QFrame(self.central_widget)
         self.command_line.setGeometry(QtCore.QRect(0, 220, 761, 16))
         self.command_line.setFrameShape(QtWidgets.QFrame.HLine)
         self.command_line.setFrameShadow(QtWidgets.QFrame.Sunken)
@@ -441,25 +436,25 @@ class UIMainWindow(object):
         ################################################################################
         # xia2 output tabs
 
-        self.xia2output = QtWidgets.QTabWidget(self.centralwidget)
-        # self.xia2output.setGeometry(QtCore.QRect(0, 180, 761, 331))
-        self.xia2output.setGeometry(QtCore.QRect(0, 230, 761, 441))
-        self.xia2output.setObjectName("xia2output")
-        self.xia2output.setTabsClosable(True)
-        self.xia2output.tabCloseRequested.connect(self.close_handler)
+        self.xia2_output = QtWidgets.QTabWidget(self.central_widget)
+        # self.xia2_output.setGeometry(QtCore.QRect(0, 180, 761, 331))
+        self.xia2_output.setGeometry(QtCore.QRect(0, 230, 761, 441))
+        self.xia2_output.setObjectName("xia2_output")
+        self.xia2_output.setTabsClosable(True)
+        self.xia2_output.tabCloseRequested.connect(self.close_handler)
 
-        self.mainTab = QtWidgets.QWidget()
-        self.mainTab.setObjectName("mainTab")
-        self.mainTab_txt = QtWidgets.QPlainTextEdit(self.mainTab)
-        self.mainTab_txt.setGeometry(QtCore.QRect(0, 0, 756, 372))
-        self.mainTab_txt.setObjectName("main_tab_txt")
-        self.xia2output.addTab(self.mainTab, "")
-        self.xia2output.setTabText(self.xia2output.indexOf(self.mainTab), "Main")
+        self.main_tab = QtWidgets.QWidget()
+        self.main_tab.setObjectName("main_tab")
+        self.main_tab_txt = QtWidgets.QPlainTextEdit(self.main_tab)
+        self.main_tab_txt.setGeometry(QtCore.QRect(0, 0, 756, 372))
+        self.main_tab_txt.setObjectName("main_tab_txt")
+        self.xia2_output.addTab(self.main_tab, "")
+        self.xia2_output.setTabText(self.xia2_output.indexOf(self.main_tab), "Main")
 
         ################################################################################
 
         self.retranslate_ui(main_window)
-        self.xia2output.setCurrentIndex(1)
+        self.xia2_output.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(main_window)
 
         ####################################################
@@ -477,97 +472,94 @@ class UIMainWindow(object):
         return os.popen("dials.version").read().split("-")[0]
 
     def select_dataset(self):
-        path = self.openingVisit
-        self.datasetPath = QtWidgets.QFileDialog.getExistingDirectory(
+        path = self.opening_visit
+        self.dataset_path = QtWidgets.QFileDialog.getExistingDirectory(
             None,
             "Select a dataset folder",
             path,
             QtWidgets.QFileDialog.ShowDirsOnly,
         )
-        global datasetINPUT
-        datasetINPUT = self.datasetPath
-        if self.datasetPath:
-            self.multipleDataset = {}
+        if self.dataset_path:
+            self.multiple_dataset = {}
             self.append_output(
-                self.mainTab_txt, "\n	Dataset Path:		" + self.datasetPath
+                self.main_tab_txt, "\n	Dataset Path:		" + self.dataset_path
             )
-            self.dataset = self.datasetPath.split("/")[-1]  # dataset name
-            if "staging" in self.datasetPath.split("/"):
+            self.dataset = self.dataset_path.split("/")[-1]  # dataset name
+            if "staging" in self.dataset_path.split("/"):
                 # /dls/staging/dls/i19-2/data/2019/cy23463-1/
-                self.visit = "/".join(self.datasetPath.split("/")[:8]) + "/"
+                self.visit = "/".join(self.dataset_path.split("/")[:8]) + "/"
             else:
                 # /dls/i19-2/data/2020/cm26492-2/
-                self.visit = "/".join(self.datasetPath.split("/")[:6]) + "/"
-            self.openingVisit = str(self.visit)
-        self.append_output(self.mainTab_txt, "	Dataset:		" + self.dataset)
-        for cbfFile in os.listdir(self.datasetPath):  # prefix
+                self.visit = "/".join(self.dataset_path.split("/")[:6]) + "/"
+            self.opening_visit = str(self.visit)
+        self.append_output(self.main_tab_txt, "	Dataset:		" + self.dataset)
+        for cbfFile in os.listdir(self.dataset_path):  # prefix
             if cbfFile.endswith("_00001.cbf"):
                 self.prefix = cbfFile[:-12]
                 break
             else:
                 continue
 
-        self.append_output(self.mainTab_txt, "	Prefix:			" + self.prefix)
-        self.runList = []
+        self.append_output(self.main_tab_txt, "	Prefix:			" + self.prefix)
+        self.run_list = []
         run_images_dict = {}
-        for cbfFiles in os.listdir(self.datasetPath):  # runs in dataset
+        for cbfFiles in os.listdir(self.dataset_path):  # runs in dataset
             if cbfFiles.endswith("_00001.cbf"):
                 if cbfFiles[:-12] == self.prefix:
                     run = int(cbfFiles[-12:-10])
-                    self.runList.append(run)
+                    self.run_list.append(run)
 
-        self.runList.sort()
+        self.run_list.sort()
         self.append_output(
-            self.mainTab_txt,
+            self.main_tab_txt,
             "	Number of runs:		"
-            + " ".join(map(str, (len(self.runList), self.runList))),
+            + " ".join(map(str, (len(self.run_list), self.run_list))),
         )
-        for run in self.runList:  # number of images per run
+        for run in self.run_list:  # number of images per run
             basename_match = self.prefix + "%02d" % run + "_*.cbf"
             num_cbf_run = len(
-                fnmatch.filter(os.listdir(self.datasetPath), basename_match)
+                fnmatch.filter(os.listdir(self.dataset_path), basename_match)
             )
             run_images_dict[run] = num_cbf_run
         self.append_output(
-            self.mainTab_txt, "	Images per run: 	" + str(run_images_dict)
+            self.main_tab_txt, "	Images per run: 	" + str(run_images_dict)
         )
         total_num_images = sum(run_images_dict.values())  # total number of images
         self.append_output(
-            self.mainTab_txt,
+            self.main_tab_txt,
             "	Total number of images:	" + str(total_num_images) + "\n",
         )
         # update labels
-        self.datasetInfo_dataset.setText(self.dataset)
-        self.datasetInfo_prefix.setText(self.prefix)
-        self.datasetInfo_images.setText(str(run_images_dict).strip("{}"))
+        self.dataset_info_dataset.setText(self.dataset)
+        self.dataset_info_prefix.setText(self.prefix)
+        self.dataset_info_images.setText(str(run_images_dict).strip("{}"))
         self.command_command.setPlainText(
-            self.xia2command + datasetINPUT + xia2OptionsList
+            self.xia2_command + self.dataset_path + self.xia2_options_list
         )
 
     # file menu, open-> select dataset ####
     def open_multiple(self):
-        path = self.openingVisit
+        path = self.opening_visit
         new_dataset_path = QtWidgets.QFileDialog.getExistingDirectory(
             None, "Select a dataset folder", path, QtWidgets.QFileDialog.ShowDirsOnly
         )
 
-        global datasetINPUT
-        datasetINPUT = "MULTIPLE"
+        self.dataset_path = "MULTIPLE"
 
         if new_dataset_path:
             self.append_output(
-                self.mainTab_txt, "\n	New Dataset Path:		" + new_dataset_path
+                self.main_tab_txt, "\n	New Dataset Path:		" + new_dataset_path
             )
 
             dataset = new_dataset_path.split("/")[-1]  # dataset name
-            if "staging" in self.datasetPath.split("/"):
+            if "staging" in self.dataset_path.split("/"):
                 # /dls/staging/dls/i19-2/data/2019/cy23463-1/
-                self.visit = "/".join(self.datasetPath.split("/")[:8]) + "/"
+                self.visit = "/".join(self.dataset_path.split("/")[:8]) + "/"
             else:
                 # /dls/i19-2/data/2020/cm26492-2/
-                self.visit = "/".join(self.datasetPath.split("/")[:6]) + "/"
-            self.openingVisit = str(self.visit)
-        self.append_output(self.mainTab_txt, "	New Dataset:		" + dataset)
+                self.visit = "/".join(self.dataset_path.split("/")[:6]) + "/"
+            self.opening_visit = str(self.visit)
+        self.append_output(self.main_tab_txt, "	New Dataset:		" + dataset)
         for cbfFile in os.listdir(new_dataset_path):  # prefix
             if cbfFile.endswith("_00001.cbf"):
                 prefix = cbfFile[:-12]
@@ -575,7 +567,7 @@ class UIMainWindow(object):
             else:
                 continue
 
-        self.append_output(self.mainTab_txt, "	New Prefix:			" + prefix)
+        self.append_output(self.main_tab_txt, "	New Prefix:			" + prefix)
         run_list = []
         run_images_dict = {}
         for cbf_file in os.listdir(new_dataset_path):  # runs in dataset
@@ -586,7 +578,7 @@ class UIMainWindow(object):
 
         run_list.sort()
         self.append_output(
-            self.mainTab_txt,
+            self.main_tab_txt,
             "	New Number of runs:		" + str(len(run_list)) + " " + str(run_list),
         )
         for run in run_list:  # number of images per run
@@ -596,86 +588,87 @@ class UIMainWindow(object):
             )
             run_images_dict[run] = num_cbf_run
         self.append_output(
-            self.mainTab_txt, "	New Images per run: 	" + str(run_images_dict)
+            self.main_tab_txt, "	New Images per run: 	" + str(run_images_dict)
         )
         total_num_images = sum(run_images_dict.values())  # total number of images
         self.append_output(
-            self.mainTab_txt,
+            self.main_tab_txt,
             "	New Total number of images:	" + str(total_num_images) + "\n",
         )
         # update labels
-        self.datasetInfo_dataset.setText(dataset)
-        self.datasetInfo_prefix.setText(prefix)
-        self.datasetInfo_images.setText(str(run_images_dict).strip("{}"))
+        self.dataset_info_dataset.setText(dataset)
+        self.dataset_info_prefix.setText(prefix)
+        self.dataset_info_images.setText(str(run_images_dict).strip("{}"))
         self.command_command.setPlainText(
-            self.xia2command + datasetINPUT + xia2OptionsList
+            self.xia2_command + self.dataset_path + self.xia2_options_list
         )
 
-        self.multipleDataset[dataset] = [new_dataset_path, prefix, run_list]
+        self.multiple_dataset[dataset] = [new_dataset_path, prefix, run_list]
         self.append_output(
-            self.mainTab_txt, "	Multiple runs:\n	" + str(self.multipleDataset)
+            self.main_tab_txt, "	Multiple runs:\n	" + str(self.multiple_dataset)
         )
 
     # file menu, close -> close GUI ####
     def close_gui(self):
-        self.append_output(self.mainTab_txt, "\n\nClosing GUI\n\n")
+        self.append_output(self.main_tab_txt, "\n\nClosing GUI\n\n")
         QtCore.QCoreApplication.instance().quit()
 
     # open albula ####
     def run_albula(self):
-        self.append_output(self.mainTab_txt, self.datasetPath)
-        if self.datasetPath == "":
+        self.append_output(self.main_tab_txt, self.dataset_path)
+        if self.dataset_path == "":
             subprocess.Popen(
                 ["sh", "/dls_sw/i19/scripts/MarkWarren/PyQT/1_basic/albula.sh"]
             )
         else:
-            self.append_output(self.mainTab_txt, "opening albula with first image")
-            image = f"{self.datasetPath}/{self.prefix}{self.runList[0]:02d}_00001.cbf"
+            self.append_output(self.main_tab_txt, "opening albula with first image")
+            image = f"{self.dataset_path}/{self.prefix}{self.run_list[0]:02d}_00001.cbf"
             subprocess.Popen(
                 ["sh", "/dls_sw/i19/scripts/MarkWarren/PyQT/1_basic/albula.sh", image]
             )
 
     # open options window ###########################################################
     def open_options(self):
-        self.append_output(self.mainTab_txt, "Opening options window")
+        self.append_output(self.main_tab_txt, "Opening options window")
         self.secondWindow = QtWidgets.QMainWindow()
         self.ui = UIXia2Options(
-            self.xia2command,
-            self.datasetPath,
+            self.xia2_command,
+            self.dataset_path,
             self.command_command,
             self.visit,
-            self.mainTab_txt,
-            self.runList,
+            self.main_tab_txt,
+            self.run_list,
             self.prefix,
-            self.openingVisit,
+            self.opening_visit,
         )
         self.ui.setup_ui(self.secondWindow)
         self.secondWindow.show()
 
-    @staticmethod
-    def update_options(xia2_command, dataset_path, command_command):
-        command_command.setPlainText(xia2_command + dataset_path + xia2OptionsList)
+    def update_options(self):
+        self.command_command.setPlainText(
+            self.xia2_command + self.dataset_path + self.xia2_options_list
+        )
 
     def run_xia2(self):
-        self.append_output(self.mainTab_txt, "\nRunning xia2\n")
+        self.append_output(self.main_tab_txt, "\nRunning xia2\n")
         # single datasets ###########
-        if not datasetINPUT == "MULTIPLE":
-            self.append_output(self.mainTab_txt, "Single Dataset")
+        if not self.dataset_path == "MULTIPLE":
+            self.append_output(self.main_tab_txt, "Single Dataset")
             if self.prefix == "":
                 self.append_output(
-                    self.mainTab_txt,
+                    self.main_tab_txt,
                     "\n\n ########################################################a",
                 )
                 self.append_output(
-                    self.mainTab_txt,
+                    self.main_tab_txt,
                     "	No cbf images found in directory, "
                     "please select dataset directory",
                 )
                 return
-            self.run_xia2_dataset(self.dataset, datasetINPUT)
+            self.run_xia2_dataset(self.dataset, self.dataset_path)
         # multiple datasets ###########
-        if datasetINPUT == "MULTIPLE":  # if multiple input has been utilised
-            self.append_output(self.mainTab_txt, "\n Multiple dataset processing\n")
+        if self.dataset_path == "MULTIPLE":  # if multiple input has been utilised
+            self.append_output(self.main_tab_txt, "\n Multiple dataset processing\n")
             # {
             #     "01_Prot1_21": [
             #         "/dls/i19-2/data/2020/cy23401-1/01_Prot1_21",
@@ -684,44 +677,44 @@ class UIMainWindow(object):
             #     ]
             # }
             # {dataset: [dataset_path, prefix, runs]}
-            if not runImageSelector:
-                for dataset_key in self.multipleDataset:
-                    dataset_path, prefix, _ = self.multipleDataset[dataset_key]
+            if not self.run_image_selector:
+                for dataset_key in self.multiple_dataset:
+                    dataset_path, prefix, _ = self.multiple_dataset[dataset_key]
                     if not prefix:
                         self.append_output(
-                            self.mainTab_txt,
+                            self.main_tab_txt,
                             "\n\n ############################"
                             "############################b",
                         )
                         self.append_output(
-                            self.mainTab_txt,
+                            self.main_tab_txt,
                             "	No cbf images found in directory, "
                             "please select dataset directory",
                         )
                         return
                     self.run_xia2_dataset(dataset_key, dataset_path)
             else:
-                for dataset_key in self.multipleDataset:
+                for dataset_key in self.multiple_dataset:
                     dataset = dataset_key
-                    dataset_path = self.multipleDataset[dataset_key][0] + "/"
-                    prefix = self.multipleDataset[dataset_key][1]
-                    runs = self.multipleDataset[dataset_key][2]
+                    dataset_path = self.multiple_dataset[dataset_key][0] + "/"
+                    prefix = self.multiple_dataset[dataset_key][1]
+                    runs = self.multiple_dataset[dataset_key][2]
                     if prefix == "":
                         self.append_output(
-                            self.mainTab_txt,
+                            self.main_tab_txt,
                             "\n\n ############################"
                             "############################c",
                         )
                         self.append_output(
-                            self.mainTab_txt,
+                            self.main_tab_txt,
                             "	No cbf images found in directory, "
                             "please select dataset directory",
                         )
                         return
                     else:
                         xia2_input = ""
-                        if runSelection:
-                            for entry in runSelection:
+                        if self.run_selection:
+                            for entry in self.run_selection:
                                 xia2_input = (
                                     xia2_input
                                     + " image="
@@ -729,9 +722,9 @@ class UIMainWindow(object):
                                     + prefix
                                     + str("%02d_00001.cbf" % int(entry))
                                 )
-                                if entry in imageSelection:
+                                if entry in self.image_selection:
                                     xia2_input = (
-                                        xia2_input + ":" + imageSelection[entry]
+                                        xia2_input + ":" + self.image_selection[entry]
                                     )
                         else:  # runs have NOT been selected
                             for run in runs:
@@ -742,104 +735,104 @@ class UIMainWindow(object):
                                     + prefix
                                     + str("%02d_00001.cbf" % int(run))
                                 )
-                                if (run - 1) in imageSelection:
+                                if (run - 1) in self.image_selection:
                                     xia2_input = (
-                                        xia2_input + ":" + imageSelection[run - 1]
+                                        xia2_input + ":" + self.image_selection[run - 1]
                                     )
                     self.run_xia2_dataset(dataset, xia2_input)
 
     def run_xia2_dataset(self, input_dataset, xia2_input):  # prefix # visit # dataset
         # create processing path
         time_date = str(datetime.utcnow().strftime("%Y%m%d_%H%M"))
-        self.processingPath = (
+        self.processing_path = (
             f"{self.visit}processing/xia2GUI/{input_dataset}_{time_date}/"
         )
         if not os.path.exists(self.visit + "processing/xia2GUI/"):
             os.makedirs(self.visit + "processing/xia2GUI/")
-        if not os.path.exists(self.processingPath):
-            os.makedirs(self.processingPath)
+        if not os.path.exists(self.processing_path):
+            os.makedirs(self.processing_path)
 
-        self.processingPath__path.setText(self.processingPath)
-        self.tabsProcessingPath[self.tabsNum] = self.processingPath
+        self.processing_path_path.setText(self.processing_path)
+        self.tabs_processing_path[self.tabs_num] = self.processing_path
 
-        self.append_output(self.mainTab_txt, "Xia2 command:")
+        self.append_output(self.main_tab_txt, "Xia2 command:")
         # this is the bit I think i need to change!!!
         # dataset and prefix I would guess is required
-        input_xia2_command = self.xia2command + xia2_input + xia2OptionsList
-        self.append_output(self.mainTab_txt, "	" + input_xia2_command)
+        input_xia2_command = self.xia2_command + xia2_input + self.xia2_options_list
+        self.append_output(self.main_tab_txt, "	" + input_xia2_command)
 
         # create job file
 
-        job_file = self.processingPath + "job.sh"
+        job_file = self.processing_path + "job.sh"
         with open(job_file, "a") as jF:
-            jF.write(str("cd " + self.processingPath) + "\n")
-            jF.write(str("module load dials" + self.dialVersion) + "\n")
+            jF.write(str("cd " + self.processing_path) + "\n")
+            jF.write(str("module load dials" + self.dials_version) + "\n")
             jF.write(str(input_xia2_command) + "\n")
 
         ################################################################################
         # open new tab with dataset and date
-        self.tabs[self.tabsNum] = QtWidgets.QWidget()
-        self.tabs[self.tabsNum].setObjectName("tabs[tabNum]")
+        self.tabs[self.tabs_num] = QtWidgets.QWidget()
+        self.tabs[self.tabs_num].setObjectName("tabs[tabNum]")
 
         # plain text
         # clear previous??
-        self.tabstxt[self.tabsNum] = QtWidgets.QPlainTextEdit(self.tabs[self.tabsNum])
-        self.tabstxt[self.tabsNum].setGeometry(QtCore.QRect(0, 32, 756, 372))
-        self.tabstxt[self.tabsNum].setObjectName("tabstxt[tabNum]")
+        self.tabstxt[self.tabs_num] = QtWidgets.QPlainTextEdit(self.tabs[self.tabs_num])
+        self.tabstxt[self.tabs_num].setGeometry(QtCore.QRect(0, 32, 756, 372))
+        self.tabstxt[self.tabs_num].setObjectName("tabstxt[tabNum]")
 
         # buttons
-        tab_num = int(self.tabsNum)
+        tab_num = int(self.tabs_num)
 
-        self.tabsIV[self.tabsNum] = QtWidgets.QPushButton(self.tabs[self.tabsNum])
-        self.tabsIV[self.tabsNum].setGeometry(QtCore.QRect(120, 0, 151, 31))
-        self.tabsIV[self.tabsNum].setFont(self.fontSize10)
-        self.tabsIV[self.tabsNum].setObjectName("xia2output_dialsImage")
-        self.tabsIV[self.tabsNum].setText("Image Viewer")
-        self.tabsIV[self.tabsNum].clicked.connect(
+        self.tabs_iv[self.tabs_num] = QtWidgets.QPushButton(self.tabs[self.tabs_num])
+        self.tabs_iv[self.tabs_num].setGeometry(QtCore.QRect(120, 0, 151, 31))
+        self.tabs_iv[self.tabs_num].setFont(self.font_size10)
+        self.tabs_iv[self.tabs_num].setObjectName("xia2output_dialsImage")
+        self.tabs_iv[self.tabs_num].setText("Image Viewer")
+        self.tabs_iv[self.tabs_num].clicked.connect(
             lambda: self.run_dials_image_viewer(tab_num)
         )
 
-        self.tabsRLV[self.tabsNum] = QtWidgets.QPushButton(self.tabs[self.tabsNum])
-        self.tabsRLV[self.tabsNum].setGeometry(QtCore.QRect(270, 0, 151, 31))
-        self.tabsRLV[self.tabsNum].setFont(self.fontSize10)
-        self.tabsRLV[self.tabsNum].setObjectName("xia2output_reciprocal")
-        self.tabsRLV[self.tabsNum].setText("Reciprocal Lattice")
-        self.tabsRLV[self.tabsNum].clicked.connect(
+        self.tabs_rlv[self.tabs_num] = QtWidgets.QPushButton(self.tabs[self.tabs_num])
+        self.tabs_rlv[self.tabs_num].setGeometry(QtCore.QRect(270, 0, 151, 31))
+        self.tabs_rlv[self.tabs_num].setFont(self.font_size10)
+        self.tabs_rlv[self.tabs_num].setObjectName("xia2output_reciprocal")
+        self.tabs_rlv[self.tabs_num].setText("Reciprocal Lattice")
+        self.tabs_rlv[self.tabs_num].clicked.connect(
             lambda: self.run_dials_reciprocal_lattice(tab_num)
         )
 
-        self.tabsHTML[self.tabsNum] = QtWidgets.QPushButton(self.tabs[self.tabsNum])
-        self.tabsHTML[self.tabsNum].setGeometry(QtCore.QRect(420, 0, 151, 31))
-        self.tabsHTML[self.tabsNum].setFont(self.fontSize10)
-        self.tabsHTML[self.tabsNum].setObjectName("xia2output_html")
-        self.tabsHTML[self.tabsNum].setText("HTML")
-        self.tabsHTML[self.tabsNum].clicked.connect(
+        self.tabs_html[self.tabs_num] = QtWidgets.QPushButton(self.tabs[self.tabs_num])
+        self.tabs_html[self.tabs_num].setGeometry(QtCore.QRect(420, 0, 151, 31))
+        self.tabs_html[self.tabs_num].setFont(self.font_size10)
+        self.tabs_html[self.tabs_num].setObjectName("xia2output_html")
+        self.tabs_html[self.tabs_num].setText("HTML")
+        self.tabs_html[self.tabs_num].clicked.connect(
             lambda: self.run_dials_html(tab_num)
         )
 
-        self.xia2output.addTab(self.tabs[self.tabsNum], "")
-        self.xia2output.setTabText(
-            self.xia2output.indexOf(self.tabs[self.tabsNum]),
+        self.xia2_output.addTab(self.tabs[self.tabs_num], "")
+        self.xia2_output.setTabText(
+            self.xia2_output.indexOf(self.tabs[self.tabs_num]),
             input_dataset + "_" + time_date,
         )
 
         # edit plain text
-        self.tabstxt[self.tabsNum].appendPlainText("\nRunning xia2\n")
-        self.tabstxt[self.tabsNum].appendPlainText("Xia2 command:")
-        self.tabstxt[self.tabsNum].appendPlainText("	" + input_xia2_command + "\n")
+        self.tabstxt[self.tabs_num].appendPlainText("\nRunning xia2\n")
+        self.tabstxt[self.tabs_num].appendPlainText("Xia2 command:")
+        self.tabstxt[self.tabs_num].appendPlainText("	" + input_xia2_command + "\n")
 
         ################################################################################
         # run xia2
 
         if input_dataset == "":
-            tab_name = self.tabstxt[self.tabsNum]
+            tab_name = self.tabstxt[self.tabs_num]
             dataset_error_statement = (
                 "\n\n No dataset has been selected (File>Open) \n\n"
             )
-            self.append_output(self.mainTab_txt, dataset_error_statement)
+            self.append_output(self.main_tab_txt, dataset_error_statement)
             self.append_output(tab_name, dataset_error_statement)
         else:
-            if computingLocation == "Local":
+            if self.computing_location == "Local":
                 # run xia2 locally
                 subprocess.Popen(["sh", job_file])
             else:
@@ -864,11 +857,11 @@ class UIMainWindow(object):
             ############################################################################
             # output xia2.txt into tab
             self.thread = MyThread2(
-                self.processingPath,
+                self.processing_path,
                 input_dataset,
                 self.tabstxt,
-                self.tabsNum,
-                self.mainTab_txt,
+                self.tabs_num,
+                self.main_tab_txt,
                 "xia2.txt",
             )
 
@@ -879,26 +872,26 @@ class UIMainWindow(object):
             self.thread.start()
 
         ################################################################################
-        self.tabsNum += 1
-        if self.tabsNum > 8:
-            self.tabsNum = 0
+        self.tabs_num += 1
+        if self.tabs_num > 8:
+            self.tabs_num = 0
 
     def run_screen19(self):
-        self.append_output(self.mainTab_txt, "\nRunning screen19\n")
+        self.append_output(self.main_tab_txt, "\nRunning screen19\n")
         if self.prefix == "":
             self.append_output(
-                self.mainTab_txt,
+                self.main_tab_txt,
                 "\n\n ########################################################a",
             )
             self.append_output(
-                self.mainTab_txt,
+                self.main_tab_txt,
                 "	No cbf images found in directory, please select dataset directory",
             )
             return
         else:
             # create processing path
             time_date = str(datetime.utcnow().strftime("%Y%m%d_%H%M"))
-            self.processingPath = (
+            self.processing_path = (
                 self.visit
                 + "processing/xia2GUI/"
                 + self.dataset
@@ -908,88 +901,94 @@ class UIMainWindow(object):
             )
             if not os.path.exists(self.visit + "processing/xia2GUI/"):
                 os.makedirs(self.visit + "processing/xia2GUI/")
-            if not os.path.exists(self.processingPath):
-                os.makedirs(self.processingPath)
+            if not os.path.exists(self.processing_path):
+                os.makedirs(self.processing_path)
 
-            self.processingPath__path.setText(self.processingPath)
-            self.tabsProcessingPath[self.tabsNum] = self.processingPath
+            self.processing_path_path.setText(self.processing_path)
+            self.tabs_processing_path[self.tabs_num] = self.processing_path
 
-            self.append_output(self.mainTab_txt, "screen19 command:")
+            self.append_output(self.main_tab_txt, "screen19 command:")
 
             # remove unwanted xia2 commands
             screen19_options_list = ""
-            for command in xia2OptionsList.split(" "):
+            for command in self.xia2_options_list.split(" "):
                 if command == "small_molecule=true":
                     pass
                 else:
                     screen19_options_list = screen19_options_list + command + " "
 
             input_screen19_command = (
-                "screen19 " + self.datasetPath + screen19_options_list
+                "screen19 " + self.dataset_path + screen19_options_list
             )
-            self.append_output(self.mainTab_txt, "	" + input_screen19_command)
+            self.append_output(self.main_tab_txt, "	" + input_screen19_command)
 
             # create job file
-            job_file = self.processingPath + "job.sh"
+            job_file = self.processing_path + "job.sh"
             with open(job_file, "a") as jf:
-                jf.write(str("cd " + self.processingPath) + "\n")
-                jf.write(str("module load dials" + self.dialVersion) + "\n")
+                jf.write(str("cd " + self.processing_path) + "\n")
+                jf.write(str("module load dials" + self.dials_version) + "\n")
                 jf.write(str(input_screen19_command) + "\n")
 
             ############################################################################
             # open new tab with dataset and date
-            self.tabs[self.tabsNum] = QtWidgets.QWidget()
+            self.tabs[self.tabs_num] = QtWidgets.QWidget()
 
-            self.tabs[self.tabsNum].setObjectName("tabs[tab_num]")
+            self.tabs[self.tabs_num].setObjectName("tabs[tab_num]")
 
             # plain text
             # clear previous??
-            self.tabstxt[self.tabsNum] = QtWidgets.QPlainTextEdit(
-                self.tabs[self.tabsNum]
+            self.tabstxt[self.tabs_num] = QtWidgets.QPlainTextEdit(
+                self.tabs[self.tabs_num]
             )
-            self.tabstxt[self.tabsNum].setGeometry(QtCore.QRect(0, 32, 756, 372))
-            self.tabstxt[self.tabsNum].setObjectName("tabstxt[tab_num]")
+            self.tabstxt[self.tabs_num].setGeometry(QtCore.QRect(0, 32, 756, 372))
+            self.tabstxt[self.tabs_num].setObjectName("tabstxt[tab_num]")
 
             # buttons
-            tab_num = int(self.tabsNum)
+            tab_num = int(self.tabs_num)
 
-            self.tabsIV[self.tabsNum] = QtWidgets.QPushButton(self.tabs[self.tabsNum])
-            self.tabsIV[self.tabsNum].setGeometry(QtCore.QRect(120, 0, 151, 31))
-            self.tabsIV[self.tabsNum].setFont(self.fontSize10)
-            self.tabsIV[self.tabsNum].setObjectName("xia2output_dialsImage")
-            self.tabsIV[self.tabsNum].setText("Image Viewer")
-            self.tabsIV[self.tabsNum].clicked.connect(
+            self.tabs_iv[self.tabs_num] = QtWidgets.QPushButton(
+                self.tabs[self.tabs_num]
+            )
+            self.tabs_iv[self.tabs_num].setGeometry(QtCore.QRect(120, 0, 151, 31))
+            self.tabs_iv[self.tabs_num].setFont(self.font_size10)
+            self.tabs_iv[self.tabs_num].setObjectName("xia2output_dialsImage")
+            self.tabs_iv[self.tabs_num].setText("Image Viewer")
+            self.tabs_iv[self.tabs_num].clicked.connect(
                 lambda: self.run_dials_image_viewer(tab_num)
             )
 
-            self.tabsRLV[self.tabsNum] = QtWidgets.QPushButton(self.tabs[self.tabsNum])
-            self.tabsRLV[self.tabsNum].setGeometry(QtCore.QRect(270, 0, 151, 31))
-            self.tabsRLV[self.tabsNum].setFont(self.fontSize10)
-            self.tabsRLV[self.tabsNum].setObjectName("xia2output_reciprocal")
-            self.tabsRLV[self.tabsNum].setText("Reciprocal Lattice")
-            self.tabsRLV[self.tabsNum].clicked.connect(
+            self.tabs_rlv[self.tabs_num] = QtWidgets.QPushButton(
+                self.tabs[self.tabs_num]
+            )
+            self.tabs_rlv[self.tabs_num].setGeometry(QtCore.QRect(270, 0, 151, 31))
+            self.tabs_rlv[self.tabs_num].setFont(self.font_size10)
+            self.tabs_rlv[self.tabs_num].setObjectName("xia2output_reciprocal")
+            self.tabs_rlv[self.tabs_num].setText("Reciprocal Lattice")
+            self.tabs_rlv[self.tabs_num].clicked.connect(
                 lambda: self.run_dials_reciprocal_lattice(tab_num)
             )
 
-            self.tabsHTML[self.tabsNum] = QtWidgets.QPushButton(self.tabs[self.tabsNum])
-            self.tabsHTML[self.tabsNum].setGeometry(QtCore.QRect(420, 0, 151, 31))
-            self.tabsHTML[self.tabsNum].setFont(self.fontSize10)
-            self.tabsHTML[self.tabsNum].setObjectName("xia2output_html")
-            self.tabsHTML[self.tabsNum].setText("HTML")
-            self.tabsHTML[self.tabsNum].clicked.connect(
+            self.tabs_html[self.tabs_num] = QtWidgets.QPushButton(
+                self.tabs[self.tabs_num]
+            )
+            self.tabs_html[self.tabs_num].setGeometry(QtCore.QRect(420, 0, 151, 31))
+            self.tabs_html[self.tabs_num].setFont(self.font_size10)
+            self.tabs_html[self.tabs_num].setObjectName("xia2output_html")
+            self.tabs_html[self.tabs_num].setText("HTML")
+            self.tabs_html[self.tabs_num].clicked.connect(
                 lambda: self.run_dials_html(tab_num)
             )
 
-            self.xia2output.addTab(self.tabs[self.tabsNum], "")
-            self.xia2output.setTabText(
-                self.xia2output.indexOf(self.tabs[self.tabsNum]),
+            self.xia2_output.addTab(self.tabs[self.tabs_num], "")
+            self.xia2_output.setTabText(
+                self.xia2_output.indexOf(self.tabs[self.tabs_num]),
                 self.dataset + "_s19_" + time_date,
             )
 
             # edit plain text
-            self.tabstxt[self.tabsNum].appendPlainText("\nRunning screen19\n")
-            self.tabstxt[self.tabsNum].appendPlainText("screen19 command:")
-            self.tabstxt[self.tabsNum].appendPlainText(
+            self.tabstxt[self.tabs_num].appendPlainText("\nRunning screen19\n")
+            self.tabstxt[self.tabs_num].appendPlainText("screen19 command:")
+            self.tabstxt[self.tabs_num].appendPlainText(
                 "	" + input_screen19_command + "\n"
             )
 
@@ -997,14 +996,14 @@ class UIMainWindow(object):
             # run screen19
 
             if self.dataset == "":
-                tab_name = self.tabstxt[self.tabsNum]
+                tab_name = self.tabstxt[self.tabs_num]
                 dataset_error_statement = (
                     "\n\n Dataset has not be selected (File>Open) \n\n"
                 )
-                self.append_output(self.mainTab_txt, dataset_error_statement)
+                self.append_output(self.main_tab_txt, dataset_error_statement)
                 self.append_output(tab_name, dataset_error_statement)
             else:
-                if computingLocation == "Local":
+                if self.computing_location == "Local":
                     # run screen19 locally
                     subprocess.Popen(["sh", job_file])
                 else:
@@ -1022,11 +1021,11 @@ class UIMainWindow(object):
                 ########################################################################
                 # output xia2.txt into tab
                 self.thread = MyThread2(
-                    self.processingPath,
+                    self.processing_path,
                     self.dataset,
                     self.tabstxt,
-                    self.tabsNum,
-                    self.mainTab_txt,
+                    self.tabs_num,
+                    self.main_tab_txt,
                     "screen19.log",
                 )
 
@@ -1037,26 +1036,26 @@ class UIMainWindow(object):
                 self.thread.start()
 
             ############################################################################
-            self.tabsNum += 1
-            if self.tabsNum > 8:
-                self.tabsNum = 0
+            self.tabs_num += 1
+            if self.tabs_num > 8:
+                self.tabs_num = 0
 
     def thread_started(self):
-        self.append_output(self.mainTab_txt, "\n*** Thread Started ***\n")
+        self.append_output(self.main_tab_txt, "\n*** Thread Started ***\n")
 
     def thread_finished(self):
-        self.append_output(self.mainTab_txt, "\n*** Thread Finished ***\n")
+        self.append_output(self.main_tab_txt, "\n*** Thread Finished ***\n")
 
     def stop_thread(self):
-        self.append_output(self.mainTab_txt, "\n*** Stopping Thead ***\n")
+        self.append_output(self.main_tab_txt, "\n*** Stopping Thead ***\n")
         # self.MyThread2.stop()
         # self.MyThread2.quit()
 
     # open run dials Reciprocal Lattice viewer ####
     def run_dials_reciprocal_lattice(self, tabs_num):
-        self.append_output(self.mainTab_txt, "Opening dials reciprocal lattice viewer")
+        self.append_output(self.main_tab_txt, "Opening dials reciprocal lattice viewer")
         self.append_output(
-            self.mainTab_txt, "Processing path:" + self.tabsProcessingPath[tabs_num]
+            self.main_tab_txt, "Processing path:" + self.tabs_processing_path[tabs_num]
         )
 
         latest_expt = ""
@@ -1065,10 +1064,10 @@ class UIMainWindow(object):
         latest_refl_time = ""
 
         expt_files = glob.glob(
-            self.tabsProcessingPath[tabs_num] + "/**/*.expt", recursive=True
+            self.tabs_processing_path[tabs_num] + "/**/*.expt", recursive=True
         )
         refl_files = glob.glob(
-            self.tabsProcessingPath[tabs_num] + "/**/*.refl", recursive=True
+            self.tabs_processing_path[tabs_num] + "/**/*.refl", recursive=True
         )
         for expt_file in expt_files:
             file_time = os.path.getmtime(expt_file)
@@ -1090,24 +1089,24 @@ class UIMainWindow(object):
                     latest_refl_time = file_time
         if latest_expt == "":
             self.append_output(
-                self.mainTab_txt,
+                self.main_tab_txt,
                 "\n\n *** Expt was not present in processing path, "
                 "please wait unit after initial importing *** \n\n",
             )
             return
         if latest_refl == "":
             self.append_output(
-                self.mainTab_txt,
+                self.main_tab_txt,
                 "\n\n ***Refl was not present in processing path, "
                 "please wait unit after initial spot finding *** \n\n",
             )
             return
         else:
             self.append_output(
-                self.mainTab_txt, "\nReflection file: " + str(latest_refl)
+                self.main_tab_txt, "\nReflection file: " + str(latest_refl)
             )
             self.append_output(
-                self.mainTab_txt, "Experiment file: " + str(latest_expt) + "\n"
+                self.main_tab_txt, "Experiment file: " + str(latest_expt) + "\n"
             )
             subprocess.Popen(
                 [
@@ -1122,9 +1121,9 @@ class UIMainWindow(object):
             )
 
     def run_dials_image_viewer(self, tabs_num):
-        self.append_output(self.mainTab_txt, "Opening dials image viewer")
+        self.append_output(self.main_tab_txt, "Opening dials image viewer")
         self.append_output(
-            self.mainTab_txt, "Processing path:" + self.tabsProcessingPath[tabs_num]
+            self.main_tab_txt, "Processing path:" + self.tabs_processing_path[tabs_num]
         )
 
         latest_expt = ""
@@ -1133,10 +1132,10 @@ class UIMainWindow(object):
         latest_refl_time = ""
 
         expt_files = glob.glob(
-            self.tabsProcessingPath[tabs_num] + "/**/*.expt", recursive=True
+            self.tabs_processing_path[tabs_num] + "/**/*.expt", recursive=True
         )
         refl_files = glob.glob(
-            self.tabsProcessingPath[tabs_num] + "/**/*.refl", recursive=True
+            self.tabs_processing_path[tabs_num] + "/**/*.refl", recursive=True
         )
         for expt_file in expt_files:
             file_time = os.path.getmtime(expt_file)
@@ -1158,16 +1157,16 @@ class UIMainWindow(object):
                     latest_refl_time = file_time
         if latest_expt == "":
             self.append_output(
-                self.mainTab_txt,
+                self.main_tab_txt,
                 "\n\n ***Expt was not present in processing path, "
                 "please wait unit after initial importing *** \n\n",
             )
         else:
             self.append_output(
-                self.mainTab_txt, "\nReflection file: " + str(latest_refl)
+                self.main_tab_txt, "\nReflection file: " + str(latest_refl)
             )
             self.append_output(
-                self.mainTab_txt, "Experiment file: " + str(latest_expt) + "\n"
+                self.main_tab_txt, "Experiment file: " + str(latest_expt) + "\n"
             )
             subprocess.Popen(
                 [
@@ -1182,16 +1181,16 @@ class UIMainWindow(object):
             )
 
     def run_dials_html(self, tabs_num):
-        self.append_output(self.mainTab_txt, "Opening HTML")
+        self.append_output(self.main_tab_txt, "Opening HTML")
         self.append_output(
-            self.mainTab_txt, "Processing path:" + self.tabsProcessingPath[tabs_num]
+            self.main_tab_txt, "Processing path:" + self.tabs_processing_path[tabs_num]
         )
 
         latest_html = ""
         latest_html_time = ""
 
         html_files = glob.glob(
-            self.tabsProcessingPath[tabs_num] + "/**/*.html", recursive=True
+            self.tabs_processing_path[tabs_num] + "/**/*.html", recursive=True
         )
         for html_file in html_files:
             file_time = os.path.getmtime(html_file)
@@ -1205,14 +1204,14 @@ class UIMainWindow(object):
 
         if latest_html == "":
             self.append_output(
-                self.mainTab_txt,
+                self.main_tab_txt,
                 (
                     "\n\n *** html file was not present in processing path, "
                     "please wait unit after initial importing *** \n\n"
                 ),
             )
         else:
-            self.append_output(self.mainTab_txt, "HTML file: " + str(latest_html))
+            self.append_output(self.main_tab_txt, "HTML file: " + str(latest_html))
             subprocess.Popen(
                 [
                     "sh",
@@ -1223,78 +1222,80 @@ class UIMainWindow(object):
 
     # version menu, change version
     def version_current(self):
-        self.append_output(self.mainTab_txt, "Changing to dials version to current.")
+        self.append_output(self.main_tab_txt, "Changing to dials version to current.")
         dial_version_pop = (
             os.popen("module unload dials; module load dials; dials.version")
             .read()
             .split("-")[0]
             .split(" ")[1]
         )
-        self.dialVersion = ""
+        self.dials_version = ""
         # update version label
-        self.menuVersion.setTitle("Version(" + dial_version_pop + ")")
-        self.append_output(self.mainTab_txt, "	Version(" + dial_version_pop + ")")
+        self.menu_version.setTitle("Version(" + dial_version_pop + ")")
+        self.append_output(self.main_tab_txt, "	Version(" + dial_version_pop + ")")
 
     # version menu, change version to latest
     def version_latest(self):
-        self.append_output(self.mainTab_txt, "Changing to dials version to latest.")
+        self.append_output(self.main_tab_txt, "Changing to dials version to latest.")
         dial_version_pop = (
             os.popen("module unload dials; module load dials/latest; dials.version")
             .read()
             .split("-")[0]
             .split(" ")[1]
         )
-        self.dialVersion = "/latest"
+        self.dials_version = "/latest"
         # update version label
-        self.menuVersion.setTitle("Version(" + dial_version_pop + ")")
-        self.append_output(self.mainTab_txt, "	Version(" + dial_version_pop + ")")
+        self.menu_version.setTitle("Version(" + dial_version_pop + ")")
+        self.append_output(self.main_tab_txt, "	Version(" + dial_version_pop + ")")
 
     # version menu, change version to now
     def version_now(self):
-        self.append_output(self.mainTab_txt, "Changing to dials version to Now.")
+        self.append_output(self.main_tab_txt, "Changing to dials version to Now.")
         dial_version_pop = (
             os.popen("module unload dials; module load dials/now; dials.version")
             .read()
             .split("-")[0]
             .split(" ")[1]
         )
-        self.dialVersion = "/now"
+        self.dials_version = "/now"
         # update version label
-        self.menuVersion.setTitle("Version(" + dial_version_pop + ")")
-        self.append_output(self.mainTab_txt, "	Version(" + dial_version_pop + ")")
+        self.menu_version.setTitle("Version(" + dial_version_pop + ")")
+        self.append_output(self.main_tab_txt, "	Version(" + dial_version_pop + ")")
 
     # version menu, change version to 1.4
     def version_1_4(self):
-        self.append_output(self.mainTab_txt, "Changing to dials version to 1.4.")
+        self.append_output(self.main_tab_txt, "Changing to dials version to 1.4.")
         dial_version_pop = (
             os.popen("module unload dials; module load dials/1.4; dials.version")
             .read()
             .split("-")[0]
             .split(" ")[1]
         )
-        self.dialVersion = "/1.4"
+        self.dials_version = "/1.4"
         # update version label
-        self.menuVersion.setTitle("Version(" + dial_version_pop + ")")
-        self.append_output(self.mainTab_txt, "	Version(" + dial_version_pop + ")")
+        self.menu_version.setTitle("Version(" + dial_version_pop + ")")
+        self.append_output(self.main_tab_txt, "	Version(" + dial_version_pop + ")")
 
     # version menu, change version to 2.1
     def version_2_1(self):
-        self.append_output(self.mainTab_txt, "Changing to dials version to 2.1.")
+        self.append_output(self.main_tab_txt, "Changing to dials version to 2.1.")
         dial_version_pop = (
             os.popen("module unload dials; module load dials/2.1; dials.version")
             .read()
             .split("-")[0]
             .split(" ")[1]
         )
-        self.dialVersion = "/2.1"
+        self.dials_version = "/2.1"
         # update version label
-        self.menuVersion.setTitle("Version(" + dial_version_pop + ")")
-        self.append_output(self.mainTab_txt, "	Version(" + dial_version_pop + ")")
+        self.menu_version.setTitle("Version(" + dial_version_pop + ")")
+        self.append_output(self.main_tab_txt, "	Version(" + dial_version_pop + ")")
 
     # close tabs ######
     def close_handler(self, index):
-        self.append_output(self.mainTab_txt, "close_handler called, index = %s" % index)
-        self.xia2output.removeTab(index)
+        self.append_output(
+            self.main_tab_txt, "close_handler called, index = %s" % index
+        )
+        self.xia2_output.removeTab(index)
 
     ####################################################
     def retranslate_ui(self, main_window):
@@ -1304,85 +1305,89 @@ class UIMainWindow(object):
             _translate("main_window", "Chemical Crystallography Xia2 GUI")
         )
         # File menu
-        self.menuFile.setTitle(_translate("main_window", "File"))
-        self.menuFile_Open.setText(_translate("main_window", "Open"))
-        self.menuFile_Open.setStatusTip(
+        self.menu_file.setTitle(_translate("main_window", "File"))
+        self.menu_file_open.setText(_translate("main_window", "Open"))
+        self.menu_file_open.setStatusTip(
             _translate("main_window", "Open the dataset - select dataset folder")
         )
-        self.menuFile_Open.setShortcut(_translate("main_window", "Ctrl+O"))
-        self.menuFile_Open_Multiple.setText(_translate("main_window", "Open Multiple"))
-        self.menuFile_Open_Multiple.setStatusTip(
+        self.menu_file_open.setShortcut(_translate("main_window", "Ctrl+O"))
+        self.menu_file_open_multiple.setText(_translate("main_window", "Open Multiple"))
+        self.menu_file_open_multiple.setStatusTip(
             _translate(
                 "main_window",
                 "Open multiple datasets - "
                 "select multiple datasets using the Ctrl button",
             )
         )
-        self.menuFile_Open_Multiple.setShortcut(_translate("main_window", "Ctrl+M"))
-        self.menuFile_Close_GUI.setText(_translate("main_window", "Close GUI"))
-        self.menuFile_Close_GUI.setStatusTip(
+        self.menu_file_open_multiple.setShortcut(_translate("main_window", "Ctrl+M"))
+        self.menu_file_close_gui.setText(_translate("main_window", "Close GUI"))
+        self.menu_file_close_gui.setStatusTip(
             _translate("main_window", "This will close the GUI")
         )
-        self.menuFile_Close_GUI.setShortcut(_translate("main_window", "Ctrl+C"))
+        self.menu_file_close_gui.setShortcut(_translate("main_window", "Ctrl+C"))
         # Edit menu
-        self.menuEdit.setTitle(_translate("main_window", "Edit"))
-        self.menuEdit_CopyCommand.setText(_translate("main_window", "Copy Command #"))
-        self.menuEdit_SaveSettings.setText(_translate("main_window", "Save Settings #"))
-        self.menuEdit_SaveSettings.setStatusTip(
+        self.menu_edit.setTitle(_translate("main_window", "Edit"))
+        self.menu_edit_copy_command.setText(_translate("main_window", "Copy Command #"))
+        self.menu_edit_save_settings.setText(
+            _translate("main_window", "Save Settings #")
+        )
+        self.menu_edit_save_settings.setStatusTip(
             _translate("main_window", "Save all the GUI settings to a .txt file")
         )
-        self.menuEdit_LoadSettings.setText(_translate("main_window", "Load Settings #"))
-        self.menuEdit_LoadSettings.setStatusTip(
+        self.menu_edit_load_settings.setText(
+            _translate("main_window", "Load Settings #")
+        )
+        self.menu_edit_load_settings.setStatusTip(
             _translate("main_window", "Load previous save GUI settings")
         )
         # View menu
-        self.menuView.setTitle(_translate("main_window", "View"))
+        self.menu_view.setTitle(_translate("main_window", "View"))
         # Settings menu
-        self.menuSettings.setTitle(_translate("main_window", "Settings"))
+        self.menu_settings.setTitle(_translate("main_window", "Settings"))
         # Version menu
         dial_version_pop = os.popen("dials.version").read().split("-")[0].split(" ")[1]
-        self.menuVersion.setTitle(
+        self.menu_version.setTitle(
             _translate("main_window", "Version(" + dial_version_pop + ")")
         )
-        self.menuVersion_current.setText(_translate("main_window", "dials_current"))
-        self.menuVersion_latest.setText(_translate("main_window", "dials_latest"))
-        self.menuVersion_now.setText(_translate("main_window", "dials_now"))
-        self.menuVersion_1_4.setText(_translate("main_window", "dials_1.4 #"))
-        self.menuVersion_2_1.setText(_translate("main_window", "dials_2.1 #"))
+        self.menu_version_current.setText(_translate("main_window", "dials_current"))
+        self.menu_version_latest.setText(_translate("main_window", "dials_latest"))
+        self.menu_version_now.setText(_translate("main_window", "dials_now"))
+        self.menu_version_1_4.setText(_translate("main_window", "dials_1.4 #"))
+        self.menu_version_2_1.setText(_translate("main_window", "dials_2.1 #"))
         # Dataset labels info
-        self.labelsDataset.setText(_translate("main_window", "Dataset"))
-        self.labelsPrefix.setText(_translate("main_window", "Prefix"))
-        self.labelsImages.setText(_translate("main_window", "Runs images"))
-        self.datasetInfo_dataset.setText(_translate("main_window", "none"))
-        self.datasetInfo_prefix.setText(_translate("main_window", "none"))
-        self.datasetInfo_images.setText(_translate("main_window", "0"))
+        self.labels_dataset.setText(_translate("main_window", "Dataset"))
+        self.labels_prefix.setText(_translate("main_window", "Prefix"))
+        self.labels_images.setText(_translate("main_window", "Runs images"))
+        self.dataset_info_dataset.setText(_translate("main_window", "none"))
+        self.dataset_info_prefix.setText(_translate("main_window", "none"))
+        self.dataset_info_images.setText(_translate("main_window", "0"))
         # view buttons
-        self.viewButtons_xia2.setText(_translate("main_window", "Run Xia2"))
-        self.viewButtons_xia2.setStatusTip(
+        self.view_buttons_xia2.setText(_translate("main_window", "Run Xia2"))
+        self.view_buttons_xia2.setStatusTip(
             _translate("main_window", "Run Xia2 with current dataset and options")
         )
 
-        self.viewButtons_screen19.setText(_translate("main_window", "Run screen19"))
-        self.viewButtons_screen19.setStatusTip(
+        self.view_buttons_screen19.setText(_translate("main_window", "Run screen19"))
+        self.view_buttons_screen19.setStatusTip(
             _translate("main_window", "Run screen with current dataset and options")
         )
 
-        self.viewButtons_options.setText(_translate("main_window", "Xia2 Options"))
-        self.viewButtons_options.setStatusTip(
+        self.view_buttons_options.setText(_translate("main_window", "Xia2 Options"))
+        self.view_buttons_options.setStatusTip(
             _translate(
                 "main_window",
                 "Opens a second window with all additional xia2 processing options",
             )
         )
-        self.viewButtons_albula.setText(_translate("main_window", "Open Albula"))
-        self.viewButtons_albula.setStatusTip(
+        self.view_buttons_albula.setText(_translate("main_window", "Open Albula"))
+        self.view_buttons_albula.setStatusTip(
             _translate(
                 "main_window", "Open Albula which is image viewing program from Dectris"
             )
         )
         # processing path
-        self.processingPath__path.setText(_translate("main_window", "none"))
-        self.processingPath_label.setText(_translate("main_window", "Processing Path"))
+        self.processing_path_path.setText(_translate("main_window", "none"))
+        self.processing_path_label.setText(_translate("main_window", "Processing Path"))
         # xia2 command
         self.command_label.setText(_translate("main_window", "xia2 Command"))
         self.command_command.setPlainText(
@@ -1491,12 +1496,9 @@ class UIXia2Options:
         self.refGeometryPath = ""
         self.visit = visit
         self.mainTab_txt = main_tab_txt
-        global runImageSelector
-        runImageSelector = False
-        global runSelection
-        runSelection = []
-        global imageSelection
-        imageSelection = {}
+        self.run_image_selector = False
+        self.run_selection = []
+        self.image_selection = {}
         self.prefix = prefix
         self.openingVisit = opening_visit
 
@@ -1506,7 +1508,7 @@ class UIXia2Options:
         # xia2_options.resize(613, 454)
         xia2_options.resize(613, 600)
         self.centralwidget = QtWidgets.QWidget(xia2_options)
-        self.centralwidget.setObjectName("centralwidget")
+        self.centralwidget.setObjectName("central_widget")
 
         # update button
         self.updateButton = QtWidgets.QPushButton(self.centralwidget)
@@ -2542,10 +2544,10 @@ class UIXia2Options:
         xia2_options.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(xia2_options)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 613, 26))
-        self.menubar.setObjectName("menubar")
+        self.menubar.setObjectName("menu_bar")
         xia2_options.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(xia2_options)
-        self.statusbar.setObjectName("statusbar")
+        self.statusbar.setObjectName("status_bar")
         xia2_options.setStatusBar(self.statusbar)
 
         self.retranslate_ui(xia2_options)
@@ -2802,15 +2804,13 @@ class UIXia2Options:
                     )
 
                 if variable == self.Import_RunSelector_checkBox:
-                    global runSelection
-                    runSelection = []
-                    global runImageSelector
-                    runImageSelector = True
+                    self.run_selection = []
+                    self.run_image_selector = True
                     for num, run in enumerate(self.runSelectorList, start=1):
                         if run.isChecked():
-                            runSelection.append(num)
+                            self.run_selection.append(num)
                     self.mainTab_txt.appendPlainText(
-                        "Run selector:	" + str(runSelection)
+                        "Run selector:	" + str(self.run_selection)
                     )
                     self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                 if variable == self.Import_type_checkBox:
@@ -3228,7 +3228,7 @@ class UIXia2Options:
                         )
 
                 if variable == self.HP_runStartEnd_checkBox:
-                    runImageSelector = True
+                    self.run_image_selector = True
                     counter = 0
                     self.runStartEnd_lineEdits = [
                         self.HP_runStartEnd_lineEdit_1.text(),
@@ -3247,11 +3247,10 @@ class UIXia2Options:
                         if entry == "":
                             counter += 1
                         else:
-                            global imageSelection
-                            imageSelection[counter] = entry
+                            self.image_selection[counter] = entry
                             counter += 1
                     output_message = "Image start/end option selected.\n" "	" + str(
-                        imageSelection
+                        self.image_selection
                     )
                     self.mainTab_txt.appendPlainText(output_message)
                     self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
@@ -3296,13 +3295,11 @@ class UIXia2Options:
                         # options = options + " high_pressure.anvil.angle=" + \
                         #           str(self.HP_anvilOpeningAngle_lineEdit.text())
 
-        global xia2OptionsList
-        xia2OptionsList = options
-        global datasetINPUT
+        self.xia2_options_list = options
 
-        if not datasetINPUT == "MULTIPLE":
+        if not self.datasetPath == "MULTIPLE":
 
-            if not runImageSelector:
+            if not self.run_image_selector:
                 dataset_input = self.datasetPath
 
             else:  # causing issues when multiple ###########
@@ -3315,8 +3312,8 @@ class UIXia2Options:
                     self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
                 else:
                     dataset_input = ""
-                    if runSelection:  # runs have been selected
-                        for entry in runSelection:
+                    if self.run_selection:  # runs have been selected
+                        for entry in self.run_selection:
                             dataset_input = (
                                 dataset_input
                                 + " image="
@@ -3325,9 +3322,11 @@ class UIXia2Options:
                                 + self.prefix
                                 + str("%02d_00001.cbf" % int(entry))
                             )
-                            if (entry - 1) in imageSelection:
+                            if (entry - 1) in self.image_selection:
                                 dataset_input = (
-                                    dataset_input + ":" + imageSelection[entry - 1]
+                                    dataset_input
+                                    + ":"
+                                    + self.image_selection[entry - 1]
                                 )
                     else:  # runs have NOT been selected
                         for run in self.runList:
@@ -3339,27 +3338,25 @@ class UIXia2Options:
                                 + self.prefix
                                 + str("%02d_00001.cbf" % int(run))
                             )
-                            if (run - 1) in imageSelection:
+                            if (run - 1) in self.image_selection:
                                 dataset_input = (
-                                    dataset_input + ":" + imageSelection[run - 1]
+                                    dataset_input + ":" + self.image_selection[run - 1]
                                 )
 
-            datasetINPUT = dataset_input
+            self.datasetPath = dataset_input
 
         options_update_text = (
             "\n\nUpdating options"
             + "\n	Xia2 command: "
             + "\n	"
             + self.xia2command
-            + datasetINPUT
-            + xia2OptionsList
+            + self.datasetPath
+            + self.xia2_options_list
         )
         self.mainTab_txt.appendPlainText(options_update_text)
         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
 
-        UIMainWindow.update_options(
-            self.xia2command, datasetINPUT, self.command_command
-        )
+        UIMainWindow.update_options()
 
         self.save_options_auto()
 
@@ -3385,12 +3382,9 @@ class UIXia2Options:
         for checkboxes in self.runSelectorList:
             checkboxes.setChecked(False)
         self.Import_type_checkBox.setChecked(True)
-        global runImageSelector
-        runImageSelector = False
-        global runSelection
-        runSelection = []
-        global imageSelection
-        imageSelection = {}
+        self.run_image_selector = False
+        self.run_selection = []
+        self.image_selection = {}
 
         if self.visit == "":
             return
@@ -3399,26 +3393,20 @@ class UIXia2Options:
             with open(optionFile, "w"):
                 pass
 
-        global xia2OptionsList
-        xia2OptionsList = ""
-
-        global datasetINPUT
-        datasetINPUT = self.datasetPath
+        self.xia2_options_list = ""
 
         options_update_text = (
             "\n\nUpdating options"
             + "\n	Xia2 command: "
             + "\n	"
             + self.xia2command
-            + datasetINPUT
-            + xia2OptionsList
+            + self.datasetPath
+            + self.xia2_options_list
         )
         self.mainTab_txt.appendPlainText(options_update_text)
         self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
 
-        UIMainWindow.update_options(
-            self.xia2command, datasetINPUT, self.command_command
-        )
+        UIMainWindow.update_options()
 
     def option_file_text_function(self):
         option_file_text = ""
@@ -4602,7 +4590,6 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     # QApplication.setOverrideCursor(Qt.WaitCursor)
     MainWindow = QtWidgets.QMainWindow()
-    ui = UIMainWindow()
-    ui.setup_ui(MainWindow)
+    ui = UIMainWindow(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())

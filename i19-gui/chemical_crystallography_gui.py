@@ -632,6 +632,7 @@ class UIMainWindow(object):
         self.append_output(self.main_tab_txt, "Opening options window")
         self.secondWindow = QtWidgets.QMainWindow()
         self.ui = UIXia2Options(
+            self.secondWindow,
             self.xia2_command,
             self.dataset_path,
             self.command_command,
@@ -641,7 +642,6 @@ class UIMainWindow(object):
             self.prefix,
             self.opening_visit,
         )
-        self.ui.setup_ui(self.secondWindow)
         self.secondWindow.show()
 
     def update_options(self):
@@ -1480,7 +1480,8 @@ class MyThread2(QtCore.QThread):
 class UIXia2Options:
     def __init__(
         self,
-        xia2command,
+        xia2_options,
+        xia2_command,
         dataset_path,
         command_command,
         visit,
@@ -1489,209 +1490,221 @@ class UIXia2Options:
         prefix,
         opening_visit,
     ):
-        self.xia2command = xia2command
-        self.datasetPath = dataset_path
-        self.runList = run_list
+        self.xia2_command = xia2_command
+        self.dataset_path = dataset_path
+        self.run_list = run_list
         self.command_command = command_command
-        self.refGeometryPath = ""
+        self.ref_geometry_path = ""
         self.visit = visit
-        self.mainTab_txt = main_tab_txt
+        self.main_tab_txt = main_tab_txt
         self.run_image_selector = False
         self.run_selection = []
         self.image_selection = {}
         self.prefix = prefix
-        self.openingVisit = opening_visit
-
-    def setup_ui(self, xia2_options):
+        self.opening_visit = opening_visit
 
         xia2_options.setObjectName("xia2_options")
         # xia2_options.resize(613, 454)
         xia2_options.resize(613, 600)
-        self.centralwidget = QtWidgets.QWidget(xia2_options)
-        self.centralwidget.setObjectName("central_widget")
+        self.central_widget = QtWidgets.QWidget(xia2_options)
+        self.central_widget.setObjectName("central_widget")
 
         # update button
-        self.updateButton = QtWidgets.QPushButton(self.centralwidget)
-        self.updateButton.setGeometry(QtCore.QRect(10, 0, 131, 28))
-        self.updateButton.setObjectName("updateButton")
-        self.updateButton.clicked.connect(self.update_options)
+        self.update_button = QtWidgets.QPushButton(self.central_widget)
+        self.update_button.setGeometry(QtCore.QRect(10, 0, 131, 28))
+        self.update_button.setObjectName("update_button")
+        self.update_button.clicked.connect(self.update_options)
 
         # reset button
-        self.resetButton = QtWidgets.QPushButton(self.centralwidget)
-        self.resetButton.setGeometry(QtCore.QRect(150, 0, 131, 28))
-        self.resetButton.setObjectName("resetButton")
-        self.resetButton.clicked.connect(self.reset_options)
+        self.reset_button = QtWidgets.QPushButton(self.central_widget)
+        self.reset_button.setGeometry(QtCore.QRect(150, 0, 131, 28))
+        self.reset_button.setObjectName("reset_button")
+        self.reset_button.clicked.connect(self.reset_options)
 
         # save button
-        self.saveButton = QtWidgets.QPushButton(self.centralwidget)
-        self.saveButton.setGeometry(QtCore.QRect(290, 0, 131, 28))
-        self.saveButton.setObjectName("saveButton")
-        self.saveButton.clicked.connect(self.save_options)
+        self.save_button = QtWidgets.QPushButton(self.central_widget)
+        self.save_button.setGeometry(QtCore.QRect(290, 0, 131, 28))
+        self.save_button.setObjectName("save_button")
+        self.save_button.clicked.connect(self.save_options)
 
         # load button
-        self.loadButton = QtWidgets.QPushButton(self.centralwidget)
-        self.loadButton.setGeometry(QtCore.QRect(430, 0, 131, 28))
-        self.loadButton.setObjectName("loadButton")
-        self.loadButton.clicked.connect(self.load_options)
+        self.load_button = QtWidgets.QPushButton(self.central_widget)
+        self.load_button.setGeometry(QtCore.QRect(430, 0, 131, 28))
+        self.load_button.setObjectName("load_button")
+        self.load_button.clicked.connect(self.load_options)
 
-        self.xia2options = QtWidgets.QTabWidget(self.centralwidget)
-        self.xia2options.setGeometry(QtCore.QRect(0, 30, 601, 520))
-        self.xia2options.setObjectName("xia2options")
+        self.xia2_options = QtWidgets.QTabWidget(self.central_widget)
+        self.xia2_options.setGeometry(QtCore.QRect(0, 30, 601, 520))
+        self.xia2_options.setObjectName("xia2_options")
 
         ################################################################################
         # dials import
 
-        self.xia2options_Import = QtWidgets.QWidget()
-        self.xia2options_Import.setObjectName("xia2options_Import")
-        self.xia2options.addTab(self.xia2options_Import, "")
+        self.xia2_options_import = QtWidgets.QWidget()
+        self.xia2_options_import.setObjectName("xia2_options_import")
+        self.xia2_options.addTab(self.xia2_options_import, "")
 
-        self.import_TrustBeamCentre = QtWidgets.QCheckBox(self.xia2options_Import)
-        self.import_TrustBeamCentre.setGeometry(QtCore.QRect(10, 20, 141, 20))
-        self.import_TrustBeamCentre.setObjectName("import_TrustBeamCentre")
+        self.import_trust_beam_centre = QtWidgets.QCheckBox(self.xia2_options_import)
+        self.import_trust_beam_centre.setGeometry(QtCore.QRect(10, 20, 141, 20))
+        self.import_trust_beam_centre.setObjectName("import_trust_beam_centre")
 
-        self.import_ReferenceGeometry = QtWidgets.QCheckBox(self.xia2options_Import)
-        self.import_ReferenceGeometry.setGeometry(QtCore.QRect(10, 50, 161, 20))
-        self.import_ReferenceGeometry.setObjectName("import_ReferenceGeometry")
-        self.import_ReferenceGeometry_browse = QtWidgets.QPushButton(
-            self.xia2options_Import
+        self.import_reference_geometry = QtWidgets.QCheckBox(self.xia2_options_import)
+        self.import_reference_geometry.setGeometry(QtCore.QRect(10, 50, 161, 20))
+        self.import_reference_geometry.setObjectName("import_reference_geometry")
+        self.import_reference_geometry_browse = QtWidgets.QPushButton(
+            self.xia2_options_import
         )
-        self.import_ReferenceGeometry_browse.setGeometry(QtCore.QRect(160, 45, 93, 28))
-        self.import_ReferenceGeometry_browse.setObjectName(
-            "import_ReferenceGeometry_browse"
+        self.import_reference_geometry_browse.setGeometry(QtCore.QRect(160, 45, 93, 28))
+        self.import_reference_geometry_browse.setObjectName(
+            "import_reference_geometry_browse"
         )
-        self.import_ReferenceGeometry_browse.clicked.connect(
+        self.import_reference_geometry_browse.clicked.connect(
             self.browse_for_reference_model
         )
-        self.import_ReferenceGeometry_path = QtWidgets.QLabel(self.xia2options_Import)
-        self.import_ReferenceGeometry_path.setGeometry(QtCore.QRect(260, 50, 271, 16))
-        self.import_ReferenceGeometry_path.setObjectName(
-            "import_ReferenceGeometry_path"
+        self.import_reference_geometry_path = QtWidgets.QLabel(self.xia2_options_import)
+        self.import_reference_geometry_path.setGeometry(QtCore.QRect(260, 50, 271, 16))
+        self.import_reference_geometry_path.setObjectName(
+            "import_reference_geometry_path"
         )
 
-        self.import_DD = QtWidgets.QCheckBox(self.xia2options_Import)
-        self.import_DD.setGeometry(QtCore.QRect(10, 80, 161, 21))
-        self.import_DD.setObjectName("import_DD")
-        self.import_DD_lineEdit = QtWidgets.QLineEdit(self.xia2options_Import)
-        self.import_DD_lineEdit.setGeometry(QtCore.QRect(160, 80, 100, 22))
-        self.import_DD_lineEdit.setObjectName("import_DD_lineEdit")
-        self.import_DD_lineEdit.setStatusTip("e.g. 85.19")
+        self.import_dd = QtWidgets.QCheckBox(self.xia2_options_import)
+        self.import_dd.setGeometry(QtCore.QRect(10, 80, 161, 21))
+        self.import_dd.setObjectName("import_dd")
+        self.import_dd_line_edit = QtWidgets.QLineEdit(self.xia2_options_import)
+        self.import_dd_line_edit.setGeometry(QtCore.QRect(160, 80, 100, 22))
+        self.import_dd_line_edit.setObjectName("import_dd_line_edit")
+        self.import_dd_line_edit.setStatusTip("e.g. 85.19")
 
-        self.import_BeamCentre = QtWidgets.QCheckBox(self.xia2options_Import)
-        self.import_BeamCentre.setGeometry(QtCore.QRect(10, 110, 161, 21))
-        self.import_BeamCentre.setObjectName("import_BeamCentre")
-        self.import_BeamCentre_X_label = QtWidgets.QLabel(self.xia2options_Import)
-        self.import_BeamCentre_X_label.setGeometry(QtCore.QRect(180, 110, 16, 16))
-        self.import_BeamCentre_X_label.setObjectName("import_BeamCentre_X_label")
-        self.import_BeamCentre_X_lineEdit = QtWidgets.QLineEdit(self.xia2options_Import)
-        self.import_BeamCentre_X_lineEdit.setGeometry(QtCore.QRect(200, 110, 61, 22))
-        self.import_BeamCentre_X_lineEdit.setObjectName("import_BeamCentre_X_lineEdit")
-        self.import_BeamCentre_X_lineEdit.setStatusTip("e.g. 54.3")
-        self.import_BeamCentre_Y_label = QtWidgets.QLabel(self.xia2options_Import)
-        self.import_BeamCentre_Y_label.setGeometry(QtCore.QRect(270, 110, 16, 16))
-        self.import_BeamCentre_Y_label.setObjectName("import_BeamCentre_Y_label")
-        self.import_BeamCentre_Y_lineEdit = QtWidgets.QLineEdit(self.xia2options_Import)
-        self.import_BeamCentre_Y_lineEdit.setGeometry(QtCore.QRect(290, 110, 61, 22))
-        self.import_BeamCentre_Y_lineEdit.setObjectName("import_BeamCentre_Y_lineEdit")
-        self.import_BeamCentre_Y_lineEdit.setStatusTip("e.g. 43.3")
-
-        self.import_Wavelengh = QtWidgets.QCheckBox(self.xia2options_Import)
-        self.import_Wavelengh.setGeometry(QtCore.QRect(10, 140, 161, 21))
-        self.import_Wavelengh.setObjectName("import_Wavelengh")
-        self.import_wavelength_lineEdit = QtWidgets.QLineEdit(self.xia2options_Import)
-        self.import_wavelength_lineEdit.setGeometry(QtCore.QRect(160, 140, 101, 22))
-        self.import_wavelength_lineEdit.setObjectName("import_wavelength_lineEdit")
-        self.import_wavelength_lineEdit.setStatusTip("e.g. 0.6889")
-
-        self.Import_FixBeamDetector_checkBox = QtWidgets.QCheckBox(
-            self.xia2options_Import
+        self.import_beam_centre = QtWidgets.QCheckBox(self.xia2_options_import)
+        self.import_beam_centre.setGeometry(QtCore.QRect(10, 110, 161, 21))
+        self.import_beam_centre.setObjectName("import_beam_centre")
+        self.import_beam_centre_x_label = QtWidgets.QLabel(self.xia2_options_import)
+        self.import_beam_centre_x_label.setGeometry(QtCore.QRect(180, 110, 16, 16))
+        self.import_beam_centre_x_label.setObjectName("import_beam_centre_x_label")
+        self.import_beam_centre_x_line_edit = QtWidgets.QLineEdit(
+            self.xia2_options_import
         )
-        self.Import_FixBeamDetector_checkBox.setGeometry(QtCore.QRect(10, 170, 151, 20))
-        self.Import_FixBeamDetector_checkBox.setObjectName(
-            "Import_FixBeamDetector_checkBox"
+        self.import_beam_centre_x_line_edit.setGeometry(QtCore.QRect(200, 110, 61, 22))
+        self.import_beam_centre_x_line_edit.setObjectName(
+            "import_beam_centre_x_line_edit"
+        )
+        self.import_beam_centre_x_line_edit.setStatusTip("e.g. 54.3")
+        self.import_beam_centre_y_label = QtWidgets.QLabel(self.xia2_options_import)
+        self.import_beam_centre_y_label.setGeometry(QtCore.QRect(270, 110, 16, 16))
+        self.import_beam_centre_y_label.setObjectName("import_beam_centre_y_label")
+        self.import_beam_centre_y_line_edit = QtWidgets.QLineEdit(
+            self.xia2_options_import
+        )
+        self.import_beam_centre_y_line_edit.setGeometry(QtCore.QRect(290, 110, 61, 22))
+        self.import_beam_centre_y_line_edit.setObjectName(
+            "import_beam_centre_y_line_edit"
+        )
+        self.import_beam_centre_y_line_edit.setStatusTip("e.g. 43.3")
+
+        self.import_wavelengh = QtWidgets.QCheckBox(self.xia2_options_import)
+        self.import_wavelengh.setGeometry(QtCore.QRect(10, 140, 161, 21))
+        self.import_wavelengh.setObjectName("import_wavelengh")
+        self.import_wavelength_line_edit = QtWidgets.QLineEdit(self.xia2_options_import)
+        self.import_wavelength_line_edit.setGeometry(QtCore.QRect(160, 140, 101, 22))
+        self.import_wavelength_line_edit.setObjectName("import_wavelength_line_edit")
+        self.import_wavelength_line_edit.setStatusTip("e.g. 0.6889")
+
+        self.import_fix_beam_detector_check_box = QtWidgets.QCheckBox(
+            self.xia2_options_import
+        )
+        self.import_fix_beam_detector_check_box.setGeometry(
+            QtCore.QRect(10, 170, 151, 20)
+        )
+        self.import_fix_beam_detector_check_box.setObjectName(
+            "import_fix_beam_detector_check_box"
         )
 
-        self.Import_RunSelector_checkBox = QtWidgets.QCheckBox(self.xia2options_Import)
-        self.Import_RunSelector_checkBox.setGeometry(QtCore.QRect(10, 200, 91, 20))
-        self.Import_RunSelector_checkBox.setObjectName("Import_RunSelector_checkBox")
+        self.import_run_selector_check_box = QtWidgets.QCheckBox(
+            self.xia2_options_import
+        )
+        self.import_run_selector_check_box.setGeometry(QtCore.QRect(10, 200, 91, 20))
+        self.import_run_selector_check_box.setObjectName(
+            "import_run_selector_check_box"
+        )
         self.Import_RunSelector_checkBox_1 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_1.setGeometry(QtCore.QRect(110, 200, 31, 20))
         self.Import_RunSelector_checkBox_1.setObjectName(
             "Import_RunSelector_checkBox_1"
         )
         self.Import_RunSelector_checkBox_2 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_2.setGeometry(QtCore.QRect(150, 200, 31, 20))
         self.Import_RunSelector_checkBox_2.setObjectName(
             "Import_RunSelector_checkBox_2"
         )
         self.Import_RunSelector_checkBox_3 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_3.setGeometry(QtCore.QRect(190, 200, 31, 20))
         self.Import_RunSelector_checkBox_3.setObjectName(
             "Import_RunSelector_checkBox_3"
         )
         self.Import_RunSelector_checkBox_4 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_4.setGeometry(QtCore.QRect(230, 200, 31, 20))
         self.Import_RunSelector_checkBox_4.setObjectName(
             "Import_RunSelector_checkBox_4"
         )
         self.Import_RunSelector_checkBox_5 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_5.setGeometry(QtCore.QRect(270, 200, 31, 20))
         self.Import_RunSelector_checkBox_5.setObjectName(
             "Import_RunSelector_checkBox_5"
         )
         self.Import_RunSelector_checkBox_6 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_6.setGeometry(QtCore.QRect(310, 200, 31, 20))
         self.Import_RunSelector_checkBox_6.setObjectName(
             "Import_RunSelector_checkBox_6"
         )
         self.Import_RunSelector_checkBox_7 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_7.setGeometry(QtCore.QRect(350, 200, 31, 20))
         self.Import_RunSelector_checkBox_7.setObjectName(
             "Import_RunSelector_checkBox_7"
         )
         self.Import_RunSelector_checkBox_8 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_8.setGeometry(QtCore.QRect(390, 200, 31, 20))
         self.Import_RunSelector_checkBox_8.setObjectName(
             "Import_RunSelector_checkBox_8"
         )
         self.Import_RunSelector_checkBox_9 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_9.setGeometry(QtCore.QRect(430, 200, 31, 20))
         self.Import_RunSelector_checkBox_9.setObjectName(
             "Import_RunSelector_checkBox_9"
         )
         self.Import_RunSelector_checkBox_10 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_10.setGeometry(QtCore.QRect(470, 200, 41, 20))
         self.Import_RunSelector_checkBox_10.setObjectName(
             "Import_RunSelector_checkBox_10"
         )
         self.Import_RunSelector_checkBox_11 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_11.setGeometry(QtCore.QRect(510, 200, 41, 20))
         self.Import_RunSelector_checkBox_11.setObjectName(
             "Import_RunSelector_checkBox_11"
         )
         self.Import_RunSelector_checkBox_12 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_12.setGeometry(QtCore.QRect(550, 200, 41, 20))
         self.Import_RunSelector_checkBox_12.setObjectName(
@@ -1699,84 +1712,84 @@ class UIXia2Options:
         )
 
         self.Import_RunSelector_checkBox_13 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_13.setGeometry(QtCore.QRect(110, 230, 41, 20))
         self.Import_RunSelector_checkBox_13.setObjectName(
             "Import_RunSelector_checkBox_13"
         )
         self.Import_RunSelector_checkBox_14 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_14.setGeometry(QtCore.QRect(150, 230, 41, 20))
         self.Import_RunSelector_checkBox_14.setObjectName(
             "Import_RunSelector_checkBox_14"
         )
         self.Import_RunSelector_checkBox_15 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_15.setGeometry(QtCore.QRect(190, 230, 41, 20))
         self.Import_RunSelector_checkBox_15.setObjectName(
             "Import_RunSelector_checkBox_15"
         )
         self.Import_RunSelector_checkBox_16 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_16.setGeometry(QtCore.QRect(230, 230, 41, 20))
         self.Import_RunSelector_checkBox_16.setObjectName(
             "Import_RunSelector_checkBox_16"
         )
         self.Import_RunSelector_checkBox_17 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_17.setGeometry(QtCore.QRect(270, 230, 41, 20))
         self.Import_RunSelector_checkBox_17.setObjectName(
             "Import_RunSelector_checkBox_17"
         )
         self.Import_RunSelector_checkBox_18 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_18.setGeometry(QtCore.QRect(310, 230, 41, 20))
         self.Import_RunSelector_checkBox_18.setObjectName(
             "Import_RunSelector_checkBox_18"
         )
         self.Import_RunSelector_checkBox_19 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_19.setGeometry(QtCore.QRect(350, 230, 41, 20))
         self.Import_RunSelector_checkBox_19.setObjectName(
             "Import_RunSelector_checkBox_19"
         )
         self.Import_RunSelector_checkBox_20 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_20.setGeometry(QtCore.QRect(390, 230, 41, 20))
         self.Import_RunSelector_checkBox_20.setObjectName(
             "Import_RunSelector_checkBox_20"
         )
         self.Import_RunSelector_checkBox_21 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_21.setGeometry(QtCore.QRect(430, 230, 41, 20))
         self.Import_RunSelector_checkBox_21.setObjectName(
             "Import_RunSelector_checkBox_21"
         )
         self.Import_RunSelector_checkBox_22 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_22.setGeometry(QtCore.QRect(470, 230, 41, 20))
         self.Import_RunSelector_checkBox_22.setObjectName(
             "Import_RunSelector_checkBox_22"
         )
         self.Import_RunSelector_checkBox_23 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_23.setGeometry(QtCore.QRect(510, 230, 41, 20))
         self.Import_RunSelector_checkBox_23.setObjectName(
             "Import_RunSelector_checkBox_23"
         )
         self.Import_RunSelector_checkBox_24 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_24.setGeometry(QtCore.QRect(550, 230, 41, 20))
         self.Import_RunSelector_checkBox_24.setObjectName(
@@ -1784,95 +1797,95 @@ class UIXia2Options:
         )
 
         self.Import_RunSelector_checkBox_25 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_25.setGeometry(QtCore.QRect(110, 260, 41, 20))
         self.Import_RunSelector_checkBox_25.setObjectName(
             "Import_RunSelector_checkBox_25"
         )
         self.Import_RunSelector_checkBox_26 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_26.setGeometry(QtCore.QRect(150, 260, 41, 20))
         self.Import_RunSelector_checkBox_26.setObjectName(
             "Import_RunSelector_checkBox_26"
         )
         self.Import_RunSelector_checkBox_27 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_27.setGeometry(QtCore.QRect(190, 260, 41, 20))
         self.Import_RunSelector_checkBox_27.setObjectName(
             "Import_RunSelector_checkBox_27"
         )
         self.Import_RunSelector_checkBox_28 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_28.setGeometry(QtCore.QRect(230, 260, 41, 20))
         self.Import_RunSelector_checkBox_28.setObjectName(
             "Import_RunSelector_checkBox_28"
         )
         self.Import_RunSelector_checkBox_29 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_29.setGeometry(QtCore.QRect(270, 260, 41, 20))
         self.Import_RunSelector_checkBox_29.setObjectName(
             "Import_RunSelector_checkBox_29"
         )
         self.Import_RunSelector_checkBox_30 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_30.setGeometry(QtCore.QRect(310, 260, 41, 20))
         self.Import_RunSelector_checkBox_30.setObjectName(
             "Import_RunSelector_checkBox_30"
         )
         self.Import_RunSelector_checkBox_31 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_31.setGeometry(QtCore.QRect(350, 260, 41, 20))
         self.Import_RunSelector_checkBox_31.setObjectName(
             "Import_RunSelector_checkBox_31"
         )
         self.Import_RunSelector_checkBox_32 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_32.setGeometry(QtCore.QRect(390, 260, 41, 20))
         self.Import_RunSelector_checkBox_32.setObjectName(
             "Import_RunSelector_checkBox_32"
         )
         self.Import_RunSelector_checkBox_33 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_33.setGeometry(QtCore.QRect(430, 260, 41, 20))
         self.Import_RunSelector_checkBox_33.setObjectName(
             "Import_RunSelector_checkBox_33"
         )
         self.Import_RunSelector_checkBox_34 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_34.setGeometry(QtCore.QRect(470, 260, 41, 20))
         self.Import_RunSelector_checkBox_34.setObjectName(
             "Import_RunSelector_checkBox_34"
         )
         self.Import_RunSelector_checkBox_35 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_35.setGeometry(QtCore.QRect(510, 260, 41, 20))
         self.Import_RunSelector_checkBox_35.setObjectName(
             "Import_RunSelector_checkBox_35"
         )
         self.Import_RunSelector_checkBox_36 = QtWidgets.QCheckBox(
-            self.xia2options_Import
+            self.xia2_options_import
         )
         self.Import_RunSelector_checkBox_36.setGeometry(QtCore.QRect(550, 260, 41, 20))
         self.Import_RunSelector_checkBox_36.setObjectName(
             "Import_RunSelector_checkBox_36"
         )
 
-        self.Import_type_checkBox = QtWidgets.QCheckBox(self.xia2options_Import)
+        self.Import_type_checkBox = QtWidgets.QCheckBox(self.xia2_options_import)
         self.Import_type_checkBox.setGeometry(QtCore.QRect(10, 290, 121, 20))
         self.Import_type_checkBox.setObjectName("Import_type_checkBox")
         self.Import_type_checkBox.setChecked(True)
-        self.Import_type_comboBox = QtWidgets.QComboBox(self.xia2options_Import)
+        self.Import_type_comboBox = QtWidgets.QComboBox(self.xia2_options_import)
         self.Import_type_comboBox.setGeometry(QtCore.QRect(130, 290, 171, 22))
         self.Import_type_comboBox.setObjectName("Import_type_comboBox")
         self.Import_type_comboBox.addItem("")
@@ -1882,7 +1895,7 @@ class UIXia2Options:
         # spotFinding
         self.xia2options_SpotFinding = QtWidgets.QWidget()
         self.xia2options_SpotFinding.setObjectName("xia2options_SpotFinding")
-        self.xia2options.addTab(self.xia2options_SpotFinding, "")
+        self.xia2_options.addTab(self.xia2options_SpotFinding, "")
 
         self.findSpots_sigmaStrong = QtWidgets.QCheckBox(self.xia2options_SpotFinding)
         self.findSpots_sigmaStrong.setGeometry(QtCore.QRect(10, 10, 111, 20))
@@ -2114,7 +2127,7 @@ class UIXia2Options:
         # indexing
         self.xia2options_Indexing = QtWidgets.QWidget()
         self.xia2options_Indexing.setObjectName("xia2options_Indexing")
-        self.xia2options.addTab(self.xia2options_Indexing, "")
+        self.xia2_options.addTab(self.xia2options_Indexing, "")
 
         self.Index_method_comboBox = QtWidgets.QComboBox(self.xia2options_Indexing)
         self.Index_method_comboBox.setGeometry(QtCore.QRect(130, 10, 171, 22))
@@ -2186,7 +2199,7 @@ class UIXia2Options:
         # dials integrate
         self.xia2options_integrate = QtWidgets.QWidget()
         self.xia2options_integrate.setObjectName("xia2options_integrate")
-        self.xia2options.addTab(self.xia2options_integrate, "")
+        self.xia2_options.addTab(self.xia2options_integrate, "")
 
         self.Integrate_keepAllReflections_checkBox = QtWidgets.QCheckBox(
             self.xia2options_integrate
@@ -2248,7 +2261,7 @@ class UIXia2Options:
         # dials refine
         self.xia2options_refine_scale = QtWidgets.QWidget()
         self.xia2options_refine_scale.setObjectName("xia2options_refine_scale")
-        self.xia2options.addTab(self.xia2options_refine_scale, "")
+        self.xia2_options.addTab(self.xia2options_refine_scale, "")
 
         self.Refine_method_checkBox = QtWidgets.QCheckBox(self.xia2options_refine_scale)
         self.Refine_method_checkBox.setGeometry(QtCore.QRect(10, 40, 121, 20))
@@ -2270,7 +2283,7 @@ class UIXia2Options:
         # dials other
         self.xia2options_Other = QtWidgets.QWidget()
         self.xia2options_Other.setObjectName("xia2options_Other")
-        self.xia2options.addTab(self.xia2options_Other, "")
+        self.xia2_options.addTab(self.xia2options_Other, "")
 
         self.Other_failover_checkBox = QtWidgets.QCheckBox(self.xia2options_Other)
         self.Other_failover_checkBox.setGeometry(QtCore.QRect(10, 10, 151, 20))
@@ -2317,7 +2330,7 @@ class UIXia2Options:
         # dials ALL
         self.xia2options_ALL = QtWidgets.QWidget()
         self.xia2options_ALL.setObjectName("xia2options_ALL")
-        self.xia2options.addTab(self.xia2options_ALL, "")
+        self.xia2_options.addTab(self.xia2options_ALL, "")
 
         self.ALL_plainTextEdit = QtWidgets.QPlainTextEdit(self.xia2options_ALL)
         self.ALL_plainTextEdit.setGeometry(QtCore.QRect(150, 10, 291, 121))
@@ -2327,7 +2340,7 @@ class UIXia2Options:
         # dials HP
         self.xia2options_HP = QtWidgets.QWidget()
         self.xia2options_HP.setObjectName("xia2options_HP")
-        self.xia2options.addTab(self.xia2options_HP, "")
+        self.xia2_options.addTab(self.xia2options_HP, "")
 
         self.HP_correction_shadowing_checkBox = QtWidgets.QCheckBox(self.xia2options_HP)
         self.HP_correction_shadowing_checkBox.setGeometry(QtCore.QRect(10, 20, 321, 20))
@@ -2541,7 +2554,7 @@ class UIXia2Options:
         self.HP_difficulty_label_3.setObjectName("HP_difficulty_label_3")
         self.HP_difficulty_label_3.setAutoFillBackground(True)
         ################################################################################
-        xia2_options.setCentralWidget(self.centralwidget)
+        xia2_options.setCentralWidget(self.central_widget)
         self.menubar = QtWidgets.QMenuBar(xia2_options)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 613, 26))
         self.menubar.setObjectName("menu_bar")
@@ -2551,17 +2564,17 @@ class UIXia2Options:
         xia2_options.setStatusBar(self.statusbar)
 
         self.retranslate_ui(xia2_options)
-        self.xia2options.setCurrentIndex(0)
+        self.xia2_options.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(xia2_options)
 
         self.optionListImport = [
-            self.import_TrustBeamCentre,
-            self.import_ReferenceGeometry,
-            self.import_DD,
-            self.import_BeamCentre,
-            self.import_Wavelengh,
-            self.Import_FixBeamDetector_checkBox,
-            self.Import_RunSelector_checkBox,
+            self.import_trust_beam_centre,
+            self.import_reference_geometry,
+            self.import_dd,
+            self.import_beam_centre,
+            self.import_wavelengh,
+            self.import_fix_beam_detector_check_box,
+            self.import_run_selector_check_box,
             self.Import_type_checkBox,
         ]
 
@@ -2678,17 +2691,17 @@ class UIXia2Options:
         self.load_options_auto()
 
     def browse_for_reference_model(self):
-        path = self.openingVisit
+        path = self.opening_visit
         os.chdir(path)
-        self.refGeometryPath = QtWidgets.QFileDialog.getOpenFileName(
+        self.ref_geometry_path = QtWidgets.QFileDialog.getOpenFileName(
             filter="expt(*.expt)"
         )[0]
         # qfd = QtWidgets.QFileDialog()
         # path = "D:\ennine\SIG HTB\BGN"
         # filter = "csv(*.csv)"
         # f = QtWidgets.QFileDialog.getOpenFileName(qfd, title, path, filter)
-        if self.refGeometryPath:
-            ref_geometry_path_txt = str(self.refGeometryPath)
+        if self.ref_geometry_path:
+            ref_geometry_path_txt = str(self.ref_geometry_path)
             ref_geometry_file_txt = ref_geometry_path_txt.split("/")[-1]
 
             output_message = (
@@ -2697,11 +2710,11 @@ class UIXia2Options:
                 + "\nReference Geometry File:\n	"
                 + str(ref_geometry_file_txt)
             )
-            self.mainTab_txt.appendPlainText(output_message)
-            self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+            self.main_tab_txt.appendPlainText(output_message)
+            self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
 
-            self.import_ReferenceGeometry_path.setText(ref_geometry_file_txt)
-            self.import_ReferenceGeometry_path.setScaledContents(True)
+            self.import_reference_geometry_path.setText(ref_geometry_file_txt)
+            self.import_reference_geometry_path.setScaledContents(True)
 
             self.HP_ReferenceGeometry_path.setText(ref_geometry_file_txt)
             self.HP_ReferenceGeometry_path.setScaledContents(True)
@@ -2712,107 +2725,109 @@ class UIXia2Options:
         # import #######
         for variable in self.optionListImport:
             if variable.isChecked():
-                if variable == self.import_TrustBeamCentre:
+                if variable == self.import_trust_beam_centre:
                     options = options + " trust_beam_centre=true"
-                if variable == self.import_ReferenceGeometry:
-                    if self.refGeometryPath == "":
+                if variable == self.import_reference_geometry:
+                    if self.ref_geometry_path == "":
                         output_message = (
                             "	*** Reference Geometry Error. Please select "
                             ".expt file with browse button first ***"
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         options = (
-                            options + " reference_geometry=" + str(self.refGeometryPath)
+                            options
+                            + " reference_geometry="
+                            + str(self.ref_geometry_path)
                         )
-                if variable == self.import_DD:
-                    if self.import_DD_lineEdit.text() == "":
+                if variable == self.import_dd:
+                    if self.import_dd_line_edit.text() == "":
                         output_message = (
                             "	*** Detector Distance Error. Please input "
                             "detector distance e.g. 85.01"
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         output_message = "Detector distance: " + str(
-                            self.import_DD_lineEdit.text()
+                            self.import_dd_line_edit.text()
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         options = (
                             options
                             + " detector_distance="
-                            + str(self.import_DD_lineEdit.text())
+                            + str(self.import_dd_line_edit.text())
                         )
 
-                if variable == self.import_BeamCentre:
-                    if self.import_BeamCentre_X_lineEdit.text() == "":
+                if variable == self.import_beam_centre:
+                    if self.import_beam_centre_x_line_edit.text() == "":
                         output_message = "	*** Beam Centre Error. Please input Y"
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
-                    elif self.import_BeamCentre_Y_lineEdit.text() == "":
+                    elif self.import_beam_centre_y_line_edit.text() == "":
                         output_message = "	*** Detector Distance Error. Please input X"
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         output_message = (
                             "Detector distance: "
-                            + str(self.import_BeamCentre_X_lineEdit.text())
+                            + str(self.import_beam_centre_x_line_edit.text())
                             + ","
-                            + str(self.import_BeamCentre_Y_lineEdit.text())
+                            + str(self.import_beam_centre_y_line_edit.text())
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         options = (
                             options
                             + " mosflm_beam_centre="
-                            + str(self.import_BeamCentre_X_lineEdit.text())
+                            + str(self.import_beam_centre_x_line_edit.text())
                             + ","
-                            + str(self.import_BeamCentre_Y_lineEdit.text())
+                            + str(self.import_beam_centre_y_line_edit.text())
                         )
 
-                if variable == self.import_Wavelengh:
-                    if self.import_wavelength_lineEdit.text() == "":
+                if variable == self.import_wavelengh:
+                    if self.import_wavelength_line_edit.text() == "":
                         output_message = (
                             "	*** Wavelength Input Error. "
                             "Please add wavelength e.g. 85.01"
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         output_message = "Wavelength: " + str(
-                            self.import_wavelength_lineEdit.text()
+                            self.import_wavelength_line_edit.text()
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         options = (
                             options
                             + " wavelength="
-                            + str(self.import_wavelength_lineEdit.text())
+                            + str(self.import_wavelength_line_edit.text())
                         )
 
-                if variable == self.Import_FixBeamDetector_checkBox:
+                if variable == self.import_fix_beam_detector_check_box:
                     options = (
                         options + " integrate.phil_file=/dls_sw/i19/scripts/HP/"
                         "integration_additional_inputs.phil"
                     )
 
-                if variable == self.Import_RunSelector_checkBox:
+                if variable == self.import_run_selector_check_box:
                     self.run_selection = []
                     self.run_image_selector = True
                     for num, run in enumerate(self.runSelectorList, start=1):
                         if run.isChecked():
                             self.run_selection.append(num)
-                    self.mainTab_txt.appendPlainText(
+                    self.main_tab_txt.appendPlainText(
                         "Run selector:	" + str(self.run_selection)
                     )
-                    self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                    self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                 if variable == self.Import_type_checkBox:
                     if self.Import_type_comboBox.currentText() == "Protein":
                         pass
@@ -2828,8 +2843,8 @@ class UIXia2Options:
                             "	*** Sigma Strong Error."
                             " Please enter sigma strong e.g. 6 ***"
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         options = (
@@ -2843,8 +2858,8 @@ class UIXia2Options:
                             "	*** Min Spot Size Error, "
                             "please entre min spots size e.g. 2 ***"
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         options = (
@@ -2858,8 +2873,8 @@ class UIXia2Options:
                             "	*** Max Spot Size Error, "
                             "please entre max spots size e.g. 2 ***"
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         options = (
@@ -2872,8 +2887,8 @@ class UIXia2Options:
                         output_message = (
                             "	*** D_min Error, please entre d_min e.g. 0.84 ***"
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         options = (
@@ -2886,8 +2901,8 @@ class UIXia2Options:
                         output_message = (
                             "	*** D_max Error, please entre d_max e.g. 10 ***"
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         options = (
@@ -2908,8 +2923,8 @@ class UIXia2Options:
                     for entry in powder_ring_line_edits:
                         if entry == "":
                             output_message = "	*** Powder ring mask error ***"
-                            self.mainTab_txt.appendPlainText(output_message)
-                            self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                            self.main_tab_txt.appendPlainText(output_message)
+                            self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
                     ice_rings_uv_command = " ice_rings.unit_cell=" + str(
                         self.findSpots_powderRingsUC_lineEdit.text()
@@ -2950,8 +2965,8 @@ class UIXia2Options:
                             "	*** Circle Mask Error, please entre is the "
                             "following format: xc,yc,r ***"
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         options = (
@@ -2966,8 +2981,8 @@ class UIXia2Options:
                             "	*** Rectangle Mask Error, please entre is "
                             "the following format: x0,x1,y0,y1 ***"
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         options = (
@@ -2993,14 +3008,14 @@ class UIXia2Options:
                         self.Index_SG_lineEdit.text(),
                     ]
                     for entry in uc_sg_line_edits:
-                        self.mainTab_txt.appendPlainText(entry)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(entry)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         if entry == "":
                             output_message = (
                                 "	*** Error in unit cell or space group entry ***"
                             )
-                            self.mainTab_txt.appendPlainText(output_message)
-                            self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                            self.main_tab_txt.appendPlainText(output_message)
+                            self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
                     uc_command = " unit_cell=" + str(self.Index_UN_lineEdit.text())
                     sg_command = " space_group=" + str(self.Index_SG_lineEdit.text())
@@ -3008,8 +3023,8 @@ class UIXia2Options:
                 if variable == self.Index_minCell_checkBox:
                     if self.Index_minCell_lineEdit.text() == "":
                         output_message = "	*** Please entre valid min cell ***"
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         options = (
@@ -3020,8 +3035,8 @@ class UIXia2Options:
                 if variable == self.Index_maxCell_checkBox:
                     if self.Index_maxCell_lineEdit.text() == "":
                         output_message = "	*** Please entre valid max cell ***"
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         options = (
@@ -3053,8 +3068,8 @@ class UIXia2Options:
                             output_message = (
                                 "	*** Error in overall or per degree entry ***"
                             )
-                            self.mainTab_txt.appendPlainText(output_message)
-                            self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                            self.main_tab_txt.appendPlainText(output_message)
+                            self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
                         if self.visit == "":
                             output_message = (
@@ -3062,8 +3077,8 @@ class UIXia2Options:
                                 "this requires a the visit to be known."
                                 "	Please open a dataset and retry (File>Open). ***"
                             )
-                            self.mainTab_txt.appendPlainText(output_message)
-                            self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                            self.main_tab_txt.appendPlainText(output_message)
+                            self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
                     overall_line = (
                         "	profile.gaussian_rs.min_spots.overall="
@@ -3136,17 +3151,19 @@ class UIXia2Options:
                 if variable == self.HP_scanVarying_checkBox:
                     options = options + " scan_varying=False"
                 if variable == self.HP_ReferenceGeometry_checkBox:
-                    if self.refGeometryPath == "":
+                    if self.ref_geometry_path == "":
                         output_message = (
                             "	*** Reference Geometry Error. "
                             "Please select .expt file with browse button first ***"
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         options = (
-                            options + " reference_geometry=" + str(self.refGeometryPath)
+                            options
+                            + " reference_geometry="
+                            + str(self.ref_geometry_path)
                         )
                 if variable == self.HP_gasket_checkBox:
                     gasket_type = str(self.HP_gasket_comboBox.currentText())
@@ -3176,8 +3193,8 @@ class UIXia2Options:
                     for entry in powder_ring_line_edits:
                         if entry == "":
                             output_message = "	*** Powder ring mask error ***"
-                            self.mainTab_txt.appendPlainText(output_message)
-                            self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                            self.main_tab_txt.appendPlainText(output_message)
+                            self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
                     ice_rings_uv_command = " ice_rings.unit_cell=" + str(
                         self.HP_gasketUserUC_lineEdit.text()
@@ -3201,14 +3218,14 @@ class UIXia2Options:
                         self.HP_SG_lineEdit.text(),
                     ]
                     for entry in uc_sg_line_edits:
-                        self.mainTab_txt.appendPlainText(entry)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(entry)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         if entry == "":
                             output_message = (
                                 "	*** Error in unit cell or space group entry ***"
                             )
-                            self.mainTab_txt.appendPlainText(output_message)
-                            self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                            self.main_tab_txt.appendPlainText(output_message)
+                            self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
                     uc_command = " unit_cell=" + str(self.HP_UN_lineEdit.text())
                     sg_command = " space_group=" + str(self.HP_SG_lineEdit.text())
@@ -3219,8 +3236,8 @@ class UIXia2Options:
                         output_message = (
                             "	*** D_min HP Error, please entre d_min e.g. 0.84 ***"
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         options = (
@@ -3252,8 +3269,8 @@ class UIXia2Options:
                     output_message = "Image start/end option selected.\n" "	" + str(
                         self.image_selection
                     )
-                    self.mainTab_txt.appendPlainText(output_message)
-                    self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                    self.main_tab_txt.appendPlainText(output_message)
+                    self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
 
                 if variable == self.HP_FixBeamDetector_checkBox:
                     options = (
@@ -3271,8 +3288,8 @@ class UIXia2Options:
                             "	*** Anvil Thickness Input Error, "
                             "please enter thickness e.g. 2.1 ***"
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         options = (
@@ -3287,29 +3304,27 @@ class UIXia2Options:
                             "	*** Anvil Opening Angle Input Error, "
                             "please enter opening angle e.g. 38 ***"
                         )
-                        self.mainTab_txt.appendPlainText(output_message)
-                        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.main_tab_txt.appendPlainText(output_message)
+                        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     else:
                         pass
                         # options = options + " high_pressure.anvil.angle=" + \
                         #           str(self.HP_anvilOpeningAngle_lineEdit.text())
 
-        self.xia2_options_list = options
-
-        if not self.datasetPath == "MULTIPLE":
+        if not self.dataset_path == "MULTIPLE":
 
             if not self.run_image_selector:
-                dataset_input = self.datasetPath
+                dataset_input = self.dataset_path
 
             else:  # causing issues when multiple ###########
-                if self.datasetPath == "":
-                    dataset_input = self.datasetPath
-                    self.mainTab_txt.appendPlainText(
+                if self.dataset_path == "":
+                    dataset_input = self.dataset_path
+                    self.main_tab_txt.appendPlainText(
                         "Dataset must be selected before selecting runs or images "
                         "start/end"
                     )
-                    self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+                    self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                 else:
                     dataset_input = ""
                     if self.run_selection:  # runs have been selected
@@ -3317,7 +3332,7 @@ class UIXia2Options:
                             dataset_input = (
                                 dataset_input
                                 + " image="
-                                + self.datasetPath
+                                + self.dataset_path
                                 + "/"
                                 + self.prefix
                                 + str("%02d_00001.cbf" % int(entry))
@@ -3329,11 +3344,11 @@ class UIXia2Options:
                                     + self.image_selection[entry - 1]
                                 )
                     else:  # runs have NOT been selected
-                        for run in self.runList:
+                        for run in self.run_list:
                             dataset_input = (
                                 dataset_input
                                 + " image="
-                                + self.datasetPath
+                                + self.dataset_path
                                 + "/"
                                 + self.prefix
                                 + str("%02d_00001.cbf" % int(run))
@@ -3343,18 +3358,18 @@ class UIXia2Options:
                                     dataset_input + ":" + self.image_selection[run - 1]
                                 )
 
-            self.datasetPath = dataset_input
+            self.dataset_path = dataset_input
 
         options_update_text = (
             "\n\nUpdating options"
             + "\n	Xia2 command: "
             + "\n	"
-            + self.xia2command
-            + self.datasetPath
-            + self.xia2_options_list
+            + self.xia2_command
+            + self.dataset_path
+            + options
         )
-        self.mainTab_txt.appendPlainText(options_update_text)
-        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+        self.main_tab_txt.appendPlainText(options_update_text)
+        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
 
         UIMainWindow.update_options()
 
@@ -3362,8 +3377,8 @@ class UIXia2Options:
 
     def reset_options(self):
         output_message = "\nResetting options"
-        self.mainTab_txt.appendPlainText(output_message)
-        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+        self.main_tab_txt.appendPlainText(output_message)
+        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
 
         for checkboxes in self.optionListImport:
             checkboxes.setChecked(False)
@@ -3389,22 +3404,22 @@ class UIXia2Options:
         if self.visit == "":
             return
         if os.path.isfile(self.visit + "processing/autoSaveOptions.txt"):
-            optionFile = self.visit + "processing/autoSaveOptions.txt"
-            with open(optionFile, "w"):
+            option_file = self.visit + "processing/autoSaveOptions.txt"
+            with open(option_file, "w"):
                 pass
 
-        self.xia2_options_list = ""
+        options = ""
 
         options_update_text = (
             "\n\nUpdating options"
             + "\n	Xia2 command: "
             + "\n	"
-            + self.xia2command
-            + self.datasetPath
-            + self.xia2_options_list
+            + self.xia2_command
+            + self.dataset_path
+            + options
         )
-        self.mainTab_txt.appendPlainText(options_update_text)
-        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+        self.main_tab_txt.appendPlainText(options_update_text)
+        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
 
         UIMainWindow.update_options()
 
@@ -3418,7 +3433,7 @@ class UIXia2Options:
                         + "I "
                         + str(num)
                         + " "
-                        + str(self.refGeometryPath)
+                        + str(self.ref_geometry_path)
                         + "\n"
                     )
                 elif num == 2:
@@ -3427,7 +3442,7 @@ class UIXia2Options:
                         + "I "
                         + str(num)
                         + " "
-                        + str(self.import_DD_lineEdit.text())
+                        + str(self.import_dd_line_edit.text())
                         + "\n"
                     )
                 elif num == 3:
@@ -3436,9 +3451,9 @@ class UIXia2Options:
                         + "I "
                         + str(num)
                         + " "
-                        + str(self.import_BeamCentre_X_lineEdit.text())
+                        + str(self.import_beam_centre_x_line_edit.text())
                         + " "
-                        + str(self.import_BeamCentre_Y_lineEdit.text())
+                        + str(self.import_beam_centre_y_line_edit.text())
                         + "\n"
                     )
                 elif num == 4:
@@ -3447,7 +3462,7 @@ class UIXia2Options:
                         + "I "
                         + str(num)
                         + " "
-                        + str(self.import_wavelength_lineEdit.text())
+                        + str(self.import_wavelength_line_edit.text())
                         + "\n"
                     )
                 elif num == 7:
@@ -3687,7 +3702,7 @@ class UIXia2Options:
                         + "HP "
                         + str(num)
                         + " "
-                        + str(self.refGeometryPath)
+                        + str(self.ref_geometry_path)
                         + "\n"
                     )
                 elif num == 2:
@@ -3777,10 +3792,10 @@ class UIXia2Options:
 
     def save_options(self):
         output_message = "\n	Saving options"
-        self.mainTab_txt.appendPlainText(output_message)
-        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+        self.main_tab_txt.appendPlainText(output_message)
+        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
 
-        path = self.openingVisit
+        path = self.opening_visit
         option_file = QtWidgets.QFileDialog.getSaveFileName(
             None, "Save Current Options", path
         )[0]
@@ -3790,8 +3805,8 @@ class UIXia2Options:
         output_message = (
             "\n	File location: " + str(option_file) + "\n	" + str(option_file_text)
         )
-        self.mainTab_txt.appendPlainText(output_message)
-        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+        self.main_tab_txt.appendPlainText(output_message)
+        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
 
         with open(option_file, "a") as oF:
             oF.write(option_file_text)
@@ -3800,8 +3815,8 @@ class UIXia2Options:
 
     def save_options_auto(self):
         output_message = "\n	Saving current options"
-        self.mainTab_txt.appendPlainText(output_message)
-        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+        self.main_tab_txt.appendPlainText(output_message)
+        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
 
         if self.visit == "":
             return
@@ -3813,8 +3828,8 @@ class UIXia2Options:
         output_message = (
             "\n	File location: " + str(option_file) + "\n	" + str(option_file_text)
         )
-        self.mainTab_txt.appendPlainText(output_message)
-        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+        self.main_tab_txt.appendPlainText(output_message)
+        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
 
         with open(option_file, "a") as of:
             of.write(option_file_text)
@@ -3827,8 +3842,8 @@ class UIXia2Options:
                 "	Visit/Dataset has not been selected, "
                 "therefore previous settings will not be loaded"
             )
-            self.mainTab_txt.appendPlainText(output_message)
-            self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+            self.main_tab_txt.appendPlainText(output_message)
+            self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
             return
         if os.path.isfile(self.visit + "processing/autoSaveOptions.txt"):
             saved_options_path_txt = self.visit + "processing/autoSaveOptions.txt"
@@ -3838,10 +3853,10 @@ class UIXia2Options:
 
     def load_options(self):
         output_message = "\nLoading options"
-        self.mainTab_txt.appendPlainText(output_message)
-        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+        self.main_tab_txt.appendPlainText(output_message)
+        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
 
-        path = self.openingVisit
+        path = self.opening_visit
         os.chdir(path)
         self.savedOptionsPath = QtWidgets.QFileDialog.getOpenFileName()[0]
         if self.savedOptionsPath:
@@ -3850,32 +3865,32 @@ class UIXia2Options:
 
     def load_options_main(self, saved_options_path_txt):
         output_message = "	Loading previous settings (" + saved_options_path_txt + ")"
-        self.mainTab_txt.appendPlainText(output_message)
-        self.mainTab_txt.moveCursor(QtGui.QTextCursor.End)
+        self.main_tab_txt.appendPlainText(output_message)
+        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
         with open(saved_options_path_txt) as optionsInput:
             for line in optionsInput:
                 line_split = line.split(" ")
                 if line_split[0] == "I":
                     if int(line_split[1]) == 1:
-                        self.refGeometryPath = line_split[2]
-                        ref_geometry_path_txt = str(self.refGeometryPath)
+                        self.ref_geometry_path = line_split[2]
+                        ref_geometry_path_txt = str(self.ref_geometry_path)
                         ref_geometry_file_txt = ref_geometry_path_txt.split("/")[-1]
-                        self.import_ReferenceGeometry_path.setText(
+                        self.import_reference_geometry_path.setText(
                             ref_geometry_file_txt
                         )
-                        self.import_ReferenceGeometry_path.setScaledContents(True)
+                        self.import_reference_geometry_path.setScaledContents(True)
                         self.HP_ReferenceGeometry_path.setText(ref_geometry_file_txt)
                         self.HP_ReferenceGeometry_path.setScaledContents(True)
                         self.optionListImport[int(line_split[1])].setChecked(True)
                     if int(line_split[1]) == 2:
-                        self.import_DD_lineEdit.setText(line_split[2])
+                        self.import_dd_line_edit.setText(line_split[2])
                         self.optionListImport[int(line_split[1])].setChecked(True)
                     if int(line_split[1]) == 3:
-                        self.import_BeamCentre_X_lineEdit.setText(line_split[2])
-                        self.import_BeamCentre_Y_lineEdit.setText(line_split[3])
+                        self.import_beam_centre_x_line_edit.setText(line_split[2])
+                        self.import_beam_centre_y_line_edit.setText(line_split[3])
                         self.optionListImport[int(line_split[1])].setChecked(True)
                     if int(line_split[1]) == 4:
-                        self.import_wavelength_lineEdit.setText(line_split[2])
+                        self.import_wavelength_line_edit.setText(line_split[2])
                         self.optionListImport[int(line_split[1])].setChecked(True)
                     if int(line_split[1]) == 7:
                         self.Import_type_comboBox.setCurrentIndex(int(line_split[2]))
@@ -3973,13 +3988,13 @@ class UIXia2Options:
                         self.optionListOther[int(line_split[1])].setChecked(True)
                 if line_split[0] == "HP":
                     if int(line_split[1]) == 1:
-                        self.refGeometryPath = line_split[2]
-                        ref_geometry_path_txt = str(self.refGeometryPath)
+                        self.ref_geometry_path = line_split[2]
+                        ref_geometry_path_txt = str(self.ref_geometry_path)
                         ref_geometry_file_txt = ref_geometry_path_txt.split("/")[-1]
-                        self.import_ReferenceGeometry_path.setText(
+                        self.import_reference_geometry_path.setText(
                             ref_geometry_file_txt
                         )
-                        self.import_ReferenceGeometry_path.setScaledContents(True)
+                        self.import_reference_geometry_path.setScaledContents(True)
                         self.HP_ReferenceGeometry_path.setText(ref_geometry_file_txt)
                         self.HP_ReferenceGeometry_path.setScaledContents(True)
                         self.optionListHP[int(line_split[1])].setChecked(True)
@@ -4038,69 +4053,69 @@ class UIXia2Options:
             _translate("xia2_options", "Options - Xia2 Additional Commands")
         )
 
-        self.updateButton.setText(_translate("xia2_options", "Update Command"))
-        self.updateButton.setStatusTip(
+        self.update_button.setText(_translate("xia2_options", "Update Command"))
+        self.update_button.setStatusTip(
             _translate(
                 "xia2_options", "Update the xia2 command with the current selection"
             )
         )
-        self.resetButton.setText(_translate("xia2_options", "Reset"))
-        self.resetButton.setStatusTip(
+        self.reset_button.setText(_translate("xia2_options", "Reset"))
+        self.reset_button.setStatusTip(
             _translate("xia2_options", "The rest button will uncheck all check boxes")
         )
-        self.saveButton.setText(_translate("xia2_options", "Save"))
-        self.saveButton.setStatusTip(
+        self.save_button.setText(_translate("xia2_options", "Save"))
+        self.save_button.setStatusTip(
             _translate("xia2_options", "Save the current options")
         )
-        self.loadButton.setText(_translate("xia2_options", "Load"))
-        self.loadButton.setStatusTip(
+        self.load_button.setText(_translate("xia2_options", "Load"))
+        self.load_button.setStatusTip(
             _translate("xia2_options", "Load a pre-saved option selection")
         )
 
-        self.import_TrustBeamCentre.setText(
+        self.import_trust_beam_centre.setText(
             _translate("xia2_options", "Trust beam centre")
         )
-        self.import_TrustBeamCentre.setStatusTip(
+        self.import_trust_beam_centre.setStatusTip(
             _translate(
                 "xia2_options", "Trust the beam centre in the headers, do not refine"
             )
         )
-        self.import_DD.setText(_translate("xia2_options", "Detector Distance"))
-        self.import_DD.setStatusTip(
+        self.import_dd.setText(_translate("xia2_options", "Detector Distance"))
+        self.import_dd.setStatusTip(
             _translate(
                 "xia2_options", "Override the detector distance from the image header"
             )
         )
-        self.import_BeamCentre.setText(_translate("xia2_options", "Beam Centre"))
-        self.import_BeamCentre.setStatusTip(
+        self.import_beam_centre.setText(_translate("xia2_options", "Beam Centre"))
+        self.import_beam_centre.setStatusTip(
             _translate(
                 "xia2_options", "Override the beam centre from the image headers"
             )
         )
-        self.import_BeamCentre_X_label.setText(_translate("xia2_options", "X"))
-        self.import_BeamCentre_Y_label.setText(_translate("xia2_options", "Y"))
-        self.import_ReferenceGeometry.setText(
+        self.import_beam_centre_x_label.setText(_translate("xia2_options", "X"))
+        self.import_beam_centre_y_label.setText(_translate("xia2_options", "Y"))
+        self.import_reference_geometry.setText(
             _translate("xia2_options", "Reference Geometry")
         )
-        self.import_ReferenceGeometry.setStatusTip(
+        self.import_reference_geometry.setStatusTip(
             _translate(
                 "xia2_options", "Experimental geometry from the models selected (.expt)"
             )
         )
-        self.import_ReferenceGeometry_path.setText(
+        self.import_reference_geometry_path.setText(
             _translate("xia2_options", "Path/To/instrument_model.expt")
         )
-        self.import_ReferenceGeometry_browse.setText(
+        self.import_reference_geometry_browse.setText(
             _translate("xia2_options", "Browse")
         )
-        self.import_Wavelengh.setText(_translate("xia2_options", "Wavelength"))
-        self.import_Wavelengh.setStatusTip(
+        self.import_wavelengh.setText(_translate("xia2_options", "Wavelength"))
+        self.import_wavelengh.setStatusTip(
             _translate("xia2_options", "Override the beam wavelength")
         )
-        self.Import_FixBeamDetector_checkBox.setText(
+        self.import_fix_beam_detector_check_box.setText(
             _translate("xia2_options", "Fix instrument model")
         )
-        self.Import_RunSelector_checkBox.setText(
+        self.import_run_selector_check_box.setText(
             _translate("xia2_options", "Run Select")
         )
         self.Import_RunSelector_checkBox_1.setText(_translate("xia2_options", "1"))
@@ -4149,8 +4164,8 @@ class UIXia2Options:
         self.Import_type_comboBox.setItemText(0, _translate("xia2_options", "Chemical"))
         self.Import_type_comboBox.setItemText(1, _translate("xia2_options", "Protein"))
 
-        self.xia2options.setTabText(
-            self.xia2options.indexOf(self.xia2options_Import),
+        self.xia2_options.setTabText(
+            self.xia2_options.indexOf(self.xia2_options_import),
             _translate("xia2_options", "Import"),
         )
 
@@ -4552,32 +4567,32 @@ class UIXia2Options:
             _translate("xia2_options", "Set DAC anvil thickness. Default: 40 deg")
         )
 
-        self.xia2options.setTabText(
-            self.xia2options.indexOf(self.xia2options_SpotFinding),
+        self.xia2_options.setTabText(
+            self.xia2_options.indexOf(self.xia2options_SpotFinding),
             _translate("xia2_options", "Spot Finding"),
         )
-        self.xia2options.setTabText(
-            self.xia2options.indexOf(self.xia2options_Indexing),
+        self.xia2_options.setTabText(
+            self.xia2_options.indexOf(self.xia2options_Indexing),
             _translate("xia2_options", "Indexing"),
         )
-        self.xia2options.setTabText(
-            self.xia2options.indexOf(self.xia2options_integrate),
+        self.xia2_options.setTabText(
+            self.xia2_options.indexOf(self.xia2options_integrate),
             _translate("xia2_options", "Integrate"),
         )
-        self.xia2options.setTabText(
-            self.xia2options.indexOf(self.xia2options_refine_scale),
+        self.xia2_options.setTabText(
+            self.xia2_options.indexOf(self.xia2options_refine_scale),
             _translate("xia2_options", "Refine/Scale"),
         )
-        self.xia2options.setTabText(
-            self.xia2options.indexOf(self.xia2options_Other),
+        self.xia2_options.setTabText(
+            self.xia2_options.indexOf(self.xia2options_Other),
             _translate("xia2_options", "Other"),
         )
-        self.xia2options.setTabText(
-            self.xia2options.indexOf(self.xia2options_ALL),
+        self.xia2_options.setTabText(
+            self.xia2_options.indexOf(self.xia2options_ALL),
             _translate("xia2_options", "ALL"),
         )
-        self.xia2options.setTabText(
-            self.xia2options.indexOf(self.xia2options_HP),
+        self.xia2_options.setTabText(
+            self.xia2_options.indexOf(self.xia2options_HP),
             _translate("xia2_options", "HP"),
         )
 

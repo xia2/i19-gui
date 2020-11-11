@@ -632,6 +632,7 @@ class UIMainWindow(object):
         self.append_output(self.main_tab_txt, "Opening options window")
         self.secondWindow = QtWidgets.QMainWindow()
         self.ui = UIXia2Options(
+            self,
             self.secondWindow,
             self.xia2_command,
             self.dataset_path,
@@ -1480,6 +1481,7 @@ class MyThread2(QtCore.QThread):
 class UIXia2Options:
     def __init__(
         self,
+        ui_main_window,
         xia2_options,
         xia2_command,
         dataset_path,
@@ -1490,6 +1492,7 @@ class UIXia2Options:
         prefix,
         opening_visit,
     ):
+        self.ui_main_window = ui_main_window
         self.xia2_command = xia2_command
         self.dataset_path = dataset_path
         self.run_list = run_list
@@ -3371,7 +3374,10 @@ class UIXia2Options:
         self.main_tab_txt.appendPlainText(options_update_text)
         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
 
-        UIMainWindow.update_options()
+        self.ui_main_window.xia2_command = self.xia2_command
+        self.ui_main_window.dataset_path = self.dataset_path
+        self.ui_main_window.xia2_options_list = options
+        self.ui_main_window.update_options()
 
         self.save_options_auto()
 
@@ -3421,7 +3427,10 @@ class UIXia2Options:
         self.main_tab_txt.appendPlainText(options_update_text)
         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
 
-        UIMainWindow.update_options()
+        self.ui_main_window.xia2_command = self.xia2_command
+        self.ui_main_window.dataset_path = self.dataset_path
+        self.ui_main_window.xia2_options_list = options
+        self.ui_main_window.update_options()
 
     def option_file_text_function(self):
         option_file_text = ""

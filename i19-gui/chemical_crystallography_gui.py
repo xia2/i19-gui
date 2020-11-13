@@ -3925,6 +3925,7 @@ class UIXia2Options:
         try:
             with open(saved_options_path_txt) as optionsInput:
                 for line in optionsInput:
+                    line = "".join(line.split("\n"))
                     line_split = line.split(" ")
                     if line_split[0] == "I":
                         if int(line_split[1]) == 1:

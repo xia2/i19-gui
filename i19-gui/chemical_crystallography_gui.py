@@ -493,9 +493,9 @@ class UIMainWindow(object):
                 self.visit = "/".join(self.dataset_path.split("/")[:6]) + "/"
             self.opening_visit = str(self.visit)
         self.append_output(self.main_tab_txt, "	Dataset:		" + self.dataset)
-        for cbfFile in os.listdir(self.dataset_path):  # prefix
-            if cbfFile.endswith("_00001.cbf"):
-                self.prefix = cbfFile[:-12]
+        for cbf_file in os.listdir(self.dataset_path):  # prefix
+            if cbf_file.endswith("_00001.cbf"):
+                self.prefix = cbf_file[:-12]
                 break
             else:
                 continue
@@ -503,10 +503,10 @@ class UIMainWindow(object):
         self.append_output(self.main_tab_txt, "	Prefix:			" + self.prefix)
         self.run_list = []
         run_images_dict = {}
-        for cbfFiles in os.listdir(self.dataset_path):  # runs in dataset
-            if cbfFiles.endswith("_00001.cbf"):
-                if cbfFiles[:-12] == self.prefix:
-                    run = int(cbfFiles[-12:-10])
+        for cbf_files in os.listdir(self.dataset_path):  # runs in dataset
+            if cbf_files.endswith("_00001.cbf"):
+                if cbf_files[:-12] == self.prefix:
+                    run = int(cbf_files[-12:-10])
                     self.run_list.append(run)
 
         self.run_list.sort()
@@ -560,9 +560,9 @@ class UIMainWindow(object):
                 self.visit = "/".join(self.dataset_path.split("/")[:6]) + "/"
             self.opening_visit = str(self.visit)
         self.append_output(self.main_tab_txt, "	New Dataset:		" + dataset)
-        for cbfFile in os.listdir(new_dataset_path):  # prefix
-            if cbfFile.endswith("_00001.cbf"):
-                prefix = cbfFile[:-12]
+        for cbf_file in os.listdir(new_dataset_path):  # prefix
+            if cbf_file.endswith("_00001.cbf"):
+                prefix = cbf_file[:-12]
                 break
             else:
                 continue
@@ -1147,14 +1147,14 @@ class UIMainWindow(object):
                 if file_time > latest_expt_time:
                     latest_expt = expt_file
                     latest_expt_time = file_time
-        for reflFile in refl_files:
-            file_time = os.path.getmtime(reflFile)
+        for refl_file in refl_files:
+            file_time = os.path.getmtime(refl_file)
             if latest_refl_time == "":
-                latest_refl = reflFile
+                latest_refl = refl_file
                 latest_refl_time = file_time
             else:
                 if file_time > latest_refl_time:
-                    latest_refl = reflFile
+                    latest_refl = refl_file
                     latest_refl_time = file_time
         if latest_expt == "":
             self.append_output(
@@ -3564,8 +3564,8 @@ class UIXia2Options:
                         self.findSpots_resolutionRange_lineEdit_10.text(),
                     ]
                     option_file_text = option_file_text + "SF " + str(num)
-                    for resRange in find_spot_res_range_list:
-                        option_file_text = option_file_text + " " + str(resRange)
+                    for res_range in find_spot_res_range_list:
+                        option_file_text = option_file_text + " " + str(res_range)
                     option_file_text = option_file_text + "\n"
                 elif num == 8:
                     option_file_text = (

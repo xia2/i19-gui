@@ -658,7 +658,7 @@ class UIMainWindow(object):
             if self.prefix == "":
                 self.append_output(
                     self.main_tab_txt,
-                    "\n\n ########################################################a",
+                    "\n\n #########################################################",
                 )
                 self.append_output(
                     self.main_tab_txt,
@@ -882,7 +882,7 @@ class UIMainWindow(object):
         if self.prefix == "":
             self.append_output(
                 self.main_tab_txt,
-                "\n\n ########################################################a",
+                "\n\n #########################################################",
             )
             self.append_output(
                 self.main_tab_txt,

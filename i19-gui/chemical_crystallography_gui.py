@@ -492,50 +492,48 @@ class UIMainWindow(object):
                 # /dls/i19-2/data/2020/cm26492-2/
                 self.visit = "/".join(self.dataset_path.split("/")[:6]) + "/"
             self.opening_visit = str(self.visit)
-        self.append_output(self.main_tab_txt, "	Dataset:		" + self.dataset)
-        for cbf_file in os.listdir(self.dataset_path):  # prefix
-            if cbf_file.endswith("_00001.cbf"):
-                self.prefix = cbf_file[:-12]
-                break
-            else:
-                continue
+            self.append_output(self.main_tab_txt, "	Dataset:		" + self.dataset)
+            for cbf_file in os.listdir(self.dataset_path):  # prefix
+                if cbf_file.endswith("_00001.cbf"):
+                    self.prefix = cbf_file[:-12]
+                    break
 
-        self.append_output(self.main_tab_txt, "	Prefix:			" + self.prefix)
-        self.run_list = []
-        run_images_dict = {}
-        for cbf_files in os.listdir(self.dataset_path):  # runs in dataset
-            if cbf_files.endswith("_00001.cbf"):
-                if cbf_files[:-12] == self.prefix:
-                    run = int(cbf_files[-12:-10])
-                    self.run_list.append(run)
+            self.append_output(self.main_tab_txt, "	Prefix:			" + self.prefix)
+            self.run_list = []
+            run_images_dict = {}
+            for cbf_files in os.listdir(self.dataset_path):  # runs in dataset
+                if cbf_files.endswith("_00001.cbf"):
+                    if cbf_files[:-12] == self.prefix:
+                        run = int(cbf_files[-12:-10])
+                        self.run_list.append(run)
 
-        self.run_list.sort()
-        self.append_output(
-            self.main_tab_txt,
-            "	Number of runs:		"
-            + " ".join(map(str, (len(self.run_list), self.run_list))),
-        )
-        for run in self.run_list:  # number of images per run
-            basename_match = self.prefix + "%02d" % run + "_*.cbf"
-            num_cbf_run = len(
-                fnmatch.filter(os.listdir(self.dataset_path), basename_match)
+            self.run_list.sort()
+            self.append_output(
+                self.main_tab_txt,
+                "	Number of runs:		"
+                + " ".join(map(str, (len(self.run_list), self.run_list))),
             )
-            run_images_dict[run] = num_cbf_run
-        self.append_output(
-            self.main_tab_txt, "	Images per run: 	" + str(run_images_dict)
-        )
-        total_num_images = sum(run_images_dict.values())  # total number of images
-        self.append_output(
-            self.main_tab_txt,
-            "	Total number of images:	" + str(total_num_images) + "\n",
-        )
-        # update labels
-        self.dataset_info_dataset.setText(self.dataset)
-        self.dataset_info_prefix.setText(self.prefix)
-        self.dataset_info_images.setText(str(run_images_dict).strip("{}"))
-        self.command_command.setPlainText(
-            self.xia2_command + self.dataset_path + self.xia2_options_list
-        )
+            for run in self.run_list:  # number of images per run
+                basename_match = self.prefix + "%02d" % run + "_*.cbf"
+                num_cbf_run = len(
+                    fnmatch.filter(os.listdir(self.dataset_path), basename_match)
+                )
+                run_images_dict[run] = num_cbf_run
+            self.append_output(
+                self.main_tab_txt, "	Images per run: 	" + str(run_images_dict)
+            )
+            total_num_images = sum(run_images_dict.values())  # total number of images
+            self.append_output(
+                self.main_tab_txt,
+                "	Total number of images:	" + str(total_num_images) + "\n",
+            )
+            # update labels
+            self.dataset_info_dataset.setText(self.dataset)
+            self.dataset_info_prefix.setText(self.prefix)
+            self.dataset_info_images.setText(str(run_images_dict).strip("{}"))
+            self.command_command.setPlainText(
+                self.xia2_command + self.dataset_path + self.xia2_options_list
+            )
 
     # file menu, open-> select dataset ####
     def open_multiple(self):
@@ -559,54 +557,52 @@ class UIMainWindow(object):
                 # /dls/i19-2/data/2020/cm26492-2/
                 self.visit = "/".join(self.dataset_path.split("/")[:6]) + "/"
             self.opening_visit = str(self.visit)
-        self.append_output(self.main_tab_txt, "	New Dataset:		" + dataset)
-        for cbf_file in os.listdir(new_dataset_path):  # prefix
-            if cbf_file.endswith("_00001.cbf"):
-                prefix = cbf_file[:-12]
-                break
-            else:
-                continue
+            self.append_output(self.main_tab_txt, "	New Dataset:		" + dataset)
+            for cbf_file in os.listdir(new_dataset_path):  # prefix
+                if cbf_file.endswith("_00001.cbf"):
+                    prefix = cbf_file[:-12]
+                    break
 
-        self.append_output(self.main_tab_txt, "	New Prefix:			" + prefix)
-        run_list = []
-        run_images_dict = {}
-        for cbf_file in os.listdir(new_dataset_path):  # runs in dataset
-            if cbf_file.endswith("_00001.cbf"):
-                if cbf_file[:-12] == prefix:
-                    run = int(cbf_file[-12:-10])
-                    run_list.append(run)
+            self.append_output(self.main_tab_txt, "	New Prefix:			" + prefix)
+            run_list = []
+            run_images_dict = {}
+            for cbf_file in os.listdir(new_dataset_path):  # runs in dataset
+                if cbf_file.endswith("_00001.cbf"):
+                    if cbf_file[:-12] == prefix:
+                        run = int(cbf_file[-12:-10])
+                        run_list.append(run)
 
-        run_list.sort()
-        self.append_output(
-            self.main_tab_txt,
-            "	New Number of runs:		" + str(len(run_list)) + " " + str(run_list),
-        )
-        for run in run_list:  # number of images per run
-            basename_match = f"{prefix}{run:02d}_*.cbf"
-            num_cbf_run = len(
-                fnmatch.filter(os.listdir(new_dataset_path), basename_match)
+            run_list.sort()
+            self.append_output(
+                self.main_tab_txt,
+                "	New Number of runs:		" + str(len(run_list)) + " " + str(run_list),
             )
-            run_images_dict[run] = num_cbf_run
-        self.append_output(
-            self.main_tab_txt, "	New Images per run: 	" + str(run_images_dict)
-        )
-        total_num_images = sum(run_images_dict.values())  # total number of images
-        self.append_output(
-            self.main_tab_txt,
-            "	New Total number of images:	" + str(total_num_images) + "\n",
-        )
-        # update labels
-        self.dataset_info_dataset.setText(dataset)
-        self.dataset_info_prefix.setText(prefix)
-        self.dataset_info_images.setText(str(run_images_dict).strip("{}"))
-        self.command_command.setPlainText(
-            self.xia2_command + self.dataset_path + self.xia2_options_list
-        )
+            for run in run_list:  # number of images per run
+                basename_match = f"{prefix}{run:02d}_*.cbf"
+                num_cbf_run = len(
+                    fnmatch.filter(os.listdir(new_dataset_path), basename_match)
+                )
+                run_images_dict[run] = num_cbf_run
+            self.append_output(
+                self.main_tab_txt, "	New Images per run: 	" + str(run_images_dict)
+            )
+            total_num_images = sum(run_images_dict.values())  # total number of images
+            self.append_output(
+                self.main_tab_txt,
+                "	New Total number of images:	" + str(total_num_images) + "\n",
+            )
+            # update labels
+            self.dataset_info_dataset.setText(dataset)
+            self.dataset_info_prefix.setText(prefix)
+            self.dataset_info_images.setText(str(run_images_dict).strip("{}"))
+            self.command_command.setPlainText(
+                self.xia2_command + self.dataset_path + self.xia2_options_list
+            )
 
-        self.multiple_dataset[dataset] = [new_dataset_path, prefix, run_list]
-        self.append_output(
-            self.main_tab_txt, "	Multiple runs:\n	" + str(self.multiple_dataset)
-        )
+            self.multiple_dataset[dataset] = [new_dataset_path, prefix, run_list]
+            self.append_output(
+                self.main_tab_txt, "	Multiple runs:\n	" + str(self.multiple_dataset)
+            )
 
     # file menu, close -> close GUI ####
     def close_gui(self):

@@ -26,7 +26,9 @@ repos:
   rev: 3.8.4
   hooks:
   - id: flake8
-    args: ['--max-line-length=88', '--ignore=D100,D101,D102,D105,D107,W503']
+    # Exclude docstring checks, ignore E203 (see https://github.com/PyCQA/pycodestyle/issues/373)
+    # and W503 (see https://github.com/psf/black/pull/36) for compatibility with Black.
+    args: ['--max-line-length=88', '--ignore=D1,E203,W503']
 
 # Syntax check with pre-commit out-of-the-box hooks
 - repo: https://github.com/pre-commit/pre-commit-hooks

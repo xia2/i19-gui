@@ -3811,21 +3811,22 @@ class UIXia2Options:
             None, "Save Current Options", path
         )[0]
 
-        option_file_text = self.option_file_text_function()
+        if option_file:
+            option_file_text = self.option_file_text_function()
 
-        output_message = (
-            "\n    File location: "
-            + str(option_file)
-            + "\n    "
-            + str(option_file_text)
-        )
-        self.main_tab_txt.appendPlainText(output_message)
-        self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
+            output_message = (
+                "\n    File location: "
+                + str(option_file)
+                + "\n    "
+                + str(option_file_text)
+            )
+            self.main_tab_txt.appendPlainText(output_message)
+            self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
 
-        with open(option_file, "a") as f:
-            f.write(option_file_text)
-            f.write("")
-            f.close()
+            with open(option_file, "a") as f:
+                f.write(option_file_text)
+                f.write("")
+                f.close()
 
     def save_options_auto(self):
         output_message = "\n    Saving current options"
@@ -3865,8 +3866,6 @@ class UIXia2Options:
         if os.path.isfile(self.visit + "processing/autoSaveOptions.txt"):
             saved_options_path_txt = self.visit + "processing/autoSaveOptions.txt"
             self.load_options_main(saved_options_path_txt)
-        else:
-            return
 
     def load_options(self):
         output_message = "\nLoading options"
@@ -3875,9 +3874,9 @@ class UIXia2Options:
 
         path = self.opening_visit
         os.chdir(path)
-        self.savedOptionsPath = QtWidgets.QFileDialog.getOpenFileName()[0]
-        if self.savedOptionsPath:
-            saved_options_path_txt = str(self.savedOptionsPath)
+        saved_options_path = QtWidgets.QFileDialog.getOpenFileName()[0]
+        if saved_options_path:
+            saved_options_path_txt = str(saved_options_path)
             self.load_options_main(saved_options_path_txt)
 
     def load_options_main(self, saved_options_path_txt):

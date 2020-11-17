@@ -3888,6 +3888,7 @@ class UIXia2Options:
         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
         with open(saved_options_path_txt) as options_input:
             for line in options_input:
+                line = "".join(line.split("\n"))
                 line_split = line.split(" ")
                 if line_split[0] == "I":
                     if int(line_split[1]) == 1:

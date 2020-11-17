@@ -765,10 +765,10 @@ class UIMainWindow(object):
         # create job file
 
         job_file = self.processing_path + "job.sh"
-        with open(job_file, "a") as jF:
-            jF.write(str("cd " + self.processing_path) + "\n")
-            jF.write(str("module load dials" + self.dials_version) + "\n")
-            jF.write(str(input_xia2_command) + "\n")
+        with open(job_file, "a") as f:
+            f.write(str("cd " + self.processing_path) + "\n")
+            f.write(str("module load dials" + self.dials_version) + "\n")
+            f.write(str(input_xia2_command) + "\n")
 
         ################################################################################
         # open new tab with dataset and date
@@ -3822,10 +3822,10 @@ class UIXia2Options:
         self.main_tab_txt.appendPlainText(output_message)
         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
 
-        with open(option_file, "a") as oF:
-            oF.write(option_file_text)
-            oF.write("")
-            oF.close()
+        with open(option_file, "a") as f:
+            f.write(option_file_text)
+            f.write("")
+            f.close()
 
     def save_options_auto(self):
         output_message = "\n    Saving current options"
@@ -3886,8 +3886,8 @@ class UIXia2Options:
         )
         self.main_tab_txt.appendPlainText(output_message)
         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
-        with open(saved_options_path_txt) as optionsInput:
-            for line in optionsInput:
+        with open(saved_options_path_txt) as options_input:
+            for line in options_input:
                 line_split = line.split(" ")
                 if line_split[0] == "I":
                     if int(line_split[1]) == 1:

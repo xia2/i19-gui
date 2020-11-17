@@ -482,7 +482,7 @@ class UIMainWindow(object):
         if self.dataset_path:
             self.multiple_dataset = {}
             self.append_output(
-                self.main_tab_txt, "\n	Dataset Path:		" + self.dataset_path
+                self.main_tab_txt, "\n    Dataset Path:        " + self.dataset_path
             )
             self.dataset = self.dataset_path.split("/")[-1]  # dataset name
             if "staging" in self.dataset_path.split("/"):
@@ -492,13 +492,13 @@ class UIMainWindow(object):
                 # /dls/i19-2/data/2020/cm26492-2/
                 self.visit = "/".join(self.dataset_path.split("/")[:6]) + "/"
             self.opening_visit = str(self.visit)
-            self.append_output(self.main_tab_txt, "	Dataset:		" + self.dataset)
+            self.append_output(self.main_tab_txt, "    Dataset:        " + self.dataset)
             for cbf_file in os.listdir(self.dataset_path):  # prefix
                 if cbf_file.endswith("_00001.cbf"):
                     self.prefix = cbf_file[:-12]
                     break
 
-            self.append_output(self.main_tab_txt, "	Prefix:			" + self.prefix)
+            self.append_output(self.main_tab_txt, "    Prefix:        " + self.prefix)
             self.run_list = []
             run_images_dict = {}
             for cbf_files in os.listdir(self.dataset_path):  # runs in dataset
@@ -510,7 +510,7 @@ class UIMainWindow(object):
             self.run_list.sort()
             self.append_output(
                 self.main_tab_txt,
-                "	Number of runs:		"
+                "    Number of runs:        "
                 + " ".join(map(str, (len(self.run_list), self.run_list))),
             )
             for run in self.run_list:  # number of images per run
@@ -520,12 +520,12 @@ class UIMainWindow(object):
                 )
                 run_images_dict[run] = num_cbf_run
             self.append_output(
-                self.main_tab_txt, "	Images per run: 	" + str(run_images_dict)
+                self.main_tab_txt, "    Images per run:    " + str(run_images_dict)
             )
             total_num_images = sum(run_images_dict.values())  # total number of images
             self.append_output(
                 self.main_tab_txt,
-                "	Total number of images:	" + str(total_num_images) + "\n",
+                "    Total number of images:    " + str(total_num_images) + "\n",
             )
             # update labels
             self.dataset_info_dataset.setText(self.dataset)
@@ -546,7 +546,7 @@ class UIMainWindow(object):
 
         if new_dataset_path:
             self.append_output(
-                self.main_tab_txt, "\n	New Dataset Path:		" + new_dataset_path
+                self.main_tab_txt, "\n    New Dataset Path:        " + new_dataset_path
             )
 
             dataset = new_dataset_path.split("/")[-1]  # dataset name
@@ -557,13 +557,13 @@ class UIMainWindow(object):
                 # /dls/i19-2/data/2020/cm26492-2/
                 self.visit = "/".join(self.dataset_path.split("/")[:6]) + "/"
             self.opening_visit = str(self.visit)
-            self.append_output(self.main_tab_txt, "	New Dataset:		" + dataset)
+            self.append_output(self.main_tab_txt, "    New Dataset:        " + dataset)
             for cbf_file in os.listdir(new_dataset_path):  # prefix
                 if cbf_file.endswith("_00001.cbf"):
                     prefix = cbf_file[:-12]
                     break
 
-            self.append_output(self.main_tab_txt, "	New Prefix:			" + prefix)
+            self.append_output(self.main_tab_txt, "    New Prefix:        " + prefix)
             run_list = []
             run_images_dict = {}
             for cbf_file in os.listdir(new_dataset_path):  # runs in dataset
@@ -575,7 +575,10 @@ class UIMainWindow(object):
             run_list.sort()
             self.append_output(
                 self.main_tab_txt,
-                "	New Number of runs:		" + str(len(run_list)) + " " + str(run_list),
+                "    New Number of runs:    "
+                + str(len(run_list))
+                + " "
+                + str(run_list),
             )
             for run in run_list:  # number of images per run
                 basename_match = f"{prefix}{run:02d}_*.cbf"
@@ -584,12 +587,12 @@ class UIMainWindow(object):
                 )
                 run_images_dict[run] = num_cbf_run
             self.append_output(
-                self.main_tab_txt, "	New Images per run: 	" + str(run_images_dict)
+                self.main_tab_txt, "    New Images per run:    " + str(run_images_dict)
             )
             total_num_images = sum(run_images_dict.values())  # total number of images
             self.append_output(
                 self.main_tab_txt,
-                "	New Total number of images:	" + str(total_num_images) + "\n",
+                "    New Total number of images:    " + str(total_num_images) + "\n",
             )
             # update labels
             self.dataset_info_dataset.setText(dataset)
@@ -601,7 +604,8 @@ class UIMainWindow(object):
 
             self.multiple_dataset[dataset] = [new_dataset_path, prefix, run_list]
             self.append_output(
-                self.main_tab_txt, "	Multiple runs:\n	" + str(self.multiple_dataset)
+                self.main_tab_txt,
+                "    Multiple runs:\n    " + str(self.multiple_dataset),
             )
 
     # file menu, close -> close GUI ####
@@ -658,7 +662,7 @@ class UIMainWindow(object):
                 )
                 self.append_output(
                     self.main_tab_txt,
-                    "	No cbf images found in directory, "
+                    "    No cbf images found in directory, "
                     "please select dataset directory",
                 )
                 return
@@ -685,7 +689,7 @@ class UIMainWindow(object):
                         )
                         self.append_output(
                             self.main_tab_txt,
-                            "	No cbf images found in directory, "
+                            "    No cbf images found in directory, "
                             "please select dataset directory",
                         )
                         return
@@ -704,7 +708,7 @@ class UIMainWindow(object):
                         )
                         self.append_output(
                             self.main_tab_txt,
-                            "	No cbf images found in directory, "
+                            "    No cbf images found in directory, "
                             "please select dataset directory",
                         )
                         return
@@ -756,7 +760,7 @@ class UIMainWindow(object):
         # this is the bit I think i need to change!!!
         # dataset and prefix I would guess is required
         input_xia2_command = self.xia2_command + xia2_input + self.xia2_options_list
-        self.append_output(self.main_tab_txt, "	" + input_xia2_command)
+        self.append_output(self.main_tab_txt, "    " + input_xia2_command)
 
         # create job file
 
@@ -816,7 +820,7 @@ class UIMainWindow(object):
         # edit plain text
         self.tabstxt[self.tabs_num].appendPlainText("\nRunning xia2\n")
         self.tabstxt[self.tabs_num].appendPlainText("Xia2 command:")
-        self.tabstxt[self.tabs_num].appendPlainText("	" + input_xia2_command + "\n")
+        self.tabstxt[self.tabs_num].appendPlainText("    " + input_xia2_command + "\n")
 
         ################################################################################
         # run xia2
@@ -882,7 +886,7 @@ class UIMainWindow(object):
             )
             self.append_output(
                 self.main_tab_txt,
-                "	No cbf images found in directory, please select dataset directory",
+                "    No cbf images found in directory, please select dataset directory",
             )
             return
         else:
@@ -917,7 +921,7 @@ class UIMainWindow(object):
             input_screen19_command = (
                 "screen19 " + self.dataset_path + screen19_options_list
             )
-            self.append_output(self.main_tab_txt, "	" + input_screen19_command)
+            self.append_output(self.main_tab_txt, "    " + input_screen19_command)
 
             # create job file
             job_file = self.processing_path + "job.sh"
@@ -986,7 +990,7 @@ class UIMainWindow(object):
             self.tabstxt[self.tabs_num].appendPlainText("\nRunning screen19\n")
             self.tabstxt[self.tabs_num].appendPlainText("screen19 command:")
             self.tabstxt[self.tabs_num].appendPlainText(
-                "	" + input_screen19_command + "\n"
+                "    " + input_screen19_command + "\n"
             )
 
             ############################################################################
@@ -1229,7 +1233,7 @@ class UIMainWindow(object):
         self.dials_version = ""
         # update version label
         self.menu_version.setTitle("Version(" + dial_version_pop + ")")
-        self.append_output(self.main_tab_txt, "	Version(" + dial_version_pop + ")")
+        self.append_output(self.main_tab_txt, "    Version(" + dial_version_pop + ")")
 
     # version menu, change version to latest
     def version_latest(self):
@@ -1243,7 +1247,7 @@ class UIMainWindow(object):
         self.dials_version = "/latest"
         # update version label
         self.menu_version.setTitle("Version(" + dial_version_pop + ")")
-        self.append_output(self.main_tab_txt, "	Version(" + dial_version_pop + ")")
+        self.append_output(self.main_tab_txt, "    Version(" + dial_version_pop + ")")
 
     # version menu, change version to now
     def version_now(self):
@@ -1257,7 +1261,7 @@ class UIMainWindow(object):
         self.dials_version = "/now"
         # update version label
         self.menu_version.setTitle("Version(" + dial_version_pop + ")")
-        self.append_output(self.main_tab_txt, "	Version(" + dial_version_pop + ")")
+        self.append_output(self.main_tab_txt, "    Version(" + dial_version_pop + ")")
 
     # version menu, change version to 1.4
     def version_1_4(self):
@@ -1271,7 +1275,7 @@ class UIMainWindow(object):
         self.dials_version = "/1.4"
         # update version label
         self.menu_version.setTitle("Version(" + dial_version_pop + ")")
-        self.append_output(self.main_tab_txt, "	Version(" + dial_version_pop + ")")
+        self.append_output(self.main_tab_txt, "    Version(" + dial_version_pop + ")")
 
     # version menu, change version to 2.1
     def version_2_1(self):
@@ -1285,7 +1289,7 @@ class UIMainWindow(object):
         self.dials_version = "/2.1"
         # update version label
         self.menu_version.setTitle("Version(" + dial_version_pop + ")")
-        self.append_output(self.main_tab_txt, "	Version(" + dial_version_pop + ")")
+        self.append_output(self.main_tab_txt, "    Version(" + dial_version_pop + ")")
 
     # close tabs ######
     def close_handler(self, index):
@@ -2704,9 +2708,9 @@ class UIXia2Options:
             ref_geometry_file_txt = ref_geometry_path_txt.split("/")[-1]
 
             output_message = (
-                "Reference Geometry Path:\n	"
+                "Reference Geometry Path:\n    "
                 + str(ref_geometry_path_txt)
-                + "\nReference Geometry File:\n	"
+                + "\nReference Geometry File:\n    "
                 + str(ref_geometry_file_txt)
             )
             self.main_tab_txt.appendPlainText(output_message)
@@ -2729,7 +2733,7 @@ class UIXia2Options:
                 if variable == self.import_reference_geometry:
                     if self.ref_geometry_path == "":
                         output_message = (
-                            "	*** Reference Geometry Error. Please select "
+                            "    *** Reference Geometry Error. Please select "
                             ".expt file with browse button first ***"
                         )
                         self.main_tab_txt.appendPlainText(output_message)
@@ -2744,7 +2748,7 @@ class UIXia2Options:
                 if variable == self.import_dd:
                     if self.import_dd_line_edit.text() == "":
                         output_message = (
-                            "	*** Detector Distance Error. Please input "
+                            "    *** Detector Distance Error. Please input "
                             "detector distance e.g. 85.01"
                         )
                         self.main_tab_txt.appendPlainText(output_message)
@@ -2764,12 +2768,14 @@ class UIXia2Options:
 
                 if variable == self.import_beam_centre:
                     if self.import_beam_centre_x_line_edit.text() == "":
-                        output_message = "	*** Beam Centre Error. Please input Y"
+                        output_message = "    *** Beam Centre Error. Please input Y"
                         self.main_tab_txt.appendPlainText(output_message)
                         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     elif self.import_beam_centre_y_line_edit.text() == "":
-                        output_message = "	*** Detector Distance Error. Please input X"
+                        output_message = (
+                            "    *** Detector Distance Error. Please input X"
+                        )
                         self.main_tab_txt.appendPlainText(output_message)
                         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
@@ -2793,7 +2799,7 @@ class UIXia2Options:
                 if variable == self.import_wavelengh:
                     if self.import_wavelength_line_edit.text() == "":
                         output_message = (
-                            "	*** Wavelength Input Error. "
+                            "    *** Wavelength Input Error. "
                             "Please add wavelength e.g. 85.01"
                         )
                         self.main_tab_txt.appendPlainText(output_message)
@@ -2824,7 +2830,7 @@ class UIXia2Options:
                         if run.isChecked():
                             self.run_selection.append(num)
                     self.main_tab_txt.appendPlainText(
-                        "Run selector:	" + str(self.run_selection)
+                        "Run selector:    " + str(self.run_selection)
                     )
                     self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                 if variable == self.Import_type_checkBox:
@@ -2839,7 +2845,7 @@ class UIXia2Options:
                 if variable == self.findSpots_sigmaStrong:
                     if self.findSpots_sigmaStrong_lineEdit.text() == "":
                         output_message = (
-                            "	*** Sigma Strong Error."
+                            "    *** Sigma Strong Error."
                             " Please enter sigma strong e.g. 6 ***"
                         )
                         self.main_tab_txt.appendPlainText(output_message)
@@ -2854,7 +2860,7 @@ class UIXia2Options:
                 if variable == self.findSpots_minSpot:
                     if self.findSpots_minSpot_lineEdit.text() == "":
                         output_message = (
-                            "	*** Min Spot Size Error, "
+                            "    *** Min Spot Size Error, "
                             "please entre min spots size e.g. 2 ***"
                         )
                         self.main_tab_txt.appendPlainText(output_message)
@@ -2869,7 +2875,7 @@ class UIXia2Options:
                 if variable == self.findSpots_maxSpot:
                     if self.findSpots_maxSpot_lineEdit.text() == "":
                         output_message = (
-                            "	*** Max Spot Size Error, "
+                            "    *** Max Spot Size Error, "
                             "please entre max spots size e.g. 2 ***"
                         )
                         self.main_tab_txt.appendPlainText(output_message)
@@ -2884,7 +2890,7 @@ class UIXia2Options:
                 if variable == self.findSpots_dmin:
                     if self.findSpots_dmin_lineEdit.text() == "":
                         output_message = (
-                            "	*** D_min Error, please entre d_min e.g. 0.84 ***"
+                            "    *** D_min Error, please entre d_min e.g. 0.84 ***"
                         )
                         self.main_tab_txt.appendPlainText(output_message)
                         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
@@ -2898,7 +2904,7 @@ class UIXia2Options:
                 if variable == self.findSpots_dmax:
                     if self.findSpots_dmax_lineEdit.text() == "":
                         output_message = (
-                            "	*** D_max Error, please entre d_max e.g. 10 ***"
+                            "    *** D_max Error, please entre d_max e.g. 10 ***"
                         )
                         self.main_tab_txt.appendPlainText(output_message)
                         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
@@ -2921,7 +2927,7 @@ class UIXia2Options:
                     ]
                     for entry in powder_ring_line_edits:
                         if entry == "":
-                            output_message = "	*** Powder ring mask error ***"
+                            output_message = "    *** Powder ring mask error ***"
                             self.main_tab_txt.appendPlainText(output_message)
                             self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
@@ -2961,7 +2967,7 @@ class UIXia2Options:
                 if variable == self.findSpots_circleMask:
                     if self.findSpots_circleMask_lineEdit.text() == "":
                         output_message = (
-                            "	*** Circle Mask Error, please entre is the "
+                            "    *** Circle Mask Error, please entre is the "
                             "following format: xc,yc,r ***"
                         )
                         self.main_tab_txt.appendPlainText(output_message)
@@ -2977,7 +2983,7 @@ class UIXia2Options:
                 if variable == self.findSpots_recMask:
                     if self.findSpots_recMask_lineEdit.text() == "":
                         output_message = (
-                            "	*** Rectangle Mask Error, please entre is "
+                            "    *** Rectangle Mask Error, please entre is "
                             "the following format: x0,x1,y0,y1 ***"
                         )
                         self.main_tab_txt.appendPlainText(output_message)
@@ -3011,7 +3017,7 @@ class UIXia2Options:
                         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         if entry == "":
                             output_message = (
-                                "	*** Error in unit cell or space group entry ***"
+                                "    *** Error in unit cell or space group entry ***"
                             )
                             self.main_tab_txt.appendPlainText(output_message)
                             self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
@@ -3021,7 +3027,7 @@ class UIXia2Options:
                     options = options + uc_command + sg_command
                 if variable == self.Index_minCell_checkBox:
                     if self.Index_minCell_lineEdit.text() == "":
-                        output_message = "	*** Please entre valid min cell ***"
+                        output_message = "    *** Please entre valid min cell ***"
                         self.main_tab_txt.appendPlainText(output_message)
                         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
@@ -3033,7 +3039,7 @@ class UIXia2Options:
                         )
                 if variable == self.Index_maxCell_checkBox:
                     if self.Index_maxCell_lineEdit.text() == "":
-                        output_message = "	*** Please entre valid max cell ***"
+                        output_message = "    *** Please entre valid max cell ***"
                         self.main_tab_txt.appendPlainText(output_message)
                         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         return
@@ -3065,27 +3071,27 @@ class UIXia2Options:
                     for entry in spot_profile_line_edits:
                         if entry == "":
                             output_message = (
-                                "	*** Error in overall or per degree entry ***"
+                                "    *** Error in overall or per degree entry ***"
                             )
                             self.main_tab_txt.appendPlainText(output_message)
                             self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
                         if self.visit == "":
                             output_message = (
-                                "	*** For this option a .phil need to be created, "
+                                "    *** For this option a .phil need to be created, "
                                 "this requires a the visit to be known."
-                                "	Please open a dataset and retry (File>Open). ***"
+                                "    Please open a dataset and retry (File>Open). ***"
                             )
                             self.main_tab_txt.appendPlainText(output_message)
                             self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
                     overall_line = (
-                        "	profile.gaussian_rs.min_spots.overall="
+                        "    profile.gaussian_rs.min_spots.overall="
                         + str(self.Integrate_minCellOverall_lineEdit.text())
                         + "\n"
                     )
                     degree_line = (
-                        "	profile.gaussian_rs.min_spots.per_degree="
+                        "    profile.gaussian_rs.min_spots.per_degree="
                         + str(self.Integrate_minCellDegree_lineEdit.text())
                         + "\n"
                     )
@@ -3152,7 +3158,7 @@ class UIXia2Options:
                 if variable == self.HP_ReferenceGeometry_checkBox:
                     if self.ref_geometry_path == "":
                         output_message = (
-                            "	*** Reference Geometry Error. "
+                            "    *** Reference Geometry Error. "
                             "Please select .expt file with browse button first ***"
                         )
                         self.main_tab_txt.appendPlainText(output_message)
@@ -3191,7 +3197,7 @@ class UIXia2Options:
                     ]
                     for entry in powder_ring_line_edits:
                         if entry == "":
-                            output_message = "	*** Powder ring mask error ***"
+                            output_message = "    *** Powder ring mask error ***"
                             self.main_tab_txt.appendPlainText(output_message)
                             self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                             return
@@ -3221,7 +3227,7 @@ class UIXia2Options:
                         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
                         if entry == "":
                             output_message = (
-                                "	*** Error in unit cell or space group entry ***"
+                                "    *** Error in unit cell or space group entry ***"
                             )
                             self.main_tab_txt.appendPlainText(output_message)
                             self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
@@ -3233,7 +3239,7 @@ class UIXia2Options:
                 if variable == self.HP_dmin_checkBox:
                     if self.HP_dmin_lineEdit.text() == "":
                         output_message = (
-                            "	*** D_min HP Error, please entre d_min e.g. 0.84 ***"
+                            "    *** D_min HP Error, please entre d_min e.g. 0.84 ***"
                         )
                         self.main_tab_txt.appendPlainText(output_message)
                         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
@@ -3265,7 +3271,7 @@ class UIXia2Options:
                         else:
                             self.image_selection[counter] = entry
                             counter += 1
-                    output_message = "Image start/end option selected.\n" "	" + str(
+                    output_message = "Image start/end option selected.\n" "    " + str(
                         self.image_selection
                     )
                     self.main_tab_txt.appendPlainText(output_message)
@@ -3284,7 +3290,7 @@ class UIXia2Options:
                 if variable == self.HP_anvilThickness_checkBox:
                     if self.HP_anvilThickness_lineEdit.text() == "":
                         output_message = (
-                            "	*** Anvil Thickness Input Error, "
+                            "    *** Anvil Thickness Input Error, "
                             "please enter thickness e.g. 2.1 ***"
                         )
                         self.main_tab_txt.appendPlainText(output_message)
@@ -3300,7 +3306,7 @@ class UIXia2Options:
                 if variable == self.HP_anvilOpeningAngle_checkBox:
                     if self.HP_anvilOpeningAngle_lineEdit.text() == "":
                         output_message = (
-                            "	*** Anvil Opening Angle Input Error, "
+                            "    *** Anvil Opening Angle Input Error, "
                             "please enter opening angle e.g. 38 ***"
                         )
                         self.main_tab_txt.appendPlainText(output_message)
@@ -3361,8 +3367,8 @@ class UIXia2Options:
 
         options_update_text = (
             "\n\nUpdating options"
-            + "\n	Xia2 command: "
-            + "\n	"
+            + "\n    Xia2 command: "
+            + "\n    "
             + self.xia2_command
             + self.dataset_path
             + options
@@ -3414,8 +3420,8 @@ class UIXia2Options:
 
         options_update_text = (
             "\n\nUpdating options"
-            + "\n	Xia2 command: "
-            + "\n	"
+            + "\n    Xia2 command: "
+            + "\n    "
             + self.xia2_command
             + self.dataset_path
             + options
@@ -3796,7 +3802,7 @@ class UIXia2Options:
         return option_file_text
 
     def save_options(self):
-        output_message = "\n	Saving options"
+        output_message = "\n    Saving options"
         self.main_tab_txt.appendPlainText(output_message)
         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
 
@@ -3808,7 +3814,10 @@ class UIXia2Options:
         option_file_text = self.option_file_text_function()
 
         output_message = (
-            "\n	File location: " + str(option_file) + "\n	" + str(option_file_text)
+            "\n    File location: "
+            + str(option_file)
+            + "\n    "
+            + str(option_file_text)
         )
         self.main_tab_txt.appendPlainText(output_message)
         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
@@ -3819,7 +3828,7 @@ class UIXia2Options:
             oF.close()
 
     def save_options_auto(self):
-        output_message = "\n	Saving current options"
+        output_message = "\n    Saving current options"
         self.main_tab_txt.appendPlainText(output_message)
         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
 
@@ -3831,7 +3840,10 @@ class UIXia2Options:
         option_file_text = self.option_file_text_function()
 
         output_message = (
-            "\n	File location: " + str(option_file) + "\n	" + str(option_file_text)
+            "\n    File location: "
+            + str(option_file)
+            + "\n    "
+            + str(option_file_text)
         )
         self.main_tab_txt.appendPlainText(output_message)
         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
@@ -3844,7 +3856,7 @@ class UIXia2Options:
     def load_options_auto(self):
         if self.visit == "":
             output_message = (
-                "	Visit/Dataset has not been selected, "
+                "    Visit/Dataset has not been selected, "
                 "therefore previous settings will not be loaded"
             )
             self.main_tab_txt.appendPlainText(output_message)
@@ -3869,7 +3881,9 @@ class UIXia2Options:
             self.load_options_main(saved_options_path_txt)
 
     def load_options_main(self, saved_options_path_txt):
-        output_message = "	Loading previous settings (" + saved_options_path_txt + ")"
+        output_message = (
+            "    Loading previous settings (" + saved_options_path_txt + ")"
+        )
         self.main_tab_txt.appendPlainText(output_message)
         self.main_tab_txt.moveCursor(QtGui.QTextCursor.End)
         with open(saved_options_path_txt) as optionsInput:

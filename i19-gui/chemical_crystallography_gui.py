@@ -543,6 +543,8 @@ class UIMainWindow(object):
         )
 
         self.dataset_path = "MULTIPLE"
+        prefix = ""
+        dataset = ""
 
         if new_dataset_path:
             self.append_output(
@@ -563,6 +565,7 @@ class UIMainWindow(object):
                     prefix = cbf_file[:-12]
                     break
 
+        if prefix:
             self.append_output(self.main_tab_txt, "    New Prefix:        " + prefix)
             run_list = []
             run_images_dict = {}

@@ -17,7 +17,7 @@
    <string>Chemical Crystallography Xia2 GUI</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_7">
+   <layout class="QHBoxLayout" name="horizontalLayout_3">
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <property name="leftMargin">
@@ -29,20 +29,17 @@
       <property name="rightMargin">
        <number>10</number>
       </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
       <item>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0">
-         <widget class="QLabel" name="labelsDataset">
+        <item row="0" column="2">
+         <widget class="QLabel" name="labelsRuns">
           <property name="text">
-           <string>Dataset</string>
+           <string>Runs</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="datasetInfo_dataset">
+        <item row="1" column="4">
+         <widget class="QLabel" name="datasetInfo_version">
           <property name="font">
            <font>
             <pointsize>14</pointsize>
@@ -51,7 +48,14 @@
            </font>
           </property>
           <property name="text">
-           <string>none</string>
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="labelsDataset">
+          <property name="text">
+           <string>Dataset</string>
           </property>
          </widget>
         </item>
@@ -59,13 +63,6 @@
          <widget class="QLabel" name="labelsVersion">
           <property name="text">
            <string>Dials Version</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QLabel" name="labelsImages">
-          <property name="text">
-           <string>Images</string>
           </property>
          </widget>
         </item>
@@ -83,13 +80,6 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="labelsPrefix">
-          <property name="text">
-           <string>Prefix</string>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="3">
          <widget class="QLabel" name="datasetInfo_images">
           <property name="font">
@@ -104,10 +94,17 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="2">
-         <widget class="QLabel" name="labelsRuns">
+        <item row="0" column="3">
+         <widget class="QLabel" name="labelsImages">
           <property name="text">
-           <string>Runs</string>
+           <string>Images</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="labelsPrefix">
+          <property name="text">
+           <string>Prefix</string>
           </property>
          </widget>
         </item>
@@ -125,8 +122,8 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="4">
-         <widget class="QLabel" name="datasetInfo_version">
+        <item row="1" column="0">
+         <widget class="QLabel" name="datasetInfo_dataset">
           <property name="font">
            <font>
             <pointsize>14</pointsize>
@@ -135,7 +132,7 @@
            </font>
           </property>
           <property name="text">
-           <string>0</string>
+           <string>none</string>
           </property>
          </widget>
         </item>
@@ -1128,124 +1125,122 @@
        </widget>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <widget class="QLabel" name="command_label">
-          <property name="text">
-           <string>xia2 command</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPlainTextEdit" name="command_command">
-          <property name="font">
-           <font>
-            <pointsize>10</pointsize>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-          <property name="plainText">
-           <string>xia2 small_molecule=true dataset_path</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="Line" name="command_line">
+       <widget class="QSplitter" name="splitter">
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Vertical</enum>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QTabWidget" name="output_tabs">
-        <property name="tabPosition">
-         <enum>QTabWidget::North</enum>
-        </property>
-        <property name="tabShape">
-         <enum>QTabWidget::Rounded</enum>
-        </property>
-        <property name="currentIndex">
-         <number>0</number>
-        </property>
-        <property name="tabsClosable">
-         <bool>true</bool>
-        </property>
-        <property name="movable">
-         <bool>false</bool>
-        </property>
-        <widget class="QWidget" name="log_output">
-         <attribute name="title">
-          <string>Main</string>
-         </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
+        <widget class="QWidget" name="">
+         <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QPlainTextEdit" name="log_output_txt">
+           <widget class="QLabel" name="command_label">
+            <property name="text">
+             <string>xia2 command</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPlainTextEdit" name="command_command">
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
             <property name="plainText">
-             <string/>
+             <string>xia2 small_molecule=true dataset_path</string>
             </property>
            </widget>
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="xia2output1">
-         <attribute name="title">
-          <string>xia2output1</string>
-         </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_5">
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_2">
-              <item>
-               <widget class="QPushButton" name="xia2output_dialsImage">
-                <property name="font">
-                 <font>
-                  <pointsize>10</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Image Viewer</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="xia2output_reciprocal">
-                <property name="font">
-                 <font>
-                  <pointsize>10</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Reciprocal Lattice</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="xia2output_html">
-                <property name="font">
-                 <font>
-                  <pointsize>10</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>HTML</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <widget class="QPlainTextEdit" name="xia2output1_txt"/>
-            </item>
-           </layout>
-          </item>
-         </layout>
+        <widget class="QTabWidget" name="output_tabs">
+         <property name="tabPosition">
+          <enum>QTabWidget::North</enum>
+         </property>
+         <property name="tabShape">
+          <enum>QTabWidget::Rounded</enum>
+         </property>
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <property name="tabsClosable">
+          <bool>true</bool>
+         </property>
+         <property name="movable">
+          <bool>false</bool>
+         </property>
+         <widget class="QWidget" name="log_output">
+          <attribute name="title">
+           <string>Main</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <widget class="QPlainTextEdit" name="log_output_txt">
+             <property name="plainText">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="xia2output1">
+          <attribute name="title">
+           <string>xia2output1</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <item>
+                <widget class="QPushButton" name="xia2output_dialsImage">
+                 <property name="font">
+                  <font>
+                   <pointsize>10</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Image Viewer</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="xia2output_reciprocal">
+                 <property name="font">
+                  <font>
+                   <pointsize>10</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Reciprocal Lattice</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="xia2output_html">
+                 <property name="font">
+                  <font>
+                   <pointsize>10</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>HTML</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QPlainTextEdit" name="xia2output1_txt"/>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </widget>
       </item>

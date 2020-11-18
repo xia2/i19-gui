@@ -1271,27 +1271,9 @@
     <addaction name="separator"/>
     <addaction name="menuFile_Close_GUI"/>
    </widget>
-   <widget class="QMenu" name="menuEdit">
-    <property name="title">
-     <string>Edit</string>
-    </property>
-    <addaction name="menuEdit_CopyCommand"/>
-    <addaction name="menuEdit_SaveSettings"/>
-    <addaction name="menuEdit_LoadSettings"/>
-   </widget>
-   <widget class="QMenu" name="menuView">
-    <property name="title">
-     <string>View</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuSettings">
-    <property name="title">
-     <string>Settings</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menuVersion">
     <property name="title">
-     <string>Version</string>
+     <string>DIALS version</string>
     </property>
     <addaction name="versionCurrent"/>
     <addaction name="versionLatest"/>
@@ -1299,9 +1281,6 @@
     <addaction name="version1_4"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuEdit"/>
-   <addaction name="menuView"/>
-   <addaction name="menuSettings"/>
    <addaction name="menuVersion"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

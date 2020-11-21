@@ -20,7 +20,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets, uic
 
 
 class UIMainWindow(QtWidgets.QMainWindow):
-    def __init__(self):
+    def __init__(self, parent_window=None):
         self.dials_version = ""
         self.opening_visit = "/dls/i19-2/data/2020/"
         self.visit = ""
@@ -84,7 +84,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
         ]
         self.tabs_num = 0
 
-        super().__init__()
+        super().__init__(parent_window)
         uic.loadUi(Path(__file__).parent / "MainWindow.ui", self)
 
         self.menuFile_Open.triggered.connect(self.select_dataset)
@@ -292,10 +292,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
     # open options window ###########################################################
     def open_options(self):
         self.append_output(self.log_output_txt, "Opening options window")
-        self.secondWindow = QtWidgets.QMainWindow()
-        self.ui = UIXia2Options(
-            self,
-            self.secondWindow,
+        options_window = UIOptionsWindow(
             self.xia2_command,
             self.dataset_path,
             self.command_command,
@@ -304,8 +301,9 @@ class UIMainWindow(QtWidgets.QMainWindow):
             self.run_list,
             self.prefix,
             self.opening_visit,
+            self,
         )
-        self.secondWindow.show()
+        options_window.show()
 
     def update_options(self):
         self.command_command.setPlainText(
@@ -1037,11 +1035,9 @@ class MyThread2(QtCore.QThread):
 ########################################################################################
 
 
-class UIXia2Options(QtWidgets.QMainWindow):
+class UIOptionsWindow(QtWidgets.QMainWindow):
     def __init__(
         self,
-        ui_main_window,
-        xia2_options,
         xia2_command,
         dataset_path,
         command_command,
@@ -1050,8 +1046,8 @@ class UIXia2Options(QtWidgets.QMainWindow):
         run_list,
         prefix,
         opening_visit,
+        parent_window=None,
     ):
-        self.ui_main_window = ui_main_window
         self.xia2_command = xia2_command
         self.dataset_path = dataset_path
         self.run_list = run_list
@@ -1065,7 +1061,7 @@ class UIXia2Options(QtWidgets.QMainWindow):
         self.prefix = prefix
         self.opening_visit = opening_visit
 
-        super().__init__()
+        super().__init__(parent_window)
         uic.loadUi(Path(__file__).parent / "OptionsWindow.ui", self)
 
         self.updateButton.clicked.connect(self.update_options)
@@ -1079,7 +1075,8 @@ class UIXia2Options(QtWidgets.QMainWindow):
         )
         self.hpReferenceGeometryBrowse.clicked.connect(self.browse_for_reference_model)
         # TODO: Dynamically create a checkbox for each sweep found.
-        QtCore.QMetaObject.connectSlotsByName(xia2_options)
+        # TODO: Make proper use of connectSlotsByName
+        QtCore.QMetaObject.connectSlotsByName(self)
 
         # load previous settings:
         self.load_options_auto()
@@ -1769,10 +1766,11 @@ class UIXia2Options(QtWidgets.QMainWindow):
         self.log_output_txt.appendPlainText(options_update_text)
         self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
 
-        self.ui_main_window.xia2_command = self.xia2_command
-        self.ui_main_window.dataset_path = self.dataset_path
-        self.ui_main_window.xia2_options_list = options
-        self.ui_main_window.update_options()
+        ui_main_window = self.parent()
+        ui_main_window.xia2_command = self.xia2_command
+        ui_main_window.dataset_path = self.dataset_path
+        ui_main_window.xia2_options_list = options
+        ui_main_window.update_options()
 
         self.save_options_auto()
 
@@ -1822,10 +1820,11 @@ class UIXia2Options(QtWidgets.QMainWindow):
         self.log_output_txt.appendPlainText(options_update_text)
         self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
 
-        self.ui_main_window.xia2_command = self.xia2_command
-        self.ui_main_window.dataset_path = self.dataset_path
-        self.ui_main_window.xia2_options_list = options
-        self.ui_main_window.update_options()
+        ui_main_window = self.parent()
+        ui_main_window.xia2_command = self.xia2_command
+        ui_main_window.dataset_path = self.dataset_path
+        ui_main_window.xia2_options_list = options
+        ui_main_window.update_options()
 
     def option_file_text_function(self):
         option_file_text = ""
@@ -3010,6 +3009,8 @@ class UIXia2Options(QtWidgets.QMainWindow):
 
 
 if __name__ == "__main__":
+    # We must assign the QApplication and MainWindow instances to variables to
+    # prevent garbage collection messing with the open UI.
     app = QtWidgets.QApplication(sys.argv)
     # QApplication.setOverrideCursor(Qt.WaitCursor)
     ui = UIMainWindow()

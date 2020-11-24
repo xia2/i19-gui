@@ -102,16 +102,17 @@ class UIMainWindow(QtWidgets.QMainWindow):
 
         # Remove the close button from the main log output tab, leaving the close
         # buttons on the other tabs active.
-        tab_bar = self.output_tabs.tabBar()
-        left_delete_button = tab_bar.tabButton(0, tab_bar.LeftSide)
+        tab_bar = self.outputTabs.tabBar()
+        log_output = self.outputTabs.indexOf(self.logOutput)
+        left_delete_button = tab_bar.tabButton(log_output, tab_bar.LeftSide)
         if left_delete_button:
             left_delete_button.deleteLater()
-        right_delete_button = tab_bar.tabButton(0, tab_bar.RightSide)
+        right_delete_button = tab_bar.tabButton(log_output, tab_bar.RightSide)
         if right_delete_button:
             right_delete_button.deleteLater()
-        tab_bar.setTabButton(0, tab_bar.LeftSide, None)
-        tab_bar.setTabButton(0, tab_bar.RightSide, None)
-        self.output_tabs.tabCloseRequested.connect(self.close_handler)
+        tab_bar.setTabButton(log_output, tab_bar.LeftSide, None)
+        tab_bar.setTabButton(log_output, tab_bar.RightSide, None)
+        self.outputTabs.tabCloseRequested.connect(self.close_handler)
 
         self.show()
 
@@ -135,7 +136,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
         if self.dataset_path:
             self.multiple_dataset = {}
             self.append_output(
-                self.log_output_txt, "\n    Dataset Path:        " + self.dataset_path
+                self.logOutputTxt, "\n    Dataset Path:        " + self.dataset_path
             )
             self.dataset = self.dataset_path.split("/")[-1]  # dataset name
             if "staging" in self.dataset_path.split("/"):
@@ -145,15 +146,13 @@ class UIMainWindow(QtWidgets.QMainWindow):
                 # /dls/i19-2/data/2020/cm26492-2/
                 self.visit = "/".join(self.dataset_path.split("/")[:6]) + "/"
             self.opening_visit = str(self.visit)
-            self.append_output(
-                self.log_output_txt, "    Dataset:        " + self.dataset
-            )
+            self.append_output(self.logOutputTxt, "    Dataset:        " + self.dataset)
             for cbf_file in os.listdir(self.dataset_path):  # prefix
                 if cbf_file.endswith("_00001.cbf"):
                     self.prefix = cbf_file[:-12]
                     break
 
-            self.append_output(self.log_output_txt, "    Prefix:        " + self.prefix)
+            self.append_output(self.logOutputTxt, "    Prefix:        " + self.prefix)
             self.run_list = []
             run_images_dict = {}
             for cbf_files in os.listdir(self.dataset_path):  # runs in dataset
@@ -164,7 +163,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
 
             self.run_list.sort()
             self.append_output(
-                self.log_output_txt,
+                self.logOutputTxt,
                 "    Number of runs:        "
                 + " ".join(map(str, (len(self.run_list), self.run_list))),
             )
@@ -175,11 +174,11 @@ class UIMainWindow(QtWidgets.QMainWindow):
                 )
                 run_images_dict[run] = num_cbf_run
             self.append_output(
-                self.log_output_txt, "    Images per run:    " + str(run_images_dict)
+                self.logOutputTxt, "    Images per run:    " + str(run_images_dict)
             )
             total_num_images = sum(run_images_dict.values())  # total number of images
             self.append_output(
-                self.log_output_txt,
+                self.logOutputTxt,
                 "    Total number of images:    " + str(total_num_images) + "\n",
             )
             # update labels
@@ -203,7 +202,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
 
         if new_dataset_path:
             self.append_output(
-                self.log_output_txt,
+                self.logOutputTxt,
                 "\n    New Dataset Path:        " + new_dataset_path,
             )
 
@@ -215,16 +214,14 @@ class UIMainWindow(QtWidgets.QMainWindow):
                 # /dls/i19-2/data/2020/cm26492-2/
                 self.visit = "/".join(self.dataset_path.split("/")[:6]) + "/"
             self.opening_visit = str(self.visit)
-            self.append_output(
-                self.log_output_txt, "    New Dataset:        " + dataset
-            )
+            self.append_output(self.logOutputTxt, "    New Dataset:        " + dataset)
             for cbf_file in os.listdir(new_dataset_path):  # prefix
                 if cbf_file.endswith("_00001.cbf"):
                     prefix = cbf_file[:-12]
                     break
 
         if prefix:
-            self.append_output(self.log_output_txt, "    New Prefix:        " + prefix)
+            self.append_output(self.logOutputTxt, "    New Prefix:        " + prefix)
             run_list = []
             run_images_dict = {}
             for cbf_file in os.listdir(new_dataset_path):  # runs in dataset
@@ -235,7 +232,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
 
             run_list.sort()
             self.append_output(
-                self.log_output_txt,
+                self.logOutputTxt,
                 "    New Number of runs:    "
                 + str(len(run_list))
                 + " "
@@ -248,12 +245,12 @@ class UIMainWindow(QtWidgets.QMainWindow):
                 )
                 run_images_dict[run] = num_cbf_run
             self.append_output(
-                self.log_output_txt,
+                self.logOutputTxt,
                 "    New Images per run:    " + str(run_images_dict),
             )
             total_num_images = sum(run_images_dict.values())  # total number of images
             self.append_output(
-                self.log_output_txt,
+                self.logOutputTxt,
                 "    New Total number of images:    " + str(total_num_images) + "\n",
             )
             # update labels
@@ -266,24 +263,24 @@ class UIMainWindow(QtWidgets.QMainWindow):
 
             self.multiple_dataset[dataset] = [new_dataset_path, prefix, run_list]
             self.append_output(
-                self.log_output_txt,
+                self.logOutputTxt,
                 "    Multiple runs:\n    " + str(self.multiple_dataset),
             )
 
     # file menu, close -> close GUI ####
     def close_gui(self):
-        self.append_output(self.log_output_txt, "\n\nClosing GUI\n\n")
+        self.append_output(self.logOutputTxt, "\n\nClosing GUI\n\n")
         QtCore.QCoreApplication.instance().quit()
 
     # open albula ####
     def run_albula(self):
-        self.append_output(self.log_output_txt, self.dataset_path)
+        self.append_output(self.logOutputTxt, self.dataset_path)
         if self.dataset_path == "":
             subprocess.Popen(
                 ["sh", "/dls_sw/i19/scripts/MarkWarren/PyQT/1_basic/albula.sh"]
             )
         else:
-            self.append_output(self.log_output_txt, "opening albula with first image")
+            self.append_output(self.logOutputTxt, "opening albula with first image")
             image = f"{self.dataset_path}/{self.prefix}{self.run_list[0]:02d}_00001.cbf"
             subprocess.Popen(
                 ["sh", "/dls_sw/i19/scripts/MarkWarren/PyQT/1_basic/albula.sh", image]
@@ -291,13 +288,13 @@ class UIMainWindow(QtWidgets.QMainWindow):
 
     # open options window ###########################################################
     def open_options(self):
-        self.append_output(self.log_output_txt, "Opening options window")
+        self.append_output(self.logOutputTxt, "Opening options window")
         options_window = UIOptionsWindow(
             self.xia2_command,
             self.dataset_path,
             self.command_command,
             self.visit,
-            self.log_output_txt,
+            self.logOutputTxt,
             self.run_list,
             self.prefix,
             self.opening_visit,
@@ -311,17 +308,17 @@ class UIMainWindow(QtWidgets.QMainWindow):
         )
 
     def run_xia2(self):
-        self.append_output(self.log_output_txt, "\nRunning xia2\n")
+        self.append_output(self.logOutputTxt, "\nRunning xia2\n")
         # single datasets ###########
         if not self.dataset_path == "MULTIPLE":
-            self.append_output(self.log_output_txt, "Single Dataset")
+            self.append_output(self.logOutputTxt, "Single Dataset")
             if self.prefix == "":
                 self.append_output(
-                    self.log_output_txt,
+                    self.logOutputTxt,
                     "\n\n #########################################################",
                 )
                 self.append_output(
-                    self.log_output_txt,
+                    self.logOutputTxt,
                     "    No cbf images found in directory, "
                     "please select dataset directory",
                 )
@@ -329,7 +326,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
             self.run_xia2_dataset(self.dataset, self.dataset_path)
         # multiple datasets ###########
         if self.dataset_path == "MULTIPLE":  # if multiple input has been utilised
-            self.append_output(self.log_output_txt, "\n Multiple dataset processing\n")
+            self.append_output(self.logOutputTxt, "\n Multiple dataset processing\n")
             # {
             #     "01_Prot1_21": [
             #         "/dls/i19-2/data/2020/cy23401-1/01_Prot1_21",
@@ -343,12 +340,12 @@ class UIMainWindow(QtWidgets.QMainWindow):
                     dataset_path, prefix, _ = self.multiple_dataset[dataset_key]
                     if not prefix:
                         self.append_output(
-                            self.log_output_txt,
+                            self.logOutputTxt,
                             "\n\n ############################"
                             "############################b",
                         )
                         self.append_output(
-                            self.log_output_txt,
+                            self.logOutputTxt,
                             "    No cbf images found in directory, "
                             "please select dataset directory",
                         )
@@ -362,12 +359,12 @@ class UIMainWindow(QtWidgets.QMainWindow):
                     runs = self.multiple_dataset[dataset_key][2]
                     if prefix == "":
                         self.append_output(
-                            self.log_output_txt,
+                            self.logOutputTxt,
                             "\n\n ############################"
                             "############################c",
                         )
                         self.append_output(
-                            self.log_output_txt,
+                            self.logOutputTxt,
                             "    No cbf images found in directory, "
                             "please select dataset directory",
                         )
@@ -416,11 +413,11 @@ class UIMainWindow(QtWidgets.QMainWindow):
         self.processing_path_path.setText(self.processing_path)
         self.tabs_processing_path[self.tabs_num] = self.processing_path
 
-        self.append_output(self.log_output_txt, "Xia2 command:")
+        self.append_output(self.logOutputTxt, "Xia2 command:")
         # this is the bit I think i need to change!!!
         # dataset and prefix I would guess is required
         input_xia2_command = self.xia2_command + xia2_input + self.xia2_options_list
-        self.append_output(self.log_output_txt, "    " + input_xia2_command)
+        self.append_output(self.logOutputTxt, "    " + input_xia2_command)
 
         # create job file
 
@@ -490,7 +487,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
             dataset_error_statement = (
                 "\n\n No dataset has been selected (File>Open) \n\n"
             )
-            self.append_output(self.log_output_txt, dataset_error_statement)
+            self.append_output(self.logOutputTxt, dataset_error_statement)
             self.append_output(tab_name, dataset_error_statement)
         else:
             if self.computing_location == "Local":
@@ -522,7 +519,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
                 input_dataset,
                 self.tabstxt,
                 self.tabs_num,
-                self.log_output_txt,
+                self.logOutputTxt,
                 "xia2.txt",
             )
 
@@ -538,14 +535,14 @@ class UIMainWindow(QtWidgets.QMainWindow):
             self.tabs_num = 0
 
     def run_screen19(self):
-        self.append_output(self.log_output_txt, "\nRunning screen19\n")
+        self.append_output(self.logOutputTxt, "\nRunning screen19\n")
         if self.prefix == "":
             self.append_output(
-                self.log_output_txt,
+                self.logOutputTxt,
                 "\n\n #########################################################",
             )
             self.append_output(
-                self.log_output_txt,
+                self.logOutputTxt,
                 "    No cbf images found in directory, please select dataset directory",
             )
             return
@@ -568,7 +565,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
             self.processing_path_path.setText(self.processing_path)
             self.tabs_processing_path[self.tabs_num] = self.processing_path
 
-            self.append_output(self.log_output_txt, "screen19 command:")
+            self.append_output(self.logOutputTxt, "screen19 command:")
 
             # remove unwanted xia2 commands
             screen19_options_list = ""
@@ -581,7 +578,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
             input_screen19_command = (
                 "screen19 " + self.dataset_path + screen19_options_list
             )
-            self.append_output(self.log_output_txt, "    " + input_screen19_command)
+            self.append_output(self.logOutputTxt, "    " + input_screen19_command)
 
             # create job file
             job_file = self.processing_path + "job.sh"
@@ -661,7 +658,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
                 dataset_error_statement = (
                     "\n\n Dataset has not be selected (File>Open) \n\n"
                 )
-                self.append_output(self.log_output_txt, dataset_error_statement)
+                self.append_output(self.logOutputTxt, dataset_error_statement)
                 self.append_output(tab_name, dataset_error_statement)
             else:
                 if self.computing_location == "Local":
@@ -686,7 +683,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
                     self.dataset,
                     self.tabstxt,
                     self.tabs_num,
-                    self.log_output_txt,
+                    self.logOutputTxt,
                     "screen19.log",
                 )
 
@@ -702,23 +699,21 @@ class UIMainWindow(QtWidgets.QMainWindow):
                 self.tabs_num = 0
 
     def thread_started(self):
-        self.append_output(self.log_output_txt, "\n*** Thread Started ***\n")
+        self.append_output(self.logOutputTxt, "\n*** Thread Started ***\n")
 
     def thread_finished(self):
-        self.append_output(self.log_output_txt, "\n*** Thread Finished ***\n")
+        self.append_output(self.logOutputTxt, "\n*** Thread Finished ***\n")
 
     def stop_thread(self):
-        self.append_output(self.log_output_txt, "\n*** Stopping Thead ***\n")
+        self.append_output(self.logOutputTxt, "\n*** Stopping Thead ***\n")
         # self.MyThread2.stop()
         # self.MyThread2.quit()
 
     # open run dials Reciprocal Lattice viewer ####
     def run_dials_reciprocal_lattice(self, tabs_num):
+        self.append_output(self.logOutputTxt, "Opening dials reciprocal lattice viewer")
         self.append_output(
-            self.log_output_txt, "Opening dials reciprocal lattice viewer"
-        )
-        self.append_output(
-            self.log_output_txt,
+            self.logOutputTxt,
             "Processing path:" + self.tabs_processing_path[tabs_num],
         )
 
@@ -753,24 +748,24 @@ class UIMainWindow(QtWidgets.QMainWindow):
                     latest_refl_time = file_time
         if latest_expt == "":
             self.append_output(
-                self.log_output_txt,
+                self.logOutputTxt,
                 "\n\n *** Expt was not present in processing path, "
                 "please wait unit after initial importing *** \n\n",
             )
             return
         if latest_refl == "":
             self.append_output(
-                self.log_output_txt,
+                self.logOutputTxt,
                 "\n\n ***Refl was not present in processing path, "
                 "please wait unit after initial spot finding *** \n\n",
             )
             return
         else:
             self.append_output(
-                self.log_output_txt, "\nReflection file: " + str(latest_refl)
+                self.logOutputTxt, "\nReflection file: " + str(latest_refl)
             )
             self.append_output(
-                self.log_output_txt, "Experiment file: " + str(latest_expt) + "\n"
+                self.logOutputTxt, "Experiment file: " + str(latest_expt) + "\n"
             )
             subprocess.Popen(
                 [
@@ -785,9 +780,9 @@ class UIMainWindow(QtWidgets.QMainWindow):
             )
 
     def run_dials_image_viewer(self, tabs_num):
-        self.append_output(self.log_output_txt, "Opening dials image viewer")
+        self.append_output(self.logOutputTxt, "Opening dials image viewer")
         self.append_output(
-            self.log_output_txt,
+            self.logOutputTxt,
             "Processing path:" + self.tabs_processing_path[tabs_num],
         )
 
@@ -822,16 +817,16 @@ class UIMainWindow(QtWidgets.QMainWindow):
                     latest_refl_time = file_time
         if latest_expt == "":
             self.append_output(
-                self.log_output_txt,
+                self.logOutputTxt,
                 "\n\n ***Expt was not present in processing path, "
                 "please wait unit after initial importing *** \n\n",
             )
         else:
             self.append_output(
-                self.log_output_txt, "\nReflection file: " + str(latest_refl)
+                self.logOutputTxt, "\nReflection file: " + str(latest_refl)
             )
             self.append_output(
-                self.log_output_txt, "Experiment file: " + str(latest_expt) + "\n"
+                self.logOutputTxt, "Experiment file: " + str(latest_expt) + "\n"
             )
             subprocess.Popen(
                 [
@@ -846,9 +841,9 @@ class UIMainWindow(QtWidgets.QMainWindow):
             )
 
     def run_dials_html(self, tabs_num):
-        self.append_output(self.log_output_txt, "Opening HTML")
+        self.append_output(self.logOutputTxt, "Opening HTML")
         self.append_output(
-            self.log_output_txt,
+            self.logOutputTxt,
             "Processing path:" + self.tabs_processing_path[tabs_num],
         )
 
@@ -870,14 +865,14 @@ class UIMainWindow(QtWidgets.QMainWindow):
 
         if latest_html == "":
             self.append_output(
-                self.log_output_txt,
+                self.logOutputTxt,
                 (
                     "\n\n *** html file was not present in processing path, "
                     "please wait unit after initial importing *** \n\n"
                 ),
             )
         else:
-            self.append_output(self.log_output_txt, "HTML file: " + str(latest_html))
+            self.append_output(self.logOutputTxt, "HTML file: " + str(latest_html))
             subprocess.Popen(
                 [
                     "sh",
@@ -888,7 +883,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
 
     # version menu, change version
     def version_current(self):
-        self.append_output(self.log_output_txt, "Changing to dials version to current.")
+        self.append_output(self.logOutputTxt, "Changing to dials version to current.")
         dial_version_pop = (
             os.popen("module unload dials; module load dials; dials.version")
             .read()
@@ -898,11 +893,11 @@ class UIMainWindow(QtWidgets.QMainWindow):
         self.dials_version = ""
         # update version label
         self.menu_version.setTitle("Version(" + dial_version_pop + ")")
-        self.append_output(self.log_output_txt, "    Version(" + dial_version_pop + ")")
+        self.append_output(self.logOutputTxt, "    Version(" + dial_version_pop + ")")
 
     # version menu, change version to latest
     def version_latest(self):
-        self.append_output(self.log_output_txt, "Changing to dials version to latest.")
+        self.append_output(self.logOutputTxt, "Changing to dials version to latest.")
         dial_version_pop = (
             os.popen("module unload dials; module load dials/latest; dials.version")
             .read()
@@ -912,11 +907,11 @@ class UIMainWindow(QtWidgets.QMainWindow):
         self.dials_version = "/latest"
         # update version label
         self.menu_version.setTitle("Version(" + dial_version_pop + ")")
-        self.append_output(self.log_output_txt, "    Version(" + dial_version_pop + ")")
+        self.append_output(self.logOutputTxt, "    Version(" + dial_version_pop + ")")
 
     # version menu, change version to now
     def version_now(self):
-        self.append_output(self.log_output_txt, "Changing to dials version to Now.")
+        self.append_output(self.logOutputTxt, "Changing to dials version to Now.")
         dial_version_pop = (
             os.popen("module unload dials; module load dials/now; dials.version")
             .read()
@@ -926,11 +921,11 @@ class UIMainWindow(QtWidgets.QMainWindow):
         self.dials_version = "/now"
         # update version label
         self.menu_version.setTitle("Version(" + dial_version_pop + ")")
-        self.append_output(self.log_output_txt, "    Version(" + dial_version_pop + ")")
+        self.append_output(self.logOutputTxt, "    Version(" + dial_version_pop + ")")
 
     # version menu, change version to 1.4
     def version_1_4(self):
-        self.append_output(self.log_output_txt, "Changing to dials version to 1.4.")
+        self.append_output(self.logOutputTxt, "Changing to dials version to 1.4.")
         dial_version_pop = (
             os.popen("module unload dials; module load dials/1.4; dials.version")
             .read()
@@ -940,11 +935,11 @@ class UIMainWindow(QtWidgets.QMainWindow):
         self.dials_version = "/1.4"
         # update version label
         self.menu_version.setTitle("Version(" + dial_version_pop + ")")
-        self.append_output(self.log_output_txt, "    Version(" + dial_version_pop + ")")
+        self.append_output(self.logOutputTxt, "    Version(" + dial_version_pop + ")")
 
     # version menu, change version to 2.1
     def version_2_1(self):
-        self.append_output(self.log_output_txt, "Changing to dials version to 2.1.")
+        self.append_output(self.logOutputTxt, "Changing to dials version to 2.1.")
         dial_version_pop = (
             os.popen("module unload dials; module load dials/2.1; dials.version")
             .read()
@@ -954,12 +949,12 @@ class UIMainWindow(QtWidgets.QMainWindow):
         self.dials_version = "/2.1"
         # update version label
         self.menu_version.setTitle("Version(" + dial_version_pop + ")")
-        self.append_output(self.log_output_txt, "    Version(" + dial_version_pop + ")")
+        self.append_output(self.logOutputTxt, "    Version(" + dial_version_pop + ")")
 
     # close tabs ######
     def close_handler(self, index):
         self.append_output(
-            self.log_output_txt, "close_handler called, index = %s" % index
+            self.logOutputTxt, "close_handler called, index = %s" % index
         )
         self.output_tabs.removeTab(index)
 

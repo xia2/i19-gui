@@ -1101,11 +1101,11 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
             self.log_output_txt.appendPlainText(output_message)
             self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
 
-            self.import_reference_geometry_path.setText(ref_geometry_file_txt)
-            self.import_reference_geometry_path.setScaledContents(True)
+            self.importReferenceGeometryPath.setText(ref_geometry_file_txt)
+            self.importReferenceGeometryPath.setScaledContents(True)
 
-            self.HP_ReferenceGeometry_path.setText(ref_geometry_file_txt)
-            self.HP_ReferenceGeometry_path.setScaledContents(True)
+            self.hpReferenceGeometryPath.setText(ref_geometry_file_txt)
+            self.hpReferenceGeometryPath.setScaledContents(True)
 
     def update_options(self):
         options = ""
@@ -2281,12 +2281,10 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                         self.ref_geometry_path = line_split[2]
                         ref_geometry_path_txt = str(self.ref_geometry_path)
                         ref_geometry_file_txt = ref_geometry_path_txt.split("/")[-1]
-                        self.import_reference_geometry_path.setText(
-                            ref_geometry_file_txt
-                        )
-                        self.import_reference_geometry_path.setScaledContents(True)
-                        self.HP_ReferenceGeometry_path.setText(ref_geometry_file_txt)
-                        self.HP_ReferenceGeometry_path.setScaledContents(True)
+                        self.importReferenceGeometryPath.setText(ref_geometry_file_txt)
+                        self.importReferenceGeometryPath.setScaledContents(True)
+                        self.hpReferenceGeometryPath.setText(ref_geometry_file_txt)
+                        self.hpReferenceGeometryPath.setScaledContents(True)
                         self.optionListImport[int(line_split[1])].setChecked(True)
                     if int(line_split[1]) == 2:
                         self.import_dd_line_edit.setText(line_split[2])
@@ -2397,12 +2395,10 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                         self.ref_geometry_path = line_split[2]
                         ref_geometry_path_txt = str(self.ref_geometry_path)
                         ref_geometry_file_txt = ref_geometry_path_txt.split("/")[-1]
-                        self.import_reference_geometry_path.setText(
-                            ref_geometry_file_txt
-                        )
-                        self.import_reference_geometry_path.setScaledContents(True)
-                        self.HP_ReferenceGeometry_path.setText(ref_geometry_file_txt)
-                        self.HP_ReferenceGeometry_path.setScaledContents(True)
+                        self.importReferenceGeometryPath.setText(ref_geometry_file_txt)
+                        self.importReferenceGeometryPath.setScaledContents(True)
+                        self.hpReferenceGeometryPath.setText(ref_geometry_file_txt)
+                        self.hpReferenceGeometryPath.setScaledContents(True)
                         self.optionListHP[int(line_split[1])].setChecked(True)
                     if int(line_split[1]) == 2:
                         self.HP_gasket_comboBox.setCurrentIndex(int(line_split[2]))
@@ -2508,7 +2504,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 "xia2_options", "Experimental geometry from the models selected (.expt)"
             )
         )
-        self.import_reference_geometry_path.setText(
+        self.importReferenceGeometryPath.setText(
             _translate("xia2_options", "Path/To/instrument_model.expt")
         )
         self.import_reference_geometry_browse.setText(
@@ -2875,10 +2871,10 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
             )
         )
 
-        self.HP_ReferenceGeometry_path.setText(
+        self.hpReferenceGeometryPath.setText(
             _translate("xia2_options", "path/to/instrument_model.expt")
         )
-        self.HP_ReferenceGeometry_browse.setText(_translate("xia2_options", "Browse"))
+        self.hpReferenceGeometryBrowse.setText(_translate("xia2_options", "Browse"))
         self.HP_gasket_checkBox.setText(_translate("xia2_options", "Gasket"))
         self.HP_gasket_checkBox.setStatusTip(
             _translate(

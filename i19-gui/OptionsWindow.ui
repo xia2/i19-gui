@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>692</width>
-    <height>684</height>
+    <height>676</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -118,6 +118,9 @@
             <property name="frame">
              <bool>true</bool>
             </property>
+            <property name="dragEnabled">
+             <bool>false</bool>
+            </property>
             <property name="readOnly">
              <bool>true</bool>
             </property>
@@ -167,6 +170,9 @@
               <property name="text">
                <string>X</string>
               </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item>
@@ -184,6 +190,9 @@
              <widget class="QLabel" name="import_BeamCentre_Y_label">
               <property name="text">
                <string>Y</string>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -489,6 +498,9 @@
               <property name="text">
                <string>Unit cell</string>
               </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item>
@@ -507,6 +519,9 @@
               <property name="text">
                <string>Space group</string>
               </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item>
@@ -524,6 +539,9 @@
              <widget class="QLabel" name="findSpots_powderRingsW_label">
               <property name="text">
                <string>Mask width</string>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -716,6 +734,9 @@
               <property name="text">
                <string>Unit Cell</string>
               </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item>
@@ -733,6 +754,9 @@
              <widget class="QLabel" name="Index_SG_label">
               <property name="text">
                <string>Space Group</string>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -859,6 +883,9 @@
                  <property name="text">
                   <string>Overall</string>
                  </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -872,6 +899,9 @@
                 <widget class="QLabel" name="Index_UN_label_4">
                  <property name="text">
                   <string>Per degree</string>
+                 </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -1004,6 +1034,9 @@
              </item>
              <item>
               <widget class="QLineEdit" name="hpReferenceGeometryPath">
+               <property name="dragEnabled">
+                <bool>true</bool>
+               </property>
                <property name="readOnly">
                 <bool>true</bool>
                </property>
@@ -1057,6 +1090,9 @@
                  <property name="text">
                   <string>Unit cell</string>
                  </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -1075,6 +1111,9 @@
                  <property name="text">
                   <string>Space group</string>
                  </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -1092,6 +1131,9 @@
                 <widget class="QLabel" name="HP_gasketUserW_label">
                  <property name="text">
                   <string>Width</string>
+                 </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -1134,6 +1176,9 @@
                  <property name="text">
                   <string>Unit cell</string>
                  </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -1151,6 +1196,9 @@
                 <widget class="QLabel" name="HP_SG_label">
                  <property name="text">
                   <string>Space group</string>
+                 </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -1198,6 +1246,9 @@
                  <property name="text">
                   <string>r1</string>
                  </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -1215,6 +1266,9 @@
                 <widget class="QLabel" name="HP_runStartEnd_label_2">
                  <property name="text">
                   <string>r2</string>
+                 </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -1234,6 +1288,9 @@
                  <property name="text">
                   <string>r3</string>
                  </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -1251,6 +1308,9 @@
                 <widget class="QLabel" name="HP_runStartEnd_label_3">
                  <property name="text">
                   <string>r4</string>
+                 </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -1270,6 +1330,9 @@
                  <property name="text">
                   <string>r5</string>
                  </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -1287,6 +1350,9 @@
                 <widget class="QLabel" name="HP_runStartEnd_label_6">
                  <property name="text">
                   <string>r6</string>
+                 </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -1306,6 +1372,9 @@
                  <property name="text">
                   <string>r7</string>
                  </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -1323,6 +1392,9 @@
                 <widget class="QLabel" name="HP_runStartEnd_label_8">
                  <property name="text">
                   <string>r8</string>
+                 </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -1342,6 +1414,9 @@
                  <property name="text">
                   <string>r9</string>
                  </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item>
@@ -1359,6 +1434,9 @@
                 <widget class="QLabel" name="HP_runStartEnd_label_10">
                  <property name="text">
                   <string>r10</string>
+                 </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -1475,6 +1553,9 @@
           </property>
           <property name="text">
            <string>Processing computer</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
           </property>
          </widget>
         </item>

@@ -10,6 +10,7 @@
 import fnmatch
 import glob
 import os
+import pathlib
 import subprocess
 import sys
 from datetime import datetime
@@ -1026,12 +1027,6 @@ class MyThread2(QtCore.QThread):
         self.finished.emit()
 
 
-########################################################################################
-########################################################################################
-########################################################################################
-########################################################################################
-
-
 class UIOptionsWindow(QtWidgets.QMainWindow):
     def __init__(
         self,
@@ -1081,34 +1076,29 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
         self.show()
 
     def browse_for_reference_model(self):
-        self.ref_geometry_path = QtWidgets.QFileDialog.getOpenFileName(
+        ref_geometry_path = self.ref_geometry_path or self.opening_visit
+        f_filter = _translate("UIOptionsWindow", "DIALS experiment list files (*.expt)")
+        ref_geometry_path, _filter = QtWidgets.QFileDialog.getOpenFileName(
             parent=self,
-            filter=_translate(
-                "UIOptionsWindow", "DIALS experiment list files (*.expt)"
-            ),
-        )[0]
-        # qfd = QtWidgets.QFileDialog()
-        # path = "D:\ennine\SIG HTB\BGN"
-        # filter = "csv(*.csv)"
-        # f = QtWidgets.QFileDialog.getOpenFileName(qfd, title, path, filter)
-        if self.ref_geometry_path:
-            ref_geometry_path_txt = str(self.ref_geometry_path)
-            ref_geometry_file_txt = ref_geometry_path_txt.split("/")[-1]
+            caption="Select calibrated instrument model",
+            directory=ref_geometry_path,
+            filter=f_filter,
+        )
+        if ref_geometry_path:
+            self.ref_geometry_path = ref_geometry_path
+            ref_geometry_path = pathlib.Path(ref_geometry_path)
 
             output_message = (
-                "Reference Geometry Path:\n    "
-                + str(ref_geometry_path_txt)
-                + "\nReference Geometry File:\n    "
-                + str(ref_geometry_file_txt)
+                "Reference Geometry Path:\n"
+                f"\t{ref_geometry_path.parent}\n"
+                "Reference Geometry File:\n"
+                f"\t{ref_geometry_path.name}"
             )
             self.log_output_txt.appendPlainText(output_message)
             self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
 
-            self.importReferenceGeometryPath.setText(ref_geometry_file_txt)
-            self.importReferenceGeometryPath.setScaledContents(True)
-
-            self.hpReferenceGeometryPath.setText(ref_geometry_file_txt)
-            self.hpReferenceGeometryPath.setScaledContents(True)
+            self.importReferenceGeometryPath.setText(ref_geometry_path.name)
+            self.hpReferenceGeometryPath.setText(ref_geometry_path.name)
 
     def update_options(self):
         options = ""

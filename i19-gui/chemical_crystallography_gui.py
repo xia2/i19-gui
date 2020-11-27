@@ -1098,7 +1098,6 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
             self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
 
             self.importReferenceGeometryPath.setText(ref_geometry_path.name)
-            self.hpReferenceGeometryPath.setText(ref_geometry_path.name)
 
     def update_options(self):
         options = ""

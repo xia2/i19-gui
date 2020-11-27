@@ -97,7 +97,7 @@
         <item row="1" column="0">
          <widget class="QCheckBox" name="import_ReferenceGeometry">
           <property name="statusTip">
-           <string>Add a calibrated instrument model (/dls/i19-2/data/2020/visit/dataset/DataFiles/*.expt).</string>
+           <string>Use a calibrated instrument model (&lt;visit-directory&gt;/processed/dataset/DataFiles/*.expt).</string>
           </property>
           <property name="text">
            <string>Reference geometry</string>
@@ -761,7 +761,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="Index_minCell_lineEdit_4">
+             <widget class="QLineEdit" name="Index_SG_lineEdit">
               <property name="statusTip">
                <string>e.g. P21/c</string>
               </property>
@@ -915,13 +915,10 @@
            <item row="1" column="0">
             <widget class="QCheckBox" name="Integrate_scanVarying_checkBox">
              <property name="statusTip">
-              <string>During refinement, allow the instrument model to vary throughout a sweep.</string>
+              <string>During refinement, do not allow the instrument model to vary throughout a sweep.</string>
              </property>
              <property name="text">
-              <string>Scan varying</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
+              <string>Only perform scan-static refinement</string>
              </property>
              <property name="tristate">
               <bool>false</bool>
@@ -1000,13 +997,10 @@
            <item row="1" column="0">
             <widget class="QCheckBox" name="Integrate_scanVarying_checkBox_3">
              <property name="statusTip">
-              <string>During refinement, allow the instrument model to vary throughout a sweep.</string>
+              <string>During refinement, do not allow the instrument model to vary throughout a sweep.</string>
              </property>
              <property name="text">
-              <string>Scan varying</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
+              <string>Only perform scan-static refinement</string>
              </property>
              <property name="tristate">
               <bool>false</bool>
@@ -1016,7 +1010,7 @@
            <item row="2" column="0">
             <widget class="QCheckBox" name="HP_ReferenceGeometry_checkBox">
              <property name="statusTip">
-              <string>Add a calibrated instrument model (/dls/i19-2/data/2020/visit/dataset/DataFiles/*.expt).</string>
+              <string>Use a calibrated instrument model (&lt;visit-directory&gt;/processed/dataset/DataFiles/*.expt).</string>
              </property>
              <property name="text">
               <string>Reference geometry</string>
@@ -1154,7 +1148,7 @@
         <item>
          <widget class="QGroupBox" name="groupBox">
           <property name="title">
-           <string>Options for medium difficulty data</string>
+           <string>Options for moderately difficult data</string>
           </property>
           <layout class="QFormLayout" name="formLayout_7">
            <item row="0" column="0">
@@ -1203,7 +1197,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="HP_minCell_lineEdit">
+                <widget class="QLineEdit" name="HP_SG_lineEdit">
                  <property name="statusTip">
                   <string>e.g. Im-3m</string>
                  </property>
@@ -1215,6 +1209,9 @@
            </item>
            <item row="1" column="0">
             <widget class="QCheckBox" name="HP_dmin_checkBox">
+             <property name="statusTip">
+              <string>The high resolution limit of the region to search for spots.</string>
+             </property>
              <property name="text">
               <string>d min (Å)</string>
              </property>
@@ -1632,6 +1629,262 @@
     <hint type="destinationlabel">
      <x>86</x>
      <y>152</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>findSpots_dmin</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>HP_dmin_checkBox</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>63</x>
+     <y>185</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>75</x>
+     <y>406</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>HP_dmin_checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>findSpots_dmin</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>75</x>
+     <y>406</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>63</x>
+     <y>185</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>findSpots_dmin_lineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>HP_dmin_lineEdit</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>419</x>
+     <y>186</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>446</x>
+     <y>407</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>HP_dmin_lineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>findSpots_dmin_lineEdit</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>446</x>
+     <y>407</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>419</x>
+     <y>186</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>import_ReferenceGeometry</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>HP_ReferenceGeometry_checkBox</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>104</x>
+     <y>121</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>116</x>
+     <y>182</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>HP_ReferenceGeometry_checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>import_ReferenceGeometry</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>116</x>
+     <y>182</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>104</x>
+     <y>121</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>importReferenceGeometryPath</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>hpReferenceGeometryPath</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>484</x>
+     <y>123</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>528</x>
+     <y>184</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>hpReferenceGeometryPath</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>importReferenceGeometryPath</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>528</x>
+     <y>184</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>484</x>
+     <y>123</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Index_UN_SG_checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>HP_UN_SG_checkBox</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>118</x>
+     <y>123</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>130</x>
+     <y>348</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>HP_UN_SG_checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Index_UN_SG_checkBox</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>130</x>
+     <y>348</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>118</x>
+     <y>123</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Index_SG_lineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>HP_SG_lineEdit</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>572</x>
+     <y>149</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>553</x>
+     <y>374</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>HP_SG_lineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>Index_SG_lineEdit</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>553</x>
+     <y>374</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>572</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Index_UN_lineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>HP_UN_lineEdit</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>370</x>
+     <y>149</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>339</x>
+     <y>374</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>HP_UN_lineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>Index_UN_lineEdit</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>339</x>
+     <y>374</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>370</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Refine_FixBeamDetector_checkBox_2</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>HP_FixBeamDetector_checkBox</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>117</x>
+     <y>124</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>117</x>
+     <y>555</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>HP_FixBeamDetector_checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Refine_FixBeamDetector_checkBox_2</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>117</x>
+     <y>555</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>117</x>
+     <y>124</y>
     </hint>
    </hints>
   </connection>

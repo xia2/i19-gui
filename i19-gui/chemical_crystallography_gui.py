@@ -10,7 +10,6 @@
 import fnmatch
 import glob
 import os
-import pathlib
 import subprocess
 import sys
 from datetime import datetime
@@ -1086,7 +1085,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
         )
         if ref_geometry_path:
             self.ref_geometry_path = ref_geometry_path
-            ref_geometry_path = pathlib.Path(ref_geometry_path)
+            ref_geometry_path = Path(ref_geometry_path)
 
             output_message = (
                 "Reference Geometry Path:\n"

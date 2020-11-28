@@ -114,7 +114,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
             right_delete_button.deleteLater()
         tab_bar.setTabButton(log_output, tab_bar.LeftSide, None)
         tab_bar.setTabButton(log_output, tab_bar.RightSide, None)
-        self.outputTabs.tabCloseRequested.connect(self.close_handler)
+        self.outputTabs.tabCloseRequested.connect(self.outputTabs.removeTab)
 
         self.show()
 
@@ -469,9 +469,9 @@ class UIMainWindow(QtWidgets.QMainWindow):
             lambda: self.run_dials_html(tab_num)
         )
 
-        self.output_tabs.addTab(self.tabs[self.tabs_num], "")
-        self.output_tabs.setTabText(
-            self.output_tabs.indexOf(self.tabs[self.tabs_num]),
+        self.outputTabs.addTab(self.tabs[self.tabs_num], "")
+        self.outputTabs.setTabText(
+            self.outputTabs.indexOf(self.tabs[self.tabs_num]),
             input_dataset + "_" + time_date,
         )
 
@@ -638,9 +638,9 @@ class UIMainWindow(QtWidgets.QMainWindow):
                 lambda: self.run_dials_html(tab_num)
             )
 
-            self.output_tabs.addTab(self.tabs[self.tabs_num], "")
-            self.output_tabs.setTabText(
-                self.output_tabs.indexOf(self.tabs[self.tabs_num]),
+            self.outputTabs.addTab(self.tabs[self.tabs_num], "")
+            self.outputTabs.setTabText(
+                self.outputTabs.indexOf(self.tabs[self.tabs_num]),
                 self.dataset + "_s19_" + time_date,
             )
 
@@ -951,13 +951,6 @@ class UIMainWindow(QtWidgets.QMainWindow):
         # update version label
         self.menu_version.setTitle("Version(" + dial_version_pop + ")")
         self.append_output(self.logOutputTxt, "    Version(" + dial_version_pop + ")")
-
-    # close tabs ######
-    def close_handler(self, index):
-        self.append_output(
-            self.logOutputTxt, "close_handler called, index = %s" % index
-        )
-        self.output_tabs.removeTab(index)
 
 
 class MyThread2(QtCore.QThread):

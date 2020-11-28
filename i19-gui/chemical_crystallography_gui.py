@@ -294,7 +294,6 @@ class UIMainWindow(QtWidgets.QMainWindow):
         options_window = UIOptionsWindow(
             self.xia2_command,
             self.dataset_path,
-            self.command_command,
             self.visit,
             self.logOutputTxt,
             self.run_list,
@@ -1031,7 +1030,6 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
         self,
         xia2_command,
         dataset_path,
-        command_command,
         visit,
         log_output_txt,
         run_list,
@@ -1042,7 +1040,6 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
         self.xia2_command = xia2_command
         self.dataset_path = dataset_path
         self.run_list = run_list
-        self.command_command = command_command
         self.ref_geometry_path = ""
         self.visit = visit
         self.log_output_txt = log_output_txt

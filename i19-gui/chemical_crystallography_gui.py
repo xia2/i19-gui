@@ -700,13 +700,13 @@ class UIMainWindow(QtWidgets.QMainWindow):
                 self.tabs_num = 0
 
     def thread_started(self):
-        self.append_output(self.logOutputTxt, "\n*** Thread Started ***\n")
+        self.append_output(self.logOutputTxt, "\n*** Thread started ***\n")
 
     def thread_finished(self):
-        self.append_output(self.logOutputTxt, "\n*** Thread Finished ***\n")
+        self.append_output(self.logOutputTxt, "\n*** Thread finished ***\n")
 
     def stop_thread(self):
-        self.append_output(self.logOutputTxt, "\n*** Stopping Thead ***\n")
+        self.append_output(self.logOutputTxt, "\n*** Stopping thread ***\n")
         # self.MyThread2.stop()
         # self.MyThread2.quit()
 
@@ -1099,7 +1099,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 if variable == self.import_reference_geometry:
                     if self.ref_geometry_path == "":
                         output_message = (
-                            "    *** Reference Geometry Error. Please select "
+                            "    *** Reference geometry error. Please select "
                             ".expt file with browse button first ***"
                         )
                         self.log_output_txt.appendPlainText(output_message)
@@ -1134,13 +1134,13 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
 
                 if variable == self.import_beam_centre:
                     if self.import_beam_centre_x_line_edit.text() == "":
-                        output_message = "    *** Beam Centre Error. Please input Y"
+                        output_message = "    *** Beam centre error. Please input Y"
                         self.log_output_txt.appendPlainText(output_message)
                         self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
                         return
                     elif self.import_beam_centre_y_line_edit.text() == "":
                         output_message = (
-                            "    *** Detector Distance Error. Please input X"
+                            "    *** Detector distance error. Please input X"
                         )
                         self.log_output_txt.appendPlainText(output_message)
                         self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
@@ -1165,7 +1165,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 if variable == self.import_wavelengh:
                     if self.import_wavelength_line_edit.text() == "":
                         output_message = (
-                            "    *** Wavelength Input Error. "
+                            "    *** Wavelength input error. "
                             "Please add wavelength e.g. 85.01"
                         )
                         self.log_output_txt.appendPlainText(output_message)
@@ -1211,7 +1211,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 if variable == self.findSpots_sigmaStrong:
                     if self.findSpots_sigmaStrong_lineEdit.text() == "":
                         output_message = (
-                            "    *** Sigma Strong Error."
+                            "    *** Sigma strong error."
                             " Please enter sigma strong e.g. 6 ***"
                         )
                         self.log_output_txt.appendPlainText(output_message)
@@ -1226,8 +1226,8 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 if variable == self.findSpots_minSpot:
                     if self.findSpots_minSpot_lineEdit.text() == "":
                         output_message = (
-                            "    *** Min Spot Size Error, "
-                            "please entre min spots size e.g. 2 ***"
+                            "    *** Min spot size error, "
+                            "please enter min spots size e.g. 2 ***"
                         )
                         self.log_output_txt.appendPlainText(output_message)
                         self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
@@ -1241,8 +1241,8 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 if variable == self.findSpots_maxSpot:
                     if self.findSpots_maxSpot_lineEdit.text() == "":
                         output_message = (
-                            "    *** Max Spot Size Error, "
-                            "please entre max spots size e.g. 2 ***"
+                            "    *** Max spot size error, "
+                            "please enter max spots size e.g. 2 ***"
                         )
                         self.log_output_txt.appendPlainText(output_message)
                         self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
@@ -1256,7 +1256,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 if variable == self.findSpots_dmin:
                     if self.findSpots_dmin_lineEdit.text() == "":
                         output_message = (
-                            "    *** D_min Error, please entre d_min e.g. 0.84 ***"
+                            "    *** d_min error, please enter d_min e.g. 0.84 ***"
                         )
                         self.log_output_txt.appendPlainText(output_message)
                         self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
@@ -1270,7 +1270,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 if variable == self.findSpots_dmax:
                     if self.findSpots_dmax_lineEdit.text() == "":
                         output_message = (
-                            "    *** D_max Error, please entre d_max e.g. 10 ***"
+                            "    *** d_max error, please enter d_max e.g. 10 ***"
                         )
                         self.log_output_txt.appendPlainText(output_message)
                         self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
@@ -1333,7 +1333,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 if variable == self.findSpots_circleMask:
                     if self.findSpots_circleMask_lineEdit.text() == "":
                         output_message = (
-                            "    *** Circle Mask Error, please entre is the "
+                            "    *** Circle mask error, please enter in the "
                             "following format: xc,yc,r ***"
                         )
                         self.log_output_txt.appendPlainText(output_message)
@@ -1349,7 +1349,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 if variable == self.findSpots_recMask:
                     if self.findSpots_recMask_lineEdit.text() == "":
                         output_message = (
-                            "    *** Rectangle Mask Error, please entre is "
+                            "    *** Rectangle mask error, please enter is "
                             "the following format: x0,x1,y0,y1 ***"
                         )
                         self.log_output_txt.appendPlainText(output_message)
@@ -1393,7 +1393,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                     options = options + uc_command + sg_command
                 if variable == self.Index_minCell_checkBox:
                     if self.Index_minCell_lineEdit.text() == "":
-                        output_message = "    *** Please entre valid min cell ***"
+                        output_message = "    *** Please enter valid min cell ***"
                         self.log_output_txt.appendPlainText(output_message)
                         self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
                         return
@@ -1405,7 +1405,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                         )
                 if variable == self.Index_maxCell_checkBox:
                     if self.Index_maxCell_lineEdit.text() == "":
-                        output_message = "    *** Please entre valid max cell ***"
+                        output_message = "    *** Please enter valid max cell ***"
                         self.log_output_txt.appendPlainText(output_message)
                         self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
                         return
@@ -1444,7 +1444,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                             return
                         if self.visit == "":
                             output_message = (
-                                "    *** For this option a .phil need to be created, "
+                                "    *** For this option a .phil needs to be created, "
                                 "this requires a the visit to be known."
                                 "    Please open a dataset and retry (File>Open). ***"
                             )
@@ -1524,7 +1524,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 if variable == self.HP_ReferenceGeometry_checkBox:
                     if self.ref_geometry_path == "":
                         output_message = (
-                            "    *** Reference Geometry Error. "
+                            "    *** Reference geometry error. "
                             "Please select .expt file with browse button first ***"
                         )
                         self.log_output_txt.appendPlainText(output_message)
@@ -1605,7 +1605,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 if variable == self.HP_dmin_checkBox:
                     if self.HP_dmin_lineEdit.text() == "":
                         output_message = (
-                            "    *** D_min HP Error, please entre d_min e.g. 0.84 ***"
+                            "    *** d_min HP error, please enter d_min e.g. 0.84 ***"
                         )
                         self.log_output_txt.appendPlainText(output_message)
                         self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
@@ -1656,7 +1656,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 if variable == self.HP_anvilThickness_checkBox:
                     if self.HP_anvilThickness_lineEdit.text() == "":
                         output_message = (
-                            "    *** Anvil Thickness Input Error, "
+                            "    *** Anvil thickness input error, "
                             "please enter thickness e.g. 2.1 ***"
                         )
                         self.log_output_txt.appendPlainText(output_message)
@@ -1672,7 +1672,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 if variable == self.HP_anvilOpeningAngle_checkBox:
                     if self.HP_anvilOpeningAngle_lineEdit.text() == "":
                         output_message = (
-                            "    *** Anvil Opening Angle Input Error, "
+                            "    *** Anvil opening angle input error, "
                             "please enter opening angle e.g. 38 ***"
                         )
                         self.log_output_txt.appendPlainText(output_message)

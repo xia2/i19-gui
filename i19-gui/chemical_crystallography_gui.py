@@ -9,16 +9,34 @@
 
 import fnmatch
 import glob
+import json
 import os
 import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
 from time import sleep
+from typing import Dict, Type, Union
 
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 
+OptionWidgetDict = Dict[Type[QtWidgets.QWidget], str]
+OptionValues = Dict[str, Union[bool, int, str]]
 _translate = QtCore.QCoreApplication.translate
+
+# Dictionary of the key property name (in the Qt sense, i.e. the attribute name in
+# Python terms) for each type of user option widget.
+# Any children of a UIOptionsWindow instance that are of a type listed here will be
+# considered user-defined settings.  The values of each of the named properties will
+# be serialised and de-serialised to (auto-)save or (auto-)load them, or to remember
+# and reset default values.
+option_widgets: OptionWidgetDict = {
+    QtWidgets.QCheckBox: "checked",
+    QtWidgets.QComboBox: "currentIndex",
+    QtWidgets.QLineEdit: "text",
+}
+
+auto_save_filename = "processing/.i19.gui.autosave.json"
 
 
 class UIMainWindow(QtWidgets.QMainWindow):
@@ -1041,28 +1059,52 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
         self.image_selection = {}
         self.prefix = prefix
         self.opening_visit = opening_visit
+        self.saved_options_path = None
 
         super().__init__(parent_window)
         uic.loadUi(Path(__file__).parent / "OptionsWindow.ui", self)
 
-        self.updateButton.clicked.connect(self.update_options)
-        self.resetButton.clicked.connect(self.reset_options)
-        self.saveButton.clicked.connect(self.save_options)
-        self.loadButton.clicked.connect(self.load_options)
+        # Get all the widgets that record user-specified options.
+        # This approach is about ten times faster than the findChildren method.
+        self._option_widgets = {
+            name: attribute
+            for name, attribute in self.__dict__.items()
+            if type(attribute) in option_widgets
+        }
 
-        # TODO: Connect duplicate widgets like the reference geometry file selection.
-        self.importReferenceGeometryBrowse.clicked.connect(
-            self.browse_for_reference_model
-        )
-        self.hpReferenceGeometryBrowse.clicked.connect(self.browse_for_reference_model)
-        # TODO: Dynamically create a checkbox for each sweep found.
-        # TODO: Make proper use of connectSlotsByName
-        QtCore.QMetaObject.connectSlotsByName(self)
+        self.default_options = self.options
 
-        # load previous settings:
         self.load_options_auto()
 
+        # Connect buttons to methods.
+        self.updateButton.clicked.connect(self.update_options)
+        self.resetButton.clicked.connect(self.reset_options)
+        self.saveButton.clicked.connect(self.save_options_manually)
+        self.loadButton.clicked.connect(self.load_options_manually)
+        for reference_geometry_button in (
+            self.importReferenceGeometryBrowse,
+            self.hpReferenceGeometryBrowse,
+        ):
+            reference_geometry_button.clicked.connect(self.browse_for_reference_model)
+
+        # TODO: Dynamically create a checkbox for each sweep found.
+
         self.show()
+
+    @property
+    def options(self):
+        return {
+            name: widget.property(option_widgets[type(widget)])
+            for name, widget in self._option_widgets.items()
+        }
+
+    @options.setter
+    def options(self, new_values: OptionValues):
+        for name, widget in self._option_widgets.items():
+            value = new_values.get(name)
+            if value is not None:
+                property_name = option_widgets[type(widget)]
+                widget.setProperty(property_name, value)
 
     def browse_for_reference_model(self):
         ref_geometry_path = self.ref_geometry_path or self.opening_visit
@@ -1087,6 +1129,67 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
             self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
 
             self.importReferenceGeometryPath.setText(ref_geometry_path.name)
+
+    def reset_options(self):
+        self.options = self.default_options
+
+    def save_options_manually(self):
+        path = self.saved_options_path or self.opening_visit
+        option_file, _ = QtWidgets.QFileDialog.getSaveFileName(
+            parent=self,
+            caption=self.tr("Choose a location for the saved settings"),
+            directory=path,
+            filter=self.tr("JSON files (*.json)"),
+        )
+        if option_file:
+            self.saved_options_path = option_file
+            self.save_options(Path(option_file))
+
+    def save_options_auto(self):
+        if self.visit:
+            self.save_options(Path(self.visit) / auto_save_filename)
+
+    def save_options(self, saved_options_path):
+        output_message = self.tr(f"\n\tSaving settings to {saved_options_path}.")
+        self.log_output_txt.appendPlainText(output_message)
+        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+        with open(saved_options_path, "w") as f:
+            json.dump(self.options, f)
+
+    def load_options_manually(self):
+        path = self.saved_options_path or self.opening_visit
+        options_file, _ = QtWidgets.QFileDialog.getOpenFileName(
+            parent=self,
+            caption=self.tr("Choose a file containing saved settings"),
+            directory=path,
+            filter=self.tr("JSON files (*.json)"),
+        )
+        if options_file:
+            self.saved_options_path = options_file
+            self.load_options(Path(options_file))
+
+    def load_options_auto(self):
+        saved_options_path = Path(self.visit) / auto_save_filename
+        if not self.visit:
+            output_message = self.tr(
+                "\nSince you have not selected a visit or dataset, "
+                "any previously auto-saved xia2 settings won't be loaded "
+                "and your new settings cannot be auto-saved.\n"
+                "If you have previously saved some settings and wish to load them, "
+                "press the 'Load settings' button.\n"
+                "You can also save your settings with the 'Save settings' button."
+            )
+            self.log_output_txt.appendPlainText(output_message)
+            self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+        elif saved_options_path.is_file():
+            self.load_options(saved_options_path)
+
+    def load_options(self, saved_options_path: Path):
+        output_message = self.tr(f"\n\tLoading settings from {saved_options_path}.")
+        self.log_output_txt.appendPlainText(output_message)
+        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+        with open(saved_options_path) as f:
+            self.options = json.load(f)
 
     def update_options(self):
         options = ""
@@ -1749,686 +1852,6 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
         ui_main_window.update_options()
 
         self.save_options_auto()
-
-    def reset_options(self):
-        output_message = "\nResetting options"
-        self.log_output_txt.appendPlainText(output_message)
-        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
-
-        for checkboxes in self.optionListImport:
-            checkboxes.setChecked(False)
-        for checkboxes in self.optionListSpotFinding:
-            checkboxes.setChecked(False)
-        for checkboxes in self.optionListIndexing:
-            checkboxes.setChecked(False)
-        for checkboxes in self.optionListIntegrate:
-            checkboxes.setChecked(False)
-        for checkboxes in self.optionListRefineScale:
-            checkboxes.setChecked(False)
-        for checkboxes in self.optionListOther:
-            checkboxes.setChecked(False)
-        for checkboxes in self.optionListHP:
-            checkboxes.setChecked(False)
-        for checkboxes in self.runSelectorList:
-            checkboxes.setChecked(False)
-        self.Import_type_checkBox.setChecked(True)
-        self.run_image_selector = False
-        self.run_selection = []
-        self.image_selection = {}
-
-        if self.visit == "":
-            return
-        if os.path.isfile(self.visit + "processing/autoSaveOptions.txt"):
-            option_file = self.visit + "processing/autoSaveOptions.txt"
-            with open(option_file, "w"):
-                pass
-
-        options = ""
-
-        options_update_text = (
-            "\n\nUpdating options"
-            + "\n    Xia2 command: "
-            + "\n    "
-            + self.xia2_command
-            + self.dataset_path
-            + options
-        )
-        self.log_output_txt.appendPlainText(options_update_text)
-        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
-
-        ui_main_window = self.parent()
-        ui_main_window.xia2_command = self.xia2_command
-        ui_main_window.dataset_path = self.dataset_path
-        ui_main_window.xia2_options_list = options
-        ui_main_window.update_options()
-
-    def option_file_text_function(self):
-        option_file_text = ""
-        for num, checkboxes in enumerate(self.optionListImport):
-            if checkboxes.isChecked():
-                if num == 1:
-                    option_file_text = (
-                        option_file_text
-                        + "I "
-                        + str(num)
-                        + " "
-                        + str(self.ref_geometry_path)
-                        + "\n"
-                    )
-                elif num == 2:
-                    option_file_text = (
-                        option_file_text
-                        + "I "
-                        + str(num)
-                        + " "
-                        + str(self.import_dd_line_edit.text())
-                        + "\n"
-                    )
-                elif num == 3:
-                    option_file_text = (
-                        option_file_text
-                        + "I "
-                        + str(num)
-                        + " "
-                        + str(self.import_beam_centre_x_line_edit.text())
-                        + " "
-                        + str(self.import_beam_centre_y_line_edit.text())
-                        + "\n"
-                    )
-                elif num == 4:
-                    option_file_text = (
-                        option_file_text
-                        + "I "
-                        + str(num)
-                        + " "
-                        + str(self.import_wavelength_line_edit.text())
-                        + "\n"
-                    )
-                elif num == 7:
-                    option_file_text = (
-                        option_file_text
-                        + "I "
-                        + str(num)
-                        + " "
-                        + str(self.Import_type_comboBox.currentIndex())
-                        + "\n"
-                    )
-                else:
-                    option_file_text = option_file_text + "I " + str(num) + "\n"
-        for num, checkboxes in enumerate(self.runSelectorList):
-            if checkboxes.isChecked():
-                option_file_text = option_file_text + "RS " + str(num) + "\n"
-        # spot finding
-        for num, checkboxes in enumerate(self.optionListSpotFinding):
-            if checkboxes.isChecked():
-                if num == 0:
-                    option_file_text = (
-                        option_file_text
-                        + "SF "
-                        + str(num)
-                        + " "
-                        + str(self.findSpots_sigmaStrong_lineEdit.text())
-                        + "\n"
-                    )
-                elif num == 1:
-                    option_file_text = (
-                        option_file_text
-                        + "SF "
-                        + str(num)
-                        + " "
-                        + str(self.findSpots_minSpot_lineEdit.text())
-                        + "\n"
-                    )
-                elif num == 2:
-                    option_file_text = (
-                        option_file_text
-                        + "SF "
-                        + str(num)
-                        + " "
-                        + str(self.findSpots_maxSpot_lineEdit.text())
-                        + "\n"
-                    )
-                elif num == 3:
-                    option_file_text = (
-                        option_file_text
-                        + "SF "
-                        + str(num)
-                        + " "
-                        + str(self.findSpots_dmin_lineEdit.text())
-                        + "\n"
-                    )
-                elif num == 4:
-                    option_file_text = (
-                        option_file_text
-                        + "SF "
-                        + str(num)
-                        + " "
-                        + str(self.findSpots_dmax_lineEdit.text())
-                        + "\n"
-                    )
-                elif num == 6:
-                    option_file_text = (
-                        option_file_text
-                        + "SF "
-                        + str(num)
-                        + " "
-                        + str(self.findSpots_powderRingsUC_lineEdit.text())
-                        + " "
-                        + str(self.findSpots_powderRingsSG_lineEdit.text())
-                        + " "
-                        + str(self.findSpots_powderRingsW_lineEdit.text())
-                        + "\n"
-                    )
-                elif num == 7:
-
-                    find_spot_res_range_list = [
-                        self.findSpots_resolutionRange_lineEdit_1.text(),
-                        self.findSpots_resolutionRange_lineEdit_2.text(),
-                        self.findSpots_resolutionRange_lineEdit_3.text(),
-                        self.findSpots_resolutionRange_lineEdit_4.text(),
-                        self.findSpots_resolutionRange_lineEdit_5.text(),
-                        self.findSpots_resolutionRange_lineEdit_6.text(),
-                        self.findSpots_resolutionRange_lineEdit_7.text(),
-                        self.findSpots_resolutionRange_lineEdit_8.text(),
-                        self.findSpots_resolutionRange_lineEdit_9.text(),
-                        self.findSpots_resolutionRange_lineEdit_10.text(),
-                    ]
-                    option_file_text = option_file_text + "SF " + str(num)
-                    for res_range in find_spot_res_range_list:
-                        option_file_text = option_file_text + " " + str(res_range)
-                    option_file_text = option_file_text + "\n"
-                elif num == 8:
-                    option_file_text = (
-                        option_file_text
-                        + "SF "
-                        + str(num)
-                        + " "
-                        + str(self.findSpots_circleMask_lineEdit.text())
-                        + "\n"
-                    )
-                elif num == 9:
-                    option_file_text = (
-                        option_file_text
-                        + "SF "
-                        + str(num)
-                        + " "
-                        + str(self.findSpots_recMask_lineEdit.text())
-                        + "\n"
-                    )
-                else:
-                    option_file_text = option_file_text + "SF " + str(num) + "\n"
-        # indexing
-        for num, checkboxes in enumerate(self.optionListIndexing):
-            if checkboxes.isChecked():
-                if num == 0:
-                    option_file_text = (
-                        option_file_text
-                        + "Ind "
-                        + str(num)
-                        + " "
-                        + str(self.Index_method_comboBox.currentIndex())
-                        + "\n"
-                    )
-                elif num == 2:
-                    option_file_text = (
-                        option_file_text
-                        + "Ind "
-                        + str(num)
-                        + " "
-                        + str(self.Index_UN_lineEdit.text())
-                        + " "
-                        + str(self.Index_SG_lineEdit.text())
-                        + "\n"
-                    )
-                elif num == 3:
-                    option_file_text = (
-                        option_file_text
-                        + "Ind "
-                        + str(num)
-                        + " "
-                        + str(self.Index_minCell_lineEdit.text())
-                        + "\n"
-                    )
-                elif num == 4:
-                    option_file_text = (
-                        option_file_text
-                        + "Ind "
-                        + str(num)
-                        + " "
-                        + str(self.Index_maxCell_lineEdit.text())
-                        + "\n"
-                    )
-                else:
-                    option_file_text = option_file_text + "Ind " + str(num) + "\n"
-        # Integrate
-        for num, checkboxes in enumerate(self.optionListIntegrate):
-            if checkboxes.isChecked():
-                if num == 2:
-                    option_file_text = (
-                        option_file_text
-                        + "Int "
-                        + str(num)
-                        + " "
-                        + str(self.Integrate_minCellOverall_lineEdit.text())
-                        + " "
-                        + str(self.Integrate_minCellDegree_lineEdit.text())
-                        + "\n"
-                    )
-                else:
-                    option_file_text = option_file_text + "Int " + str(num) + "\n"
-        # Refine and Scale
-        for num, checkboxes in enumerate(self.optionListRefineScale):
-            if checkboxes.isChecked():
-                if num == 1:
-                    option_file_text = (
-                        option_file_text
-                        + "R "
-                        + str(num)
-                        + " "
-                        + str(self.Refine_method_comboBox.currentIndex())
-                        + "\n"
-                    )
-                else:
-                    option_file_text = option_file_text + "R " + str(num) + "\n"
-        # Other
-        for num, checkboxes in enumerate(self.optionListOther):
-            if checkboxes.isChecked():
-                if num == 1:
-                    option_file_text = (
-                        option_file_text
-                        + "O "
-                        + str(num)
-                        + " "
-                        + str(self.Other_manualInput1_lineEdit.text())
-                        + "\n"
-                    )
-                if num == 2:
-                    option_file_text = (
-                        option_file_text
-                        + "O "
-                        + str(num)
-                        + " "
-                        + str(self.Other_manualInput1_lineEdit.text())
-                        + "\n"
-                    )
-                if num == 3:
-                    option_file_text = (
-                        option_file_text
-                        + "O "
-                        + str(num)
-                        + " "
-                        + str(self.Other_manualInput1_lineEdit.text())
-                        + "\n"
-                    )
-                if num == 4:
-                    option_file_text = (
-                        option_file_text
-                        + "O "
-                        + str(num)
-                        + " "
-                        + str(self.Other_manualInput1_lineEdit.text())
-                        + "\n"
-                    )
-                else:
-                    option_file_text = option_file_text + "O " + str(num) + "\n"
-
-        # HP
-        for num, checkboxes in enumerate(self.optionListHP):
-            if checkboxes.isChecked():
-                if num == 1:
-                    option_file_text = (
-                        option_file_text
-                        + "HP "
-                        + str(num)
-                        + " "
-                        + str(self.ref_geometry_path)
-                        + "\n"
-                    )
-                elif num == 2:
-                    option_file_text = (
-                        option_file_text
-                        + "HP "
-                        + str(num)
-                        + " "
-                        + str(self.HP_gasket_comboBox.currentIndex())
-                        + "\n"
-                    )
-                elif num == 3:
-                    option_file_text = (
-                        option_file_text
-                        + "HP "
-                        + str(num)
-                        + " "
-                        + str(self.HP_gasketUserUC_lineEdit.text())
-                        + " "
-                        + str(self.HP_gasketUserSG_lineEdit.text())
-                        + " "
-                        + str(self.HP_gasketUserW_lineEdit.text())
-                        + "\n"
-                    )
-                elif num == 4:
-                    option_file_text = (
-                        option_file_text
-                        + "HP "
-                        + str(num)
-                        + " "
-                        + str(self.HP_UN_lineEdit.text())
-                        + " "
-                        + str(self.HP_SG_lineEdit.text())
-                        + "\n"
-                    )
-                elif num == 5:
-                    option_file_text = (
-                        option_file_text
-                        + "HP "
-                        + str(num)
-                        + " "
-                        + str(self.HP_dmin_lineEdit.text())
-                        + "\n"
-                    )
-                elif num == 6:
-                    option_file_text = option_file_text + "HP " + str(num)
-                    self.runStartEnd_lineEdits = [
-                        self.HP_runStartEnd_lineEdit_1.text(),
-                        self.HP_runStartEnd_lineEdit_2.text(),
-                        self.HP_runStartEnd_lineEdit_3.text(),
-                        self.HP_runStartEnd_lineEdit_4.text(),
-                        self.HP_runStartEnd_lineEdit_5.text(),
-                        self.HP_runStartEnd_lineEdit_6.text(),
-                        self.HP_runStartEnd_lineEdit_7.text(),
-                        self.HP_runStartEnd_lineEdit_8.text(),
-                        self.HP_runStartEnd_lineEdit_9.text(),
-                        self.HP_runStartEnd_lineEdit_10.text(),
-                    ]
-                    for entry in self.runStartEnd_lineEdits:
-                        if entry == "":
-                            option_file_text = option_file_text + " #"
-                        else:
-                            option_file_text = option_file_text + " " + str(entry)
-                    option_file_text = option_file_text + "\n"
-                elif num == 8:
-                    option_file_text = (
-                        option_file_text
-                        + "HP "
-                        + str(num)
-                        + " "
-                        + str(self.HP_anvilThickness_lineEdit.text())
-                        + "\n"
-                    )
-                elif num == 9:
-                    option_file_text = (
-                        option_file_text
-                        + "HP "
-                        + str(num)
-                        + " "
-                        + str(self.HP_anvilOpeningAngle_checkBox.text())
-                        + "\n"
-                    )
-
-                else:
-                    option_file_text = option_file_text + "HP " + str(num) + "\n"
-        return option_file_text
-
-    def save_options(self):
-        output_message = "\n    Saving options"
-        self.log_output_txt.appendPlainText(output_message)
-        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
-
-        path = self.opening_visit
-        option_file = QtWidgets.QFileDialog.getSaveFileName(
-            None, "Save Current Options", path
-        )[0]
-
-        if option_file:
-            option_file_text = self.option_file_text_function()
-
-            output_message = (
-                "\n    File location: "
-                + str(option_file)
-                + "\n    "
-                + str(option_file_text)
-            )
-            self.log_output_txt.appendPlainText(output_message)
-            self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
-
-            with open(option_file, "a") as f:
-                f.write(option_file_text)
-                f.write("")
-                f.close()
-
-    def save_options_auto(self):
-        output_message = "\n    Saving current options"
-        self.log_output_txt.appendPlainText(output_message)
-        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
-
-        if self.visit == "":
-            return
-
-        option_file = self.visit + "processing/autoSaveOptions.txt"
-
-        option_file_text = self.option_file_text_function()
-
-        output_message = (
-            "\n    File location: "
-            + str(option_file)
-            + "\n    "
-            + str(option_file_text)
-        )
-        self.log_output_txt.appendPlainText(output_message)
-        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
-
-        with open(option_file, "a") as of:
-            of.write(option_file_text)
-            of.write("")
-            of.close()
-
-    def load_options_auto(self):
-        if self.visit == "":
-            output_message = (
-                "    Visit/Dataset has not been selected, "
-                "therefore previous settings will not be loaded"
-            )
-            self.log_output_txt.appendPlainText(output_message)
-            self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
-            return
-        if os.path.isfile(self.visit + "processing/autoSaveOptions.txt"):
-            saved_options_path_txt = self.visit + "processing/autoSaveOptions.txt"
-            self.load_options_main(saved_options_path_txt)
-
-    def load_options(self):
-        output_message = "\nLoading options"
-        self.log_output_txt.appendPlainText(output_message)
-        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
-
-        path = self.opening_visit
-        os.chdir(path)
-        saved_options_path = QtWidgets.QFileDialog.getOpenFileName()[0]
-        if saved_options_path:
-            saved_options_path_txt = str(saved_options_path)
-            self.load_options_main(saved_options_path_txt)
-
-    def load_options_main(self, saved_options_path_txt):
-        output_message = (
-            "    Loading previous settings (" + saved_options_path_txt + ")"
-        )
-        self.log_output_txt.appendPlainText(output_message)
-        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
-        with open(saved_options_path_txt) as options_input:
-            for line in options_input:
-                line = "".join(line.split("\n"))
-                line_split = line.split(" ")
-                if line_split[0] == "I":
-                    if int(line_split[1]) == 1:
-                        self.ref_geometry_path = line_split[2]
-                        ref_geometry_path_txt = str(self.ref_geometry_path)
-                        ref_geometry_file_txt = ref_geometry_path_txt.split("/")[-1]
-                        self.importReferenceGeometryPath.setText(ref_geometry_file_txt)
-                        self.importReferenceGeometryPath.setScaledContents(True)
-                        self.hpReferenceGeometryPath.setText(ref_geometry_file_txt)
-                        self.hpReferenceGeometryPath.setScaledContents(True)
-                        self.optionListImport[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 2:
-                        self.import_dd_line_edit.setText(line_split[2])
-                        self.optionListImport[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 3:
-                        self.import_beam_centre_x_line_edit.setText(line_split[2])
-                        self.import_beam_centre_y_line_edit.setText(line_split[3])
-                        self.optionListImport[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 4:
-                        self.import_wavelength_line_edit.setText(line_split[2])
-                        self.optionListImport[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 7:
-                        self.Import_type_comboBox.setCurrentIndex(int(line_split[2]))
-                        self.optionListImport[int(line_split[1])].setChecked(True)
-                    else:
-                        self.optionListImport[int(line_split[1])].setChecked(True)
-                if line_split[0] == "SF":
-                    if int(line_split[1]) == 0:
-                        self.findSpots_sigmaStrong_lineEdit.setText(line_split[2])
-                        self.optionListSpotFinding[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 1:
-                        self.findSpots_minSpot_lineEdit.setText(line_split[2])
-                        self.optionListSpotFinding[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 2:
-                        self.findSpots_maxSpot_lineEdit.setText(line_split[2])
-                        self.optionListSpotFinding[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 3:
-                        self.findSpots_dmin_lineEdit.setText(line_split[2])
-                        self.optionListSpotFinding[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 4:
-                        self.findSpots_dmax_lineEdit.setText(line_split[2])
-                        self.optionListSpotFinding[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 6:
-                        self.findSpots_powderRingsUC_lineEdit.setText(line_split[2])
-                        self.findSpots_powderRingsSG_lineEdit.setText(line_split[3])
-                        self.findSpots_powderRingsW_lineEdit.setText(line_split[4])
-                        self.optionListSpotFinding[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 7:
-                        self.findSpots_resolutionRange_lineEdit_1.setText(line_split[2])
-                        self.findSpots_resolutionRange_lineEdit_2.setText(line_split[3])
-                        self.findSpots_resolutionRange_lineEdit_3.setText(line_split[4])
-                        self.findSpots_resolutionRange_lineEdit_4.setText(line_split[5])
-                        self.findSpots_resolutionRange_lineEdit_5.setText(line_split[6])
-                        self.findSpots_resolutionRange_lineEdit_6.setText(line_split[7])
-                        self.findSpots_resolutionRange_lineEdit_7.setText(line_split[8])
-                        self.findSpots_resolutionRange_lineEdit_8.setText(line_split[9])
-                        self.findSpots_resolutionRange_lineEdit_9.setText(
-                            line_split[10]
-                        )
-                        self.findSpots_resolutionRange_lineEdit_10.setText(
-                            line_split[11]
-                        )
-                        self.optionListSpotFinding[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 8:
-                        self.findSpots_circleMask_lineEdit.setText(line_split[2])
-                        self.optionListSpotFinding[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 9:
-                        self.findSpots_recMask_lineEdit.setText(line_split[2])
-                        self.optionListSpotFinding[int(line_split[1])].setChecked(True)
-                    else:
-                        self.optionListSpotFinding[int(line_split[1])].setChecked(True)
-                if line_split[0] == "Ind":
-                    if int(line_split[1]) == 0:
-                        self.Index_method_comboBox.setCurrentIndex(int(line_split[2]))
-                        self.optionListIndexing[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 2:
-                        self.Index_UN_lineEdit.setText((line_split[2]))
-                        self.Index_SG_lineEdit.setText((line_split[3]))
-                        self.optionListIndexing[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 3:
-                        self.Index_minCell_lineEdit.setText((line_split[2]))
-                        self.optionListIndexing[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 4:
-                        self.Index_maxCell_lineEdit.setText((line_split[2]))
-                        self.optionListIndexing[int(line_split[1])].setChecked(True)
-                    else:
-                        self.optionListIndexing[int(line_split[1])].setChecked(True)
-                if line_split[0] == "Int":
-                    if int(line_split[1]) == 2:
-                        self.Integrate_minCellOverall_lineEdit.setText((line_split[2]))
-                        self.Integrate_minCellDegree_lineEdit.setText((line_split[3]))
-                        self.optionListIntegrate[int(line_split[1])].setChecked(True)
-                    else:
-                        self.optionListIntegrate[int(line_split[1])].setChecked(True)
-                if line_split[0] == "R":
-                    if int(line_split[1]) == 1:
-                        self.Refine_method_comboBox.setCurrentIndex(int(line_split[2]))
-                        self.optionListRefineScale[int(line_split[1])].setChecked(True)
-                    else:
-                        self.optionListRefineScale[int(line_split[1])].setChecked(True)
-                if line_split[0] == "O":
-                    if int(line_split[1]) == 1:
-                        self.Other_manualInput1_lineEdit.setText((line_split[2]))
-                        self.optionListOther[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 2:
-                        self.Other_manualInput2_lineEdit.setText((line_split[2]))
-                        self.optionListOther[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 3:
-                        self.Other_manualInput3_lineEdit.setText((line_split[2]))
-                        self.optionListOther[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 4:
-                        self.Other_manualInput4_lineEdit.setText((line_split[2]))
-                        self.optionListOther[int(line_split[1])].setChecked(True)
-                    else:
-                        self.optionListOther[int(line_split[1])].setChecked(True)
-                if line_split[0] == "HP":
-                    if int(line_split[1]) == 1:
-                        self.ref_geometry_path = line_split[2]
-                        ref_geometry_path_txt = str(self.ref_geometry_path)
-                        ref_geometry_file_txt = ref_geometry_path_txt.split("/")[-1]
-                        self.importReferenceGeometryPath.setText(ref_geometry_file_txt)
-                        self.importReferenceGeometryPath.setScaledContents(True)
-                        self.hpReferenceGeometryPath.setText(ref_geometry_file_txt)
-                        self.hpReferenceGeometryPath.setScaledContents(True)
-                        self.optionListHP[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 2:
-                        self.HP_gasket_comboBox.setCurrentIndex(int(line_split[2]))
-                        self.optionListHP[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 3:
-                        self.HP_gasketUserUC_lineEdit.setText((line_split[2]))
-                        self.HP_gasketUserSG_lineEdit.setText((line_split[3]))
-                        self.HP_gasketUserW_lineEdit.setText((line_split[4]))
-                        self.optionListHP[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 4:
-                        self.HP_UN_lineEdit.setText((line_split[2]))
-                        self.HP_SG_lineEdit.setText((line_split[3]))
-                        self.optionListHP[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 5:
-                        self.HP_dmin_lineEdit.setText((line_split[2]))
-                        self.optionListHP[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 6:
-                        # if # then skip ###
-                        if "#" not in line_split[2]:
-                            self.HP_runStartEnd_lineEdit_1.setText((line_split[2]))
-                        if "#" not in line_split[3]:
-                            self.HP_runStartEnd_lineEdit_2.setText((line_split[3]))
-                        if "#" not in line_split[4]:
-                            self.HP_runStartEnd_lineEdit_3.setText((line_split[4]))
-                        if "#" not in line_split[5]:
-                            self.HP_runStartEnd_lineEdit_4.setText((line_split[5]))
-                        if "#" not in line_split[6]:
-                            self.HP_runStartEnd_lineEdit_5.setText((line_split[6]))
-                        if "#" not in line_split[7]:
-                            self.HP_runStartEnd_lineEdit_6.setText((line_split[7]))
-                        if "#" not in line_split[8]:
-                            self.HP_runStartEnd_lineEdit_7.setText((line_split[8]))
-                        if "#" not in line_split[9]:
-                            self.HP_runStartEnd_lineEdit_8.setText((line_split[9]))
-                        if "#" not in line_split[10]:
-                            self.HP_runStartEnd_lineEdit_9.setText((line_split[10]))
-                        if "#" not in line_split[11]:
-                            self.HP_runStartEnd_lineEdit_10.setText((line_split[11]))
-                        self.optionListHP[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 8:
-                        self.HP_anvilThickness_lineEdit.setText((line_split[2]))
-                        self.optionListHP[int(line_split[1])].setChecked(True)
-                    if int(line_split[1]) == 9:
-                        self.HP_anvilOpeningAngle_lineEdit.setText((line_split[2]))
-                        self.optionListHP[int(line_split[1])].setChecked(True)
-                    else:
-                        self.optionListHP[int(line_split[1])].setChecked(True)
-                if line_split[0] == "RS":
-                    self.runSelectorList[int(line_split[1])].setChecked(True)
 
 
 if __name__ == "__main__":

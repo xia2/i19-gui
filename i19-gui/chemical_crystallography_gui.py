@@ -39,7 +39,7 @@ auto_save_filename = "processing/.i19.gui.autosave.json"
 
 
 class UIMainWindow(QtWidgets.QMainWindow):
-    def __init__(self, parent_window=None):
+    def __init__(self, parent_window=None, **kwargs):
         self.dials_version = ""
         self.opening_visit = "/dls/i19-2/data/2020/"
         self.visit = ""
@@ -103,7 +103,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
         ]
         self.tabs_num = 0
 
-        super().__init__(parent_window)
+        super().__init__(parent=parent_window, **kwargs)
         uic.loadUi(Path(__file__).parent / "MainWindow.ui", self)
 
         self.menuFile_Open.triggered.connect(self.select_dataset)
@@ -1038,17 +1038,18 @@ class MyThread2(QtCore.QThread):
 class UIOptionsWindow(QtWidgets.QMainWindow):
     def __init__(
         self,
-        xia2_command,
-        dataset_path,
-        visit,
-        run_list,
-        prefix,
-        opening_visit,
+        xia2_command="",
+        dataset_path="",
+        visit="",
+        run_list=None,
+        prefix="",
+        opening_visit="",
         parent_window=None,
+        **kwargs,
     ):
         self.xia2_command = xia2_command
         self.dataset_path = dataset_path
-        self.run_list = run_list
+        self.run_list = run_list or []
         self.ref_geometry_path = ""
         self.visit = visit
         self.run_image_selector = False
@@ -1058,7 +1059,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
         self.opening_visit = opening_visit
         self.saved_options_path = None
 
-        super().__init__(parent=parent_window)
+        super().__init__(parent=parent_window, **kwargs)
         uic.loadUi(Path(__file__).parent / "OptionsWindow.ui", self)
 
         # Get all the widgets that record user-specified options.

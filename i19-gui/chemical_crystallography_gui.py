@@ -1041,7 +1041,6 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
         xia2_command,
         dataset_path,
         visit,
-        log_output_txt,
         run_list,
         prefix,
         opening_visit,
@@ -1052,7 +1051,6 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
         self.run_list = run_list
         self.ref_geometry_path = ""
         self.visit = visit
-        self.log_output_txt = log_output_txt
         self.run_image_selector = False
         self.run_selection = []
         self.image_selection = {}
@@ -1060,7 +1058,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
         self.opening_visit = opening_visit
         self.saved_options_path = None
 
-        super().__init__(parent_window)
+        super().__init__(parent=parent_window)
         uic.loadUi(Path(__file__).parent / "OptionsWindow.ui", self)
 
         # Get all the widgets that record user-specified options.
@@ -1089,6 +1087,15 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
         # TODO: Dynamically create a checkbox for each sweep found.
 
         self.show()
+
+    def log_output(self, message):
+        try:
+            log_widget = self.parent().logOutputTxt
+        except AttributeError:
+            print(message)
+        else:
+            log_widget.appendPlainText(message)
+            log_widget.moveCursor(QtGui.QTextCursor.End)
 
     @property
     def options(self):
@@ -1123,8 +1130,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 "Reference geometry file:\n"
                 f"\t{ref_geometry_path.name}"
             )
-            self.log_output_txt.appendPlainText(output_message)
-            self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+            self.log_output(output_message)
 
             self.importReferenceGeometryPath.setText(ref_geometry_path.name)
 
@@ -1149,8 +1155,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
 
     def save_options(self, saved_options_path):
         output_message = self.tr(f"\n\tSaving settings to {saved_options_path}.")
-        self.log_output_txt.appendPlainText(output_message)
-        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+        self.log_output(output_message)
         with open(saved_options_path, "w") as f:
             json.dump(self.options, f)
 
@@ -1177,15 +1182,12 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 "press the 'Load settings' button.\n"
                 "You can also save your settings with the 'Save settings' button."
             )
-            self.log_output_txt.appendPlainText(output_message)
-            self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+            self.log_output(output_message)
         elif saved_options_path.is_file():
             self.load_options(saved_options_path)
 
     def load_options(self, saved_options_path: Path):
-        output_message = self.tr(f"\n\tLoading settings from {saved_options_path}.")
-        self.log_output_txt.appendPlainText(output_message)
-        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+        self.log_output(self.tr(f"\n\tLoading settings from {saved_options_path}."))
         with open(saved_options_path) as f:
             self.options = json.load(f)
 
@@ -1203,8 +1205,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                             "    *** Reference geometry error. Please select "
                             ".expt file with browse button first ***"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         options = (
@@ -1218,15 +1219,13 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                             "    *** Detector Distance Error. Please input "
                             "detector distance e.g. 85.01"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         output_message = self.tr(
                             "Detector distance: " + str(self.import_dd_line_edit.text())
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         options = (
                             options
                             + " detector_distance="
@@ -1238,15 +1237,13 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                         output_message = self.tr(
                             "    *** Beam centre error. Please input Y"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     elif self.import_beam_centre_y_line_edit.text() == "":
                         output_message = self.tr(
                             "    *** Detector distance error. Please input X"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         output_message = self.tr(
@@ -1255,8 +1252,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                             + ","
                             + str(self.import_beam_centre_y_line_edit.text())
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         options = (
                             options
                             + " mosflm_beam_centre="
@@ -1271,16 +1267,14 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                             "    *** Wavelength input error. "
                             "Please add wavelength e.g. 85.01"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         output_message = self.tr(
                             "Wavelength: "
                             + str(self.import_wavelength_line_edit.text())
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         options = (
                             options
                             + " wavelength="
@@ -1299,10 +1293,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                     for num, run in enumerate(self.runSelectorList, start=1):
                         if run.isChecked():
                             self.run_selection.append(num)
-                    self.log_output_txt.appendPlainText(
-                        "Run selector:    " + str(self.run_selection)
-                    )
-                    self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                    self.log_output("Run selector:    " + str(self.run_selection))
                 if variable == self.Import_type_checkBox:
                     if self.Import_type_comboBox.currentText() == "Protein":
                         pass
@@ -1318,8 +1309,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                             "    *** Sigma strong error."
                             " Please enter sigma strong e.g. 6 ***"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         options = (
@@ -1333,8 +1323,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                             "    *** Min spot size error, "
                             "please enter min spots size e.g. 2 ***"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         options = (
@@ -1348,8 +1337,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                             "    *** Max spot size error, "
                             "please enter max spots size e.g. 2 ***"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         options = (
@@ -1362,8 +1350,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                         output_message = self.tr(
                             "    *** d_min error, please enter d_min e.g. 0.84 ***"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         options = (
@@ -1376,8 +1363,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                         output_message = self.tr(
                             "    *** d_max error, please enter d_max e.g. 10 ***"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         options = (
@@ -1400,8 +1386,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                             output_message = self.tr(
                                 "    *** Powder ring mask error ***"
                             )
-                            self.log_output_txt.appendPlainText(output_message)
-                            self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                            self.log_output(output_message)
                             return
                     ice_rings_uv_command = " ice_rings.unit_cell=" + str(
                         self.findSpots_powderRingsUC_lineEdit.text()
@@ -1442,8 +1427,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                             "    *** Circle mask error, please enter in the "
                             "following format: xc,yc,r ***"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         options = (
@@ -1458,8 +1442,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                             "    *** Rectangle mask error, please enter is "
                             "the following format: x0,x1,y0,y1 ***"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         options = (
@@ -1485,14 +1468,12 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                         self.Index_SG_lineEdit.text(),
                     ]
                     for entry in uc_sg_line_edits:
-                        self.log_output_txt.appendPlainText(entry)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(entry)
                         if entry == "":
                             output_message = self.tr(
                                 "    *** Error in unit cell or space group entry ***"
                             )
-                            self.log_output_txt.appendPlainText(output_message)
-                            self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                            self.log_output(output_message)
                             return
                     uc_command = " unit_cell=" + str(self.Index_UN_lineEdit.text())
                     sg_command = " space_group=" + str(self.Index_SG_lineEdit.text())
@@ -1502,8 +1483,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                         output_message = self.tr(
                             "    *** Please enter valid min cell ***"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         options = (
@@ -1516,8 +1496,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                         output_message = self.tr(
                             "    *** Please enter valid max cell ***"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         options = (
@@ -1549,8 +1528,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                             output_message = self.tr(
                                 "    *** Error in overall or per degree entry ***"
                             )
-                            self.log_output_txt.appendPlainText(output_message)
-                            self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                            self.log_output(output_message)
                             return
                         if self.visit == "":
                             output_message = self.tr(
@@ -1558,8 +1536,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                                 "this requires a the visit to be known."
                                 "    Please open a dataset and retry (File>Open). ***"
                             )
-                            self.log_output_txt.appendPlainText(output_message)
-                            self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                            self.log_output(output_message)
                             return
                     overall_line = (
                         "    profile.gaussian_rs.min_spots.overall="
@@ -1637,8 +1614,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                             "    *** Reference geometry error. "
                             "Please select .expt file with browse button first ***"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         options = (
@@ -1676,8 +1652,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                             output_message = self.tr(
                                 "    *** Powder ring mask error ***"
                             )
-                            self.log_output_txt.appendPlainText(output_message)
-                            self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                            self.log_output(output_message)
                             return
                     ice_rings_uv_command = " ice_rings.unit_cell=" + str(
                         self.HP_gasketUserUC_lineEdit.text()
@@ -1701,14 +1676,12 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                         self.HP_SG_lineEdit.text(),
                     ]
                     for entry in uc_sg_line_edits:
-                        self.log_output_txt.appendPlainText(entry)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(entry)
                         if entry == "":
                             output_message = self.tr(
                                 "    *** Error in unit cell or space group entry ***"
                             )
-                            self.log_output_txt.appendPlainText(output_message)
-                            self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                            self.log_output(output_message)
                             return
                     uc_command = " unit_cell=" + str(self.HP_UN_lineEdit.text())
                     sg_command = " space_group=" + str(self.HP_SG_lineEdit.text())
@@ -1719,8 +1692,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                         output_message = self.tr(
                             "    *** d_min HP error, please enter d_min e.g. 0.84 ***"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         options = (
@@ -1753,8 +1725,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                         "Image start/end option selected.\n"
                         "    " + str(self.image_selection)
                     )
-                    self.log_output_txt.appendPlainText(output_message)
-                    self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                    self.log_output(output_message)
 
                 if variable == self.HP_FixBeamDetector_checkBox:
                     options = (
@@ -1772,8 +1743,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                             "    *** Anvil thickness input error, "
                             "please enter thickness e.g. 2.1 ***"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         options = (
@@ -1788,8 +1758,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                             "    *** Anvil opening angle input error, "
                             "please enter opening angle e.g. 38 ***"
                         )
-                        self.log_output_txt.appendPlainText(output_message)
-                        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
+                        self.log_output(output_message)
                         return
                     else:
                         pass
@@ -1804,11 +1773,10 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
             else:  # causing issues when multiple ###########
                 if self.dataset_path == "":
                     dataset_input = self.dataset_path
-                    self.log_output_txt.appendPlainText(
+                    self.log_output(
                         "Dataset must be selected before selecting runs or images "
                         "start/end"
                     )
-                    self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
                 else:
                     dataset_input = ""
                     if self.run_selection:  # runs have been selected
@@ -1844,7 +1812,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
 
             self.dataset_path = dataset_input
 
-        options_update_text = (
+        self.log_output(
             "\n\nUpdating options"
             + "\n    Xia2 command: "
             + "\n    "
@@ -1852,8 +1820,6 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
             + self.dataset_path
             + options
         )
-        self.log_output_txt.appendPlainText(options_update_text)
-        self.log_output_txt.moveCursor(QtGui.QTextCursor.End)
 
         ui_main_window = self.parent()
         ui_main_window.xia2_command = self.xia2_command

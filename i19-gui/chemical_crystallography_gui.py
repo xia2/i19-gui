@@ -1186,6 +1186,11 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
             self.log_output(output_message)
         elif saved_options_path.is_file():
             self.load_options(saved_options_path)
+        else:
+            self.log_output(
+                f"No auto-saved options found for the visit {self.visit}.\n"
+                f"A new auto-save file will be created at {auto_save_filename}."
+            )
 
     def load_options(self, saved_options_path: Path):
         self.log_output(self.tr(f"\n\tLoading settings from {saved_options_path}."))

@@ -13,6 +13,7 @@ import json
 import os
 import subprocess
 import sys
+from collections import namedtuple
 from datetime import datetime
 from pathlib import Path
 from time import sleep
@@ -22,6 +23,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets, uic
 
 OptionWidgetDict = Dict[Type[QtWidgets.QWidget], str]
 OptionValues = Dict[str, Union[bool, int, str]]
+
+auto_save_filename = "processing/.i19.gui.autosave.json"
 
 # Dictionary of the key property name (in the Qt sense, i.e. the attribute name in
 # Python terms) for each type of user option widget.
@@ -35,7 +38,164 @@ option_widgets: OptionWidgetDict = {
     QtWidgets.QLineEdit: "text",
 }
 
-auto_save_filename = "processing/.i19.gui.autosave.json"
+Option = namedtuple(
+    "Option", ["phil", "value", "condition", "convert"], defaults=[None, None, None]
+)
+
+
+def small_molecule(i):
+    return i == 0
+
+
+def csv(parameters, number=2):
+    # TODO: Add some exception handling to warn of mangled or invalid input.
+    parameters = [str(float(param.strip())) for param in parameters.split(",")]
+    assert len(parameters) == number
+    return ",".join(parameters)
+
+
+def indexing_method(index=0):
+    return ["fft3d", "fft1d", "real_space_grid_search", "low_res_spot_match"][index]
+
+
+gasket_params = [
+    f"ice_rings.{param}" for param in ("filter", "unit_cell", "space_group", "width")
+]
+
+
+def gasket_values(index):
+    """Tungsten, steel"""
+    unit_cell_params = ["3.1652, 3.1652, 3.1652", "2.87, 2.87, 2.87"]
+    unit_cell = csv(f"{unit_cell_params[index]}, 90, 90, 90", number=6)
+    return True, unit_cell, "Im-3m", "0.02"
+
+
+# Specify how option widgets translate to PHIL parameters to be passed to xia2.
+# Once it is supported in xia2 (see #7, xia2/xia2#543), add this entry:
+# findSpots_maxSpot_lineEdit=Option(
+#     "max_spot_size", condition="findSpots_maxSpot", convert=int
+# ),
+option_specification = dict(
+    comboBox=Option("small_molecule", condition=small_molecule, convert=small_molecule),
+    import_TrustBeamCentre=Option("trust_beam_centre", convert=bool),
+    importReferenceGeometryPath=Option(
+        "reference_geometry", condition="import_ReferenceGeometry"
+    ),
+    import_DD_lineEdit=Option(
+        "detector_distance", condition="import_DD", convert=float
+    ),
+    import_BeamCentre=Option(
+        "mosflm_beam_centre",
+        value=["import_BeamCentre_X_lineEdit", "import_BeamCentre_Y_lineEdit"],
+        convert=float,
+    ),
+    import_wavelength_lineEdit=Option(
+        "wavelength", condition="import_Wavelength", convert=float
+    ),
+    findSpots_sigmaStrong_lineEdit=Option(
+        "sigma_strong", condition="findSpots_sigmaStrong", convert=float
+    ),
+    findSpots_minSpot_lineEdit=Option(
+        "min_spot_size", condition="findSpots_minSpot", convert=int
+    ),
+    findSpots_dmin_lineEdit=Option("d_min", condition="findSpots_dmin", convert=float),
+    findSpots_dmax_lineEdit=Option("d_max", condition="findSpots_dmax", convert=float),
+    findSpots_powderRings=Option("ice_rings.filter"),
+    # Put gasket selection before user-specified powder rings, to allow the width of
+    # the pre-specified powder rings to be adjusted with the options below.
+    HP_gasket_comboBox=Option(
+        gasket_params, condition="HP_gasket_checkBox", value=gasket_values
+    ),
+    findSpots_powderRingsUC_lineEdit=Option(
+        "ice_rings.unit_cell",
+        condition=["ice_rings.filter", "findSpots_powderRingsSG_lineEdit"],
+        convert=lambda parameters: csv(parameters, number=6),
+    ),
+    findSpots_powderRingsSG_lineEdit=Option(
+        "ice_rings.space_group",
+        condition=["findSpots_powderRings", "findSpots_powderRingsUC_lineEdit"],
+    ),
+    findSpots_powderRingsW_lineEdit=Option(
+        "ice_rings.width", condition="findSpots_powderRings", convert=float
+    ),
+    findSpots_resolutionRange_lineEdit_1=Option(
+        "resolution_range", condition="findSpots_resolutionRange", convert=csv
+    ),
+    findSpots_resolutionRange_lineEdit_2=Option(
+        "resolution_range", condition="findSpots_resolutionRange", convert=csv
+    ),
+    findSpots_resolutionRange_lineEdit_3=Option(
+        "resolution_range", condition="findSpots_resolutionRange", convert=csv
+    ),
+    findSpots_resolutionRange_lineEdit_4=Option(
+        "resolution_range", condition="findSpots_resolutionRange", convert=csv
+    ),
+    findSpots_resolutionRange_lineEdit_5=Option(
+        "resolution_range", condition="findSpots_resolutionRange", convert=csv
+    ),
+    findSpots_resolutionRange_lineEdit_6=Option(
+        "resolution_range", condition="findSpots_resolutionRange", convert=csv
+    ),
+    findSpots_resolutionRange_lineEdit_7=Option(
+        "resolution_range", condition="findSpots_resolutionRange", convert=csv
+    ),
+    findSpots_resolutionRange_lineEdit_8=Option(
+        "resolution_range", condition="findSpots_resolutionRange", convert=csv
+    ),
+    findSpots_resolutionRange_lineEdit_9=Option(
+        "resolution_range", condition="findSpots_resolutionRange", convert=csv
+    ),
+    findSpots_resolutionRange_lineEdit_10=Option(
+        "resolution_range", condition="findSpots_resolutionRange", convert=csv
+    ),
+    findSpots_circleMask_lineEdit=Option(
+        "circle",
+        condition="findSpots_circleMask",
+        convert=lambda parameters: csv(parameters, number=3),
+    ),
+    findSpots_recMask_lineEdit=Option(
+        "rectangle",
+        condition="findSpots_recMask",
+        convert=lambda parameters: csv(parameters, number=4),
+    ),
+    Index_method_comboBox=Option("method", convert=indexing_method),
+    Index_UN_lineEdit=Option(
+        "unit_cell",
+        condition="Index_UN_SG_checkBox",
+        convert=lambda parameters: csv(parameters, number=6),
+    ),
+    Index_SG_lineEdit=Option("space_group", condition="Index_UN_SG_checkBox"),
+    Index_minCell_lineEdit=Option(
+        "min_cell", condition="Index_minCell_checkBox", convert=float
+    ),
+    Index_maxCell_lineEdit=Option(
+        "max_cell", condition="Index_maxCell_checkBox", convert=float
+    ),
+    Index_multiprocessing_checkBox=Option("multi_sweep_indexing", convert=bool),
+    Index_multiprocessing_checkBox_2=Option("multi_sweep_refinement", convert=bool),
+    Index_outliers_checkBox=Option("outlier.algorithm", convert=lambda _: "null"),
+    Refine_FixBeamDetector_checkBox_2=Option(
+        [
+            "refinement.parameterisation.beam.fix",
+            "refinement.parameterisation.detector.fix",
+            "refinement.parameterisation.auto_reduction.action",
+        ],
+        convert=lambda _: ["all", "all", "fix"],
+    ),
+    Integrate_scanVarying_checkBox=Option("scan_varying", convert=lambda x: not x),
+    Index_minCell_lineEdit_2=Option(
+        "min_spots.overall", condition="Integrate_scanVarying_checkBox_2", convert=int
+    ),
+    Index_minCell_lineEdit_3=Option(
+        "min_spots.per_degree",
+        condition="Integrate_scanVarying_checkBox_2",
+        convert=int,
+    ),
+    Refine_method_comboBox=Option("pipeline", value="dials-aimless"),
+    Integrate_keepAllReflections_checkBox=Option("keep_all_reflections", convert=bool),
+    HP_correction_shaddowing_checkBox=Option("high_pressure.correction", convert=bool),
+    lineEdit_2=Option("anvil.thickness", condition="checkBox_3", convert=float),
+)
 
 
 class UIMainWindow(QtWidgets.QMainWindow):
@@ -1196,6 +1356,9 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
         self.log_output(self.tr(f"\n\tLoading settings from {saved_options_path}."))
         with open(saved_options_path) as f:
             self.options = json.load(f)
+
+    def phil_params(self):
+        pass
 
     def update_options(self):
         options = ""

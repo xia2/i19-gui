@@ -2010,5 +2010,133 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>HP_gasketUser_checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>findSpots_powderRings</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>118</x>
+     <y>246</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>90</x>
+     <y>247</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>findSpots_powderRings</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>HP_gasketUser_checkBox</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>90</x>
+     <y>247</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>118</x>
+     <y>246</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>HP_gasketUserUC_lineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>findSpots_powderRingsUC_lineEdit</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>368</x>
+     <y>272</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>287</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>findSpots_powderRingsUC_lineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>HP_gasketUserUC_lineEdit</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>287</x>
+     <y>274</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>368</x>
+     <y>272</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>HP_gasketUserSG_lineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>findSpots_powderRingsSG_lineEdit</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>485</x>
+     <y>272</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>464</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>findSpots_powderRingsSG_lineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>HP_gasketUserSG_lineEdit</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>464</x>
+     <y>274</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>485</x>
+     <y>272</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>HP_gasketUserW_lineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>findSpots_powderRingsW_lineEdit</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>602</x>
+     <y>272</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>603</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>findSpots_powderRingsW_lineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>HP_gasketUserW_lineEdit</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>603</x>
+     <y>274</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>602</x>
+     <y>272</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
 </ui>

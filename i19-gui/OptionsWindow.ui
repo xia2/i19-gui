@@ -503,7 +503,7 @@
            <string>The minimum number of contiguous pixels to be considered a spot.</string>
           </property>
           <property name="text">
-           <string>Min spot size</string>
+           <string>Minimum spot size</string>
           </property>
          </widget>
         </item>
@@ -526,7 +526,7 @@
            <string>The maximum number of contiguous pixels to be considered a spot.</string>
           </property>
           <property name="text">
-           <string>Max spot size</string>
+           <string>Maximum spot size</string>
           </property>
          </widget>
         </item>
@@ -549,7 +549,7 @@
            <string>The high resolution limit of the region to search for spots.</string>
           </property>
           <property name="text">
-           <string>d min (Å)</string>
+           <string>Minimum d (Å)</string>
           </property>
          </widget>
         </item>
@@ -566,7 +566,7 @@
            <string>The low resolution limit of the region to search for spots.</string>
           </property>
           <property name="text">
-           <string>d max (Å)</string>
+           <string>Maximum d (Å)</string>
           </property>
          </widget>
         </item>
@@ -788,36 +788,29 @@
         <string>Indexing</string>
        </attribute>
        <layout class="QFormLayout" name="formLayout_2">
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="Index_method_checkBox">
+        <item row="0" column="1">
+         <widget class="QComboBox" name="Index_method_comboBox">
           <property name="statusTip">
            <string>Select indexing algorithm.</string>
           </property>
-          <property name="text">
-           <string>Method</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="Index_method_comboBox">
           <item>
            <property name="text">
-            <string>fft3d</string>
+            <string>3-d fast Fourier transform in reciprocal space</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>fft1d</string>
+            <string>1-d fast Fourier transforms in reciprocal space</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>real_space_grid_search</string>
+            <string>Real space grid search</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>low_res_spot_match</string>
+            <string>Low resolution spot match</string>
            </property>
           </item>
          </widget>
@@ -825,7 +818,7 @@
         <item row="1" column="0">
          <widget class="QCheckBox" name="Index_UN_SG_checkBox">
           <property name="statusTip">
-           <string>Known unit cell and space group (must provide both).</string>
+           <string>Known unit cell and space group.</string>
           </property>
           <property name="text">
            <string>Unit cell and space group</string>
@@ -941,7 +934,14 @@
            <string>Include all reflections from spot finding, including outliers in reciprocal space.</string>
           </property>
           <property name="text">
-           <string>Include outliers</string>
+           <string>Include indexing outliers</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Method</string>
           </property>
          </widget>
         </item>
@@ -980,7 +980,7 @@
               <string>Set the minimum number of reflections deemed necessary for refinement.</string>
              </property>
              <property name="text">
-              <string>Min number of reflections</string>
+              <string>Minimum number of reflections</string>
              </property>
             </widget>
            </item>
@@ -1044,16 +1044,6 @@
            <string>Scaling</string>
           </property>
           <layout class="QFormLayout" name="formLayout">
-           <item row="0" column="0">
-            <widget class="QCheckBox" name="Refine_method_checkBox">
-             <property name="statusTip">
-              <string>Select the choice of scaling tool.</string>
-             </property>
-             <property name="text">
-              <string>Scaling tool</string>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="1">
             <widget class="QComboBox" name="Refine_method_comboBox">
              <item>
@@ -1075,6 +1065,13 @@
              </property>
              <property name="text">
               <string>Keep all reflections</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_5">
+             <property name="text">
+              <string>Scaling tool</string>
              </property>
             </widget>
            </item>
@@ -1335,7 +1332,7 @@
               <string>The high resolution limit of the region to search for spots.</string>
              </property>
              <property name="text">
-              <string>d min (Å)</string>
+              <string>Minimum d (Å)</string>
              </property>
             </widget>
            </item>

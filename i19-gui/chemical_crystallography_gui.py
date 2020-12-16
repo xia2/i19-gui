@@ -16,6 +16,7 @@ import re
 import subprocess
 import sys
 from collections import namedtuple
+from collections.abc import Iterable
 from datetime import datetime
 from itertools import chain, repeat
 from pathlib import Path
@@ -1283,28 +1284,6 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
                 property_name = option_widgets[type(widget)]
                 widget.setProperty(property_name, value)
 
-    def browse_for_reference_model(self):
-        ref_geometry_path = self.ref_geometry_path or self.opening_visit
-        ref_geometry_path, _filter = QtWidgets.QFileDialog.getOpenFileName(
-            parent=self,
-            caption=self.tr("Select calibrated instrument model"),
-            directory=ref_geometry_path,
-            filter=self.tr("DIALS experiment list files (*.expt)"),
-        )
-        if ref_geometry_path:
-            self.ref_geometry_path = ref_geometry_path
-            ref_geometry_path = Path(ref_geometry_path)
-
-            output_message = self.tr(
-                "\nReference geometry path:\n"
-                f"\t{ref_geometry_path.parent}\n"
-                "Reference geometry file:\n"
-                f"\t{ref_geometry_path.name}"
-            )
-            self.log_output(output_message)
-
-            self.importReferenceGeometryPath.setText(ref_geometry_path.name)
-
     def reset_options(self):
         self.options = self.default_options
 
@@ -1370,643 +1349,74 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
     def phil_params(self):
         pass
 
-    def update_options(self):
-        options = ""
-
-        # import #######
-        for variable in self.optionListImport:
-            if variable.isChecked():
-                if variable == self.import_trust_beam_centre:
-                    options = options + " trust_beam_centre=true"
-                if variable == self.import_reference_geometry:
-                    if self.ref_geometry_path == "":
-                        output_message = self.tr(
-                            "    *** Reference geometry error. Please select "
-                            ".expt file with browse button first ***"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        options = (
-                            options
-                            + " reference_geometry="
-                            + str(self.ref_geometry_path)
-                        )
-                if variable == self.import_dd:
-                    if self.import_dd_line_edit.text() == "":
-                        output_message = self.tr(
-                            "    *** Detector Distance Error. Please input "
-                            "detector distance e.g. 85.01"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        output_message = self.tr(
-                            "Detector distance: " + str(self.import_dd_line_edit.text())
-                        )
-                        self.log_output(output_message)
-                        options = (
-                            options
-                            + " detector_distance="
-                            + str(self.import_dd_line_edit.text())
-                        )
-
-                if variable == self.import_beam_centre:
-                    if self.import_beam_centre_x_line_edit.text() == "":
-                        output_message = self.tr(
-                            "    *** Beam centre error. Please input Y"
-                        )
-                        self.log_output(output_message)
-                        return
-                    elif self.import_beam_centre_y_line_edit.text() == "":
-                        output_message = self.tr(
-                            "    *** Detector distance error. Please input X"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        output_message = self.tr(
-                            "Detector distance: "
-                            + str(self.import_beam_centre_x_line_edit.text())
-                            + ","
-                            + str(self.import_beam_centre_y_line_edit.text())
-                        )
-                        self.log_output(output_message)
-                        options = (
-                            options
-                            + " mosflm_beam_centre="
-                            + str(self.import_beam_centre_x_line_edit.text())
-                            + ","
-                            + str(self.import_beam_centre_y_line_edit.text())
-                        )
-
-                if variable == self.import_wavelengh:
-                    if self.import_wavelength_line_edit.text() == "":
-                        output_message = self.tr(
-                            "    *** Wavelength input error. "
-                            "Please add wavelength e.g. 85.01"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        output_message = self.tr(
-                            "Wavelength: "
-                            + str(self.import_wavelength_line_edit.text())
-                        )
-                        self.log_output(output_message)
-                        options = (
-                            options
-                            + " wavelength="
-                            + str(self.import_wavelength_line_edit.text())
-                        )
-
-                if variable == self.import_fix_beam_detector_check_box:
-                    options = (
-                        options + " integrate.phil_file=/dls_sw/i19/scripts/HP/"
-                        "integration_additional_inputs.phil"
-                    )
-
-                if variable == self.import_run_selector_check_box:
-                    self.run_selection = []
-                    self.run_image_selector = True
-                    for num, run in enumerate(self.runSelectorList, start=1):
-                        if run.isChecked():
-                            self.run_selection.append(num)
-                    self.log_output("Run selector:    " + str(self.run_selection))
-                if variable == self.Import_type_checkBox:
-                    if self.Import_type_comboBox.currentText() == "Protein":
-                        pass
-                    else:
-                        options = options + " small_molecule=True"
-
-        # spot finding #######
-        for variable in self.optionListSpotFinding:
-            if variable.isChecked():
-                if variable == self.findSpots_sigmaStrong:
-                    if self.findSpots_sigmaStrong_lineEdit.text() == "":
-                        output_message = self.tr(
-                            "    *** Sigma strong error."
-                            " Please enter sigma strong e.g. 6 ***"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        options = (
-                            options
-                            + " sigma_strong="
-                            + str(self.findSpots_sigmaStrong_lineEdit.text())
-                        )
-                if variable == self.findSpots_minSpot:
-                    if self.findSpots_minSpot_lineEdit.text() == "":
-                        output_message = self.tr(
-                            "    *** Min spot size error, "
-                            "please enter min spots size e.g. 2 ***"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        options = (
-                            options
-                            + " min_spot_size="
-                            + str(self.findSpots_minSpot_lineEdit.text())
-                        )
-                if variable == self.findSpots_maxSpot:
-                    if self.findSpots_maxSpot_lineEdit.text() == "":
-                        output_message = self.tr(
-                            "    *** Max spot size error, "
-                            "please enter max spots size e.g. 2 ***"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        options = (
-                            options
-                            + " max_spot_size="
-                            + str(self.findSpots_maxSpot_lineEdit.text())
-                        )
-                if variable == self.findSpots_dmin:
-                    if self.findSpots_dmin_lineEdit.text() == "":
-                        output_message = self.tr(
-                            "    *** d_min error, please enter d_min e.g. 0.84 ***"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        options = (
-                            options
-                            + " d_min="
-                            + str(self.findSpots_dmin_lineEdit.text())
-                        )
-                if variable == self.findSpots_dmax:
-                    if self.findSpots_dmax_lineEdit.text() == "":
-                        output_message = self.tr(
-                            "    *** d_max error, please enter d_max e.g. 10 ***"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        options = (
-                            options
-                            + " d_max="
-                            + str(self.findSpots_dmax_lineEdit.text())
-                        )
-                if variable == self.findSpots_iceRings:
-                    options = options + " ice_rings=true"
-
-                if variable == self.findSpots_powderRings:
-
-                    powder_ring_line_edits = [
-                        self.findSpots_powderRingsUC_lineEdit.text(),
-                        self.findSpots_powderRingsSG_lineEdit.text(),
-                        self.findSpots_powderRingsW_lineEdit.text(),
-                    ]
-                    for entry in powder_ring_line_edits:
-                        if entry == "":
-                            output_message = self.tr(
-                                "    *** Powder ring mask error ***"
-                            )
-                            self.log_output(output_message)
-                            return
-                    ice_rings_uv_command = " ice_rings.unit_cell=" + str(
-                        self.findSpots_powderRingsUC_lineEdit.text()
-                    )
-                    ice_rings_sg_command = " ice_rings.space_group=" + str(
-                        self.findSpots_powderRingsSG_lineEdit.text()
-                    )
-                    ice_rings_w_command = " ice_rings.width=" + str(
-                        self.findSpots_powderRingsW_lineEdit.text()
-                    )
-                    options = (
-                        options
-                        + ice_rings_uv_command
-                        + ice_rings_sg_command
-                        + ice_rings_w_command
-                    )
-
-                if variable == self.findSpots_resolutionRange:
-                    find_spot_res_range_list = [
-                        self.findSpots_resolutionRange_lineEdit_1.text(),
-                        self.findSpots_resolutionRange_lineEdit_2.text(),
-                        self.findSpots_resolutionRange_lineEdit_3.text(),
-                        self.findSpots_resolutionRange_lineEdit_4.text(),
-                        self.findSpots_resolutionRange_lineEdit_5.text(),
-                        self.findSpots_resolutionRange_lineEdit_6.text(),
-                        self.findSpots_resolutionRange_lineEdit_7.text(),
-                        self.findSpots_resolutionRange_lineEdit_8.text(),
-                        self.findSpots_resolutionRange_lineEdit_9.text(),
-                        self.findSpots_resolutionRange_lineEdit_10.text(),
-                    ]
-                    for res in find_spot_res_range_list:
-                        if not res == "":
-                            options = options + " resolution_range=" + str(res)
-
-                if variable == self.findSpots_circleMask:
-                    if self.findSpots_circleMask_lineEdit.text() == "":
-                        output_message = self.tr(
-                            "    *** Circle mask error, please enter in the "
-                            "following format: xc,yc,r ***"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        options = (
-                            options
-                            + " circle="
-                            + str(self.findSpots_circleMask_lineEdit.text())
-                        )
-
-                if variable == self.findSpots_recMask:
-                    if self.findSpots_recMask_lineEdit.text() == "":
-                        output_message = self.tr(
-                            "    *** Rectangle mask error, please enter is "
-                            "the following format: x0,x1,y0,y1 ***"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        options = (
-                            options
-                            + " rectangle="
-                            + str(self.findSpots_recMask_lineEdit.text())
-                        )
-
-        # indexing #######
-        for variable in self.optionListIndexing:
-            if variable.isChecked():
-                if variable == self.Index_method_checkBox:
-                    options = (
-                        options
-                        + " method="
-                        + str(self.Index_method_comboBox.currentText())
-                    )
-                if variable == self.Index_scanVarying_checkBox:
-                    options = options + " scan_varying=False"
-                if variable == self.Index_UN_SG_checkBox:
-                    uc_sg_line_edits = [
-                        self.Index_UN_lineEdit.text(),
-                        self.Index_SG_lineEdit.text(),
-                    ]
-                    for entry in uc_sg_line_edits:
-                        self.log_output(entry)
-                        if entry == "":
-                            output_message = self.tr(
-                                "    *** Error in unit cell or space group entry ***"
-                            )
-                            self.log_output(output_message)
-                            return
-                    uc_command = " unit_cell=" + str(self.Index_UN_lineEdit.text())
-                    sg_command = " space_group=" + str(self.Index_SG_lineEdit.text())
-                    options = options + uc_command + sg_command
-                if variable == self.Index_minCell_checkBox:
-                    if self.Index_minCell_lineEdit.text() == "":
-                        output_message = self.tr(
-                            "    *** Please enter valid min cell ***"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        options = (
-                            options
-                            + " min_cell="
-                            + str(self.Index_minCell_lineEdit.text())
-                        )
-                if variable == self.Index_maxCell_checkBox:
-                    if self.Index_maxCell_lineEdit.text() == "":
-                        output_message = self.tr(
-                            "    *** Please enter valid max cell ***"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        options = (
-                            options
-                            + " max_cell="
-                            + str(self.Index_maxCell_lineEdit.text())
-                        )
-                if variable == self.Index_multiprocessing_checkBox:
-                    options = options + " multi_sweep_processing=True"
-                if variable == self.Index_multiSweepRefine_checkBox:
-                    options = options + " multi_sweep_refinement=False"
-                if variable == self.Index_outliers_checkBox:
-                    options = options + " outlier.algorithm=null"
-
-        # integrate #####
-        for variable in self.optionListIntegrate:
-            if variable.isChecked():
-                if variable == self.Integrate_keepAllReflections_checkBox:
-                    options = options + " keep_all_reflections=true"
-                if variable == self.Integrate_scanVarying_checkBox:
-                    options = options + " scan_varying=False"
-                if variable == self.Integrate_minSpotProfile_checkBox:
-                    spot_profile_line_edits = [
-                        self.Integrate_minCellOverall_lineEdit.text(),
-                        self.Integrate_minCellDegree_lineEdit.text(),
-                    ]
-                    for entry in spot_profile_line_edits:
-                        if entry == "":
-                            output_message = self.tr(
-                                "    *** Error in overall or per degree entry ***"
-                            )
-                            self.log_output(output_message)
-                            return
-                        if self.visit == "":
-                            output_message = self.tr(
-                                "    *** For this option a .phil needs to be created, "
-                                "this requires a the visit to be known."
-                                "    Please open a dataset and retry (File>Open). ***"
-                            )
-                            self.log_output(output_message)
-                            return
-                    overall_line = (
-                        "    profile.gaussian_rs.min_spots.overall="
-                        + str(self.Integrate_minCellOverall_lineEdit.text())
-                        + "\n"
-                    )
-                    degree_line = (
-                        "    profile.gaussian_rs.min_spots.per_degree="
-                        + str(self.Integrate_minCellDegree_lineEdit.text())
-                        + "\n"
-                    )
-                    xia2_gui_path = self.visit + "processing/xia2GUI/"
-                    if not os.path.exists(xia2_gui_path):
-                        os.makedirs(xia2_gui_path)
-                    phil_file = xia2_gui_path + "integration_additional_inputs.phil"
-                    with open(phil_file, "a") as f:
-                        f.write(
-                            "refinement_additional_inputs.phil:\n"
-                            + overall_line
-                            + degree_line
-                        )
-                    options = options + " integrate.phil_file=" + phil_file
-
-        # refine ####
-        for variable in self.optionListRefineScale:
-            if variable.isChecked():
-                if variable == self.Refine_method_checkBox:
-                    options = (
-                        options
-                        + " method="
-                        + str(self.Refine_method_comboBox.currentText())
-                    )
-                if variable == self.Refine_FixBeamDetector_checkBox:
-                    xia2_gui_path = self.visit + "processing/xia2GUI/"
-                    if not os.path.exists(xia2_gui_path):
-                        os.makedirs(xia2_gui_path)
-                    phil_file = xia2_gui_path + "refine_additional_inputs.phil"
-                    with open(phil_file, "a") as f:
-                        refine_line1 = "refinement.parameterisation.beam.fix=all\n"
-                        refine_line2 = "refinement.parameterisation.detector.fix=all\n"
-                        refine_line3 = (
-                            "refinement.parameterisation.auto_reduction.action=fix\n"
-                        )
-                        f.write(refine_line1 + refine_line2 + refine_line3)
-                    options = options + " refine.phil_file=" + phil_file
-
-        # other #####
-        for variable in self.optionListOther:
-            if variable.isChecked():
-                if variable == self.Other_failover_checkBox:
-                    options = options + " failover=true"
-                if variable == self.Other_manualInput1_checkBox:
-                    options = options + " " + self.Other_manualInput1_lineEdit.text()
-                if variable == self.Other_manualInput2_checkBox:
-                    options = options + " " + self.Other_manualInput2_lineEdit.text()
-                if variable == self.Other_manualInput3_checkBox:
-                    options = options + " " + self.Other_manualInput3_lineEdit.text()
-                if variable == self.Other_manualInput4_checkBox:
-                    options = options + " " + self.Other_manualInput4_lineEdit.text()
-
-        # HP #####
-        for variable in self.optionListHP:
-            if variable.isChecked():
-                if variable == self.HP_correction_shadowing_checkBox:
-                    options = (
-                        options
-                        + " high_pressure.correction=True dynamic_shadowing=True "
-                        "resolution_range=999,15"
-                    )
-                if variable == self.HP_scanVarying_checkBox:
-                    options = options + " scan_varying=False"
-                if variable == self.HP_ReferenceGeometry_checkBox:
-                    if self.ref_geometry_path == "":
-                        output_message = self.tr(
-                            "    *** Reference geometry error. "
-                            "Please select .expt file with browse button first ***"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        options = (
-                            options
-                            + " reference_geometry="
-                            + str(self.ref_geometry_path)
-                        )
-                if variable == self.HP_gasket_checkBox:
-                    gasket_type = str(self.HP_gasket_comboBox.currentText())
-                    if gasket_type == "Tungsten":
-                        options = (
-                            options + " ice_rings.filter=True "
-                            "ice_rings.unit_cell=3.1652,3.1652,3.1652,90,90,90 "
-                            "ice_rings.space_group=Im-3m "
-                            "ice_rings.width=0.02"
-                        )
-                    if gasket_type == "Steel":
-                        # Steel gaskets are often either Fe or Ni.
-                        # The unit cell for Fe is given below.
-                        options = (
-                            options + " ice_rings.filter=True "
-                            "ice_rings.unit_cell=2.87,2.87,2.87,90,90,90 "
-                            "ice_rings.space_group=Im-3m "
-                            "ice_rings.width=0.02"
-                        )
-
-                if variable == self.HP_gasketUser_checkBox:
-                    powder_ring_line_edits = [
-                        self.HP_gasketUserUC_lineEdit.text(),
-                        self.HP_gasketUserSG_lineEdit.text(),
-                        self.HP_gasketUserW_lineEdit.text(),
-                    ]
-                    for entry in powder_ring_line_edits:
-                        if entry == "":
-                            output_message = self.tr(
-                                "    *** Powder ring mask error ***"
-                            )
-                            self.log_output(output_message)
-                            return
-                    ice_rings_uv_command = " ice_rings.unit_cell=" + str(
-                        self.HP_gasketUserUC_lineEdit.text()
-                    )
-                    ice_rings_sg_command = " ice_rings.space_group=" + str(
-                        self.HP_gasketUserSG_lineEdit.text()
-                    )
-                    ice_rings_w_command = " ice_rings.width=" + str(
-                        self.HP_gasketUserW_lineEdit.text()
-                    )
-                    options = (
-                        options
-                        + ice_rings_uv_command
-                        + ice_rings_sg_command
-                        + ice_rings_w_command
-                    )
-                # medium difficulty:
-                if variable == self.HP_UN_SG_checkBox:
-                    uc_sg_line_edits = [
-                        self.HP_UN_lineEdit.text(),
-                        self.HP_SG_lineEdit.text(),
-                    ]
-                    for entry in uc_sg_line_edits:
-                        self.log_output(entry)
-                        if entry == "":
-                            output_message = self.tr(
-                                "    *** Error in unit cell or space group entry ***"
-                            )
-                            self.log_output(output_message)
-                            return
-                    uc_command = " unit_cell=" + str(self.HP_UN_lineEdit.text())
-                    sg_command = " space_group=" + str(self.HP_SG_lineEdit.text())
-                    options = options + uc_command + sg_command
-
-                if variable == self.HP_dmin_checkBox:
-                    if self.HP_dmin_lineEdit.text() == "":
-                        output_message = self.tr(
-                            "    *** d_min HP error, please enter d_min e.g. 0.84 ***"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        options = (
-                            options + " d_min=" + str(self.HP_dmin_lineEdit.text())
-                        )
-
-                if variable == self.HP_runStartEnd_checkBox:
-                    self.run_image_selector = True
-                    counter = 0
-                    self.runStartEnd_lineEdits = [
-                        self.HP_runStartEnd_lineEdit_1.text(),
-                        self.HP_runStartEnd_lineEdit_2.text(),
-                        self.HP_runStartEnd_lineEdit_3.text(),
-                        self.HP_runStartEnd_lineEdit_4.text(),
-                        self.HP_runStartEnd_lineEdit_5.text(),
-                        self.HP_runStartEnd_lineEdit_6.text(),
-                        self.HP_runStartEnd_lineEdit_7.text(),
-                        self.HP_runStartEnd_lineEdit_8.text(),
-                        self.HP_runStartEnd_lineEdit_9.text(),
-                        self.HP_runStartEnd_lineEdit_10.text(),
-                    ]
-
-                    for entry in self.runStartEnd_lineEdits:
-                        if entry == "":
-                            counter += 1
-                        else:
-                            self.image_selection[counter] = entry
-                            counter += 1
-                    output_message = self.tr(
-                        "Image start/end option selected.\n"
-                        "    " + str(self.image_selection)
-                    )
-                    self.log_output(output_message)
-
-                if variable == self.HP_FixBeamDetector_checkBox:
-                    options = (
-                        options + " integrate.phil_file=/dls_sw/i19/scripts/HP/"
-                        "integration_additional_inputs.phil"
-                    )
-                    # integration_additional_inputs.phil:
-                    # refinement.parameterisation.beam.fix=all
-                    # refinement.parameterisation.detector.fix=all
-                    # refinement.parameterisation.auto_reduction.action=fix
-
-                if variable == self.HP_anvilThickness_checkBox:
-                    if self.HP_anvilThickness_lineEdit.text() == "":
-                        output_message = self.tr(
-                            "    *** Anvil thickness input error, "
-                            "please enter thickness e.g. 2.1 ***"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        options = (
-                            options
-                            + " high_pressure.anvil.thickness="
-                            + str(self.HP_anvilThickness_lineEdit.text())
-                        )
-
-                if variable == self.HP_anvilOpeningAngle_checkBox:
-                    if self.HP_anvilOpeningAngle_lineEdit.text() == "":
-                        output_message = self.tr(
-                            "    *** Anvil opening angle input error, "
-                            "please enter opening angle e.g. 38 ***"
-                        )
-                        self.log_output(output_message)
-                        return
-                    else:
-                        pass
-                        # options = options + " high_pressure.anvil.angle=" + \
-                        #           str(self.HP_anvilOpeningAngle_lineEdit.text())
-
-        if not self.dataset_path == "MULTIPLE":
-
-            if not self.run_image_selector:
-                dataset_input = self.dataset_path
-
-            else:  # causing issues when multiple ###########
-                if self.dataset_path == "":
-                    dataset_input = self.dataset_path
-                    self.log_output(
-                        "Dataset must be selected before selecting runs or images "
-                        "start/end"
-                    )
-                else:
-                    dataset_input = ""
-                    if self.run_selection:  # runs have been selected
-                        for entry in self.run_selection:
-                            dataset_input = (
-                                dataset_input
-                                + " image="
-                                + self.dataset_path
-                                + "/"
-                                + self.prefix
-                                + str("%02d_00001.cbf" % int(entry))
-                            )
-                            if (entry - 1) in self.image_selection:
-                                dataset_input = (
-                                    dataset_input
-                                    + ":"
-                                    + self.image_selection[entry - 1]
-                                )
-                    else:  # runs have NOT been selected
-                        for run in self.run_list:
-                            dataset_input = (
-                                dataset_input
-                                + " image="
-                                + self.dataset_path
-                                + "/"
-                                + self.prefix
-                                + str("%02d_00001.cbf" % int(run))
-                            )
-                            if (run - 1) in self.image_selection:
-                                dataset_input = (
-                                    dataset_input + ":" + self.image_selection[run - 1]
-                                )
-
-            self.dataset_path = dataset_input
-
-        self.log_output(
-            "\n\nUpdating options"
-            + "\n    Xia2 command: "
-            + "\n    "
-            + self.xia2_command
-            + self.dataset_path
-            + options
+    def browse_for_reference_model(self):
+        ref_geometry_path = self.ref_geometry_path or self.opening_visit
+        ref_geometry_path, _filter = QtWidgets.QFileDialog.getOpenFileName(
+            parent=self,
+            caption=self.tr("Select calibrated instrument model"),
+            directory=ref_geometry_path,
+            filter=self.tr("DIALS experiment list files (*.expt)"),
         )
+        if ref_geometry_path:
+            self.ref_geometry_path = ref_geometry_path
+            ref_geometry_path = Path(ref_geometry_path)
 
-        ui_main_window = self.parent()
-        ui_main_window.xia2_command = self.xia2_command
-        ui_main_window.dataset_path = self.dataset_path
-        ui_main_window.xia2_options_list = options
-        ui_main_window.update_options()
+            output_message = self.tr(
+                "\nReference geometry path:\n"
+                f"\t{ref_geometry_path.parent}\n"
+                "Reference geometry file:\n"
+                f"\t{ref_geometry_path.name}"
+            )
+            self.log_output(output_message)
 
+            self.importReferenceGeometryPath.setText(ref_geometry_path.name)
+
+    def construct_phil_params(self, widget: str, specification: Option):
+        options = self.options
+
+        phil = specification.phil
+        if not isinstance(phil, list):
+            phil = [phil]
+
+        value = specification.value
+        if value is None:
+            value = []
+        elif not isinstance(value, list):
+            value = [value]
+        value = list(map(options.get, [widget] + value))
+
+        condition = specification.condition
+        if callable(condition):
+            condition = condition(*value)
+        else:
+            if condition is None:
+                condition = []
+            elif not isinstance(condition, list):
+                condition = [condition]
+            condition = list(map(options.get, condition))
+            condition = all(condition + value)
+
+        if condition:
+            convert = specification.convert
+            if convert:
+                result = convert(*value)
+                if isinstance(result, str) or not isinstance(result, Iterable):
+                    result = [result]
+            else:
+                result = value
+
+            result = map(str, result)
+            return ["=".join(pair) for pair in zip(phil, result)]
+
+    def filterable_phil_params(self, item):
+        return self.construct_phil_params(*item)
+
+    def update_options(self):
         self.save_options_auto()
+        params = map(self.filterable_phil_params, option_specification.items())
+        params = chain.from_iterable(filter(None, params))
+        self.parent().xia2_options_list = " ".join(params)
+        self.parent().update_options()
 
 
 if __name__ == "__main__":

@@ -228,7 +228,7 @@ class UIMainWindow(QtWidgets.QMainWindow):
 
         self.computing_location = "Cluster"
 
-        self.xia2_options_list = " small_molecule=true"
+        self.xia2_options_list = ""
         self.xia2_command = "xia2 "
         self.tabs = ["tab1", "tab2", "tab3", "tab4", "tab5", "tab6", "tab7", "tab8"]
         self.tabstxt = [
@@ -483,7 +483,6 @@ class UIMainWindow(QtWidgets.QMainWindow):
             self.xia2_command,
             self.dataset_path,
             self.visit,
-            self.logOutputTxt,
             self.run_list,
             self.prefix,
             self.opening_visit,

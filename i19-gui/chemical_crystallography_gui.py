@@ -11,6 +11,7 @@ import fnmatch
 import glob
 import json
 import os
+import re
 import subprocess
 import sys
 from collections import namedtuple
@@ -47,9 +48,12 @@ def small_molecule(i):
     return i == 0
 
 
+numbers_regex = re.compile(r"(\d+\.?\d*|\.\d+)")
+
+
 def csv(parameters, number=2):
     # TODO: Add some exception handling to warn of mangled or invalid input.
-    parameters = [str(float(param.strip())) for param in parameters.split(",")]
+    parameters = [str(float(param)) for param in re.findall(numbers_regex, parameters)]
     assert len(parameters) == number
     return ",".join(parameters)
 

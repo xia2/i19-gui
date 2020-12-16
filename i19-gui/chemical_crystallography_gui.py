@@ -1346,9 +1346,6 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
         with open(saved_options_path) as f:
             self.options = json.load(f)
 
-    def phil_params(self):
-        pass
-
     def browse_for_reference_model(self):
         ref_geometry_path = self.ref_geometry_path or self.opening_visit
         ref_geometry_path, _filter = QtWidgets.QFileDialog.getOpenFileName(
@@ -1371,7 +1368,7 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
 
             self.importReferenceGeometryPath.setText(ref_geometry_path.name)
 
-    def construct_phil_params(self, widget: str, specification: Option):
+    def phil_params(self, widget: str, specification: Option):
         options = self.options
 
         phil = specification.phil
@@ -1408,12 +1405,10 @@ class UIOptionsWindow(QtWidgets.QMainWindow):
             result = map(str, result)
             return ["=".join(pair) for pair in zip(phil, result)]
 
-    def filterable_phil_params(self, item):
-        return self.construct_phil_params(*item)
-
     def update_options(self):
         self.save_options_auto()
-        params = map(self.filterable_phil_params, option_specification.items())
+        items = option_specification.keys(), option_specification.values()
+        params = map(self.phil_params, *items)
         params = chain.from_iterable(filter(None, params))
         self.parent().xia2_options_list = " ".join(params)
         self.parent().update_options()

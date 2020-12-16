@@ -10,6 +10,7 @@
 import fnmatch
 import glob
 import json
+import operator
 import os
 import re
 import subprocess
@@ -83,20 +84,21 @@ def gasket_values(index, check):
 # ),
 option_specification = dict(
     comboBox=Option("small_molecule", condition=small_molecule, convert=small_molecule),
-    import_TrustBeamCentre=Option("trust_beam_centre", convert=bool),
+    import_TrustBeamCentre=Option("trust_beam_centre"),
     importReferenceGeometryPath=Option(
         "reference_geometry", condition="import_ReferenceGeometry"
     ),
     import_DD_lineEdit=Option(
         "detector_distance", condition="import_DD", convert=float
     ),
-    import_BeamCentre=Option(
+    import_BeamCentre_X_lineEdit=Option(
         "mosflm_beam_centre",
-        value=["import_BeamCentre_X_lineEdit", "import_BeamCentre_Y_lineEdit"],
-        convert=float,
+        value="import_BeamCentre_Y_lineEdit",
+        condition="import_BeamCentre",
+        convert=lambda *xy: ",".join(str(float(coord)) for coord in xy),
     ),
     import_wavelength_lineEdit=Option(
-        "wavelength", condition="import_Wavelength", convert=float
+        "wavelength", condition="import_Wavelengh", convert=float
     ),
     findSpots_sigmaStrong_lineEdit=Option(
         "sigma_strong", condition="findSpots_sigmaStrong", convert=float
@@ -110,11 +112,14 @@ option_specification = dict(
     # Put gasket selection before user-specified powder rings, to allow the width of
     # the pre-specified powder rings to be adjusted with the options below.
     HP_gasket_comboBox=Option(
-        gasket_params, condition="HP_gasket_checkBox", value=gasket_values
+        gasket_params,
+        value="HP_gasket_checkBox",
+        condition=gasket_values,
+        convert=gasket_values,
     ),
     findSpots_powderRingsUC_lineEdit=Option(
         "ice_rings.unit_cell",
-        condition=["ice_rings.filter", "findSpots_powderRingsSG_lineEdit"],
+        condition=["findSpots_powderRings", "findSpots_powderRingsSG_lineEdit"],
         convert=lambda parameters: csv(parameters, number=6),
     ),
     findSpots_powderRingsSG_lineEdit=Option(
@@ -177,8 +182,8 @@ option_specification = dict(
     Index_maxCell_lineEdit=Option(
         "max_cell", condition="Index_maxCell_checkBox", convert=float
     ),
-    Index_multiprocessing_checkBox=Option("multi_sweep_indexing", convert=bool),
-    Index_multiprocessing_checkBox_2=Option("multi_sweep_refinement", convert=bool),
+    Index_multiprocessing_checkBox=Option("multi_sweep_indexing"),
+    Index_multiprocessing_checkBox_2=Option("multi_sweep_refinement"),
     Index_outliers_checkBox=Option("outlier.algorithm", convert=lambda _: "null"),
     Refine_FixBeamDetector_checkBox_2=Option(
         [
@@ -188,7 +193,7 @@ option_specification = dict(
         ],
         convert=lambda _: ["all", "all", "fix"],
     ),
-    Integrate_scanVarying_checkBox=Option("scan_varying", convert=lambda x: not x),
+    Integrate_scanVarying_checkBox=Option("scan_varying", convert=operator.not_),
     Index_minCell_lineEdit_2=Option(
         "min_spots.overall", condition="Integrate_scanVarying_checkBox_2", convert=int
     ),
@@ -198,8 +203,8 @@ option_specification = dict(
         convert=int,
     ),
     Refine_method_comboBox=Option("pipeline", value="dials-aimless"),
-    Integrate_keepAllReflections_checkBox=Option("keep_all_reflections", convert=bool),
-    HP_correction_shaddowing_checkBox=Option("high_pressure.correction", convert=bool),
+    Integrate_keepAllReflections_checkBox=Option("keep_all_reflections"),
+    HP_correction_shaddowing_checkBox=Option("high_pressure.correction"),
     lineEdit_2=Option("anvil.thickness", condition="checkBox_3", convert=float),
 )
 

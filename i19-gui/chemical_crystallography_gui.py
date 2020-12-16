@@ -16,6 +16,7 @@ import subprocess
 import sys
 from collections import namedtuple
 from datetime import datetime
+from itertools import chain, repeat
 from pathlib import Path
 from time import sleep
 from typing import Dict, Type, Union
@@ -67,11 +68,12 @@ gasket_params = [
 ]
 
 
-def gasket_values(index):
+def gasket_values(index, check):
     """Tungsten, steel"""
-    unit_cell_params = ["3.1652, 3.1652, 3.1652", "2.87, 2.87, 2.87"]
-    unit_cell = csv(f"{unit_cell_params[index]}, 90, 90, 90", number=6)
-    return True, unit_cell, "Im-3m", "0.02"
+    unit_cell_params = ["3.1652", "2.87"]
+    if check:
+        unit_cell = ",".join(chain(repeat(unit_cell_params[index], 3), repeat("90", 3)))
+        return True, unit_cell, "Im-3m", "0.02"
 
 
 # Specify how option widgets translate to PHIL parameters to be passed to xia2.

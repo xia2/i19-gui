@@ -9,21 +9,21 @@ repos:
 
 # Automatically sort imports with isort
 - repo: https://github.com/PyCQA/isort
-  rev: 5.13.2
+  rev: 6.0.0
   hooks:
   - id: isort
     additional_dependencies: [toml]
 
 # Automatic source code formatting with Black
 - repo: https://github.com/psf/black
-  rev: 24.10.0
+  rev: 25.1.0
   hooks:
   - id: black
     args: [--safe, --quiet]
 
 # Enforce style with Flake8
 - repo: https://github.com/PyCQA/flake8
-  rev: 7.1.1
+  rev: 7.1.2
   hooks:
   - id: flake8
     # Exclude docstring checks, ignore E203 (see https://github.com/PyCQA/pycodestyle/issues/373)
